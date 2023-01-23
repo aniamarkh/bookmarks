@@ -1,50 +1,37 @@
 <script setup lang="ts">
-import { ref } from "vue";
-
-interface ListItem {
-  id: number;
-  title: string;
-}
-
-const ListItems: ListItem[] = ref([
-  {
-    id: 1,
-    title: "Learn Vue",
-  },
-  {
-    id: 2,
-    title: "Cook cookies",
-  },
-]);
+import { store } from "../store";
 
 const addNew = () => {
   const newItem = {
-    id: ListItems.value.length + 1,
-    title: "die",
+    id: store.length + 1,
+    title: "VueDoc",
+    link: "https://vuejs.org/",
+    category: "Job",
   };
-  ListItems.value.push(newItem);
+  store.push(newItem);
 };
 
 const deleteLast = () => {
-  ListItems.value.pop();
+  store.pop();
 };
 
 const isBtnDisabled = () => {
-  return ListItems.value.length ? false : true;
+  return store.length ? false : true;
 };
 </script>
 
 <template>
-  <div>
-    <h3>This is a list</h3>
+  <div class="form-wrapper">
+    <h4>Add new link</h4>
+    <form id="link-form"></form>
   </div>
   <div class="btns-wrapper">
     <button @click="addNew">Add new</button>
     <button :disabled="isBtnDisabled()" @click="deleteLast">Delete last</button>
   </div>
   <ol>
-    <li v-for="item in ListItems" :key="item.id">
-      {{ item.title }}
+    <li v-for="bookmark in store" :key="bookmark.id">
+      {{ bookmark.title }}
     </li>
   </ol>
 </template>
