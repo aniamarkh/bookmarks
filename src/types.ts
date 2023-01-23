@@ -1,6 +1,6 @@
 export interface Bookmark {
   id: number;
   title: string;
-  link: string;
+  url: string;
   category: string;
 }

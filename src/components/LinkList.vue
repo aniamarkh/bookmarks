@@ -1,50 +1,82 @@
 <script setup lang="ts">
 import { store } from "../store";
+import { ref } from "vue";
 
-const addNew = () => {
-  const newItem = {
-    id: store.length + 1,
-    title: "VueDoc",
-    link: "https://vuejs.org/",
-    category: "Job",
-  };
-  store.push(newItem);
-};
-
-const deleteLast = () => {
-  store.pop();
-};
+const input_title = ref("");
+const input_url = ref("");
 
 const isBtnDisabled = () => {
-  return store.length ? false : true;
+  if (input_title.value.trim() === "" || input_url.value.trim() === "") {
+    return true;
+  }
+  return false;
+};
+
+const addBookmark = () => {
+  if (input_title.value.trim() === "" || input_url.value.trim() === "") {
+    return;
+  }
+  store.push({
+    id: store.length + 1,
+    title: input_title.value,
+    url: input_url.value,
+    //todo: category: input_category.value,
+    category: "Job",
+  });
+
+  input_title.value = "";
+  input_url.value = "";
+};
+
+const deleteBookmark = (id: number) => {
+  const bookmarkToDelete = store.findIndex((bookmark) => bookmark.id === id);
+
+  if (bookmarkToDelete > -1) {
+    store.splice(bookmarkToDelete, 1);
+  }
+
+  return store;
 };
 </script>
 
 <template>
   <div class="form-wrapper">
-    <h4>Add new link</h4>
-    <form id="link-form"></form>
+    <form class="bookmark_form" @submit.prevent="addBookmark">
+      <h4>Add new link</h4>
+      <input type="text" placeholder="title" v-model="input_title" />
+      <input type="url" placeholder="url" v-model="input_url" />
+      <input type="submit" value="Add a bookmark" :disabled="isBtnDisabled()" />
+      <!-- todo: category input -->
+    </form>
   </div>
-  <div class="btns-wrapper">
-    <button @click="addNew">Add new</button>
-    <button :disabled="isBtnDisabled()" @click="deleteLast">Delete last</button>
-  </div>
-  <ol>
+  <ul>
     <li v-for="bookmark in store" :key="bookmark.id">
-      {{ bookmark.title }}
+      <a :href="bookmark.url" target="_blank">{{ bookmark.title }}</a>
+      <button @click="deleteBookmark(bookmark.id)">×</button>
+      <!--todo: <button @click="editBookmark(bookmark.id)">edit</button> -->
     </li>
-  </ol>
+  </ul>
 </template>
 
 <style scoped>
-.btns-wrapper {
+.bookmark_form {
   display: flex;
-  flex-direction: row;
-  gap: 1rem;
+  flex-direction: column;
+  gap: 10px;
 }
 
-ol {
+ul {
   margin-block-start: 0;
   margin-block-end: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 5px;
+}
+
+li {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
 }
 </style>
