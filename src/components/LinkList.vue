@@ -6,19 +6,18 @@ import type { Ref } from "vue";
 const input_title: Ref<string> = ref("");
 const input_url: Ref<string> = ref("");
 
-const isValidInputs = () => {
-  const isEmpty: boolean =
-    input_title.value.trim() === "" || input_url.value.trim() === "";
-  let isValidUrl: boolean;
+const isInvalidInputs = () => {
+  const isEmpty: boolean = input_title.value.trim() === "" || input_url.value.trim() === "";
+  let invalidUrl: boolean;
 
   try {
     new URL(input_url.value);
-    isValidUrl = true;
+    invalidUrl = false;
   } catch (err) {
-    isValidUrl = false;
+    invalidUrl = true;
   }
 
-  return isEmpty || !isValidUrl;
+  return isEmpty || invalidUrl;
 };
 
 const addBookmark = () => {
@@ -53,7 +52,11 @@ const deleteBookmark = (id: number) => {
       <h4>Add new link</h4>
       <input type="text" placeholder="title" v-model="input_title" />
       <input type="url" placeholder="url" v-model="input_url" />
-      <input type="submit" value="Add a bookmark" :disabled="isValidInputs()" />
+      <input
+        type="submit"
+        value="Add a bookmark"
+        :disabled="isInvalidInputs()"
+      />
       <!-- todo: category input -->
     </form>
   </div>
