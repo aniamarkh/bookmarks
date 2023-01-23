@@ -1,23 +1,33 @@
 <script setup lang="ts">
 import { store } from "../store";
 import { ref } from "vue";
+import type { Ref } from "vue";
 
-const input_title = ref("");
-const input_url = ref("");
+const input_title: Ref<string> = ref("");
+const input_url: Ref<string> = ref("");
 
-const isBtnDisabled = () => {
-  if (input_title.value.trim() === "" || input_url.value.trim() === "") {
-    return true;
+const isValidInputs = () => {
+  const isEmpty: boolean =
+    input_title.value.trim() === "" || input_url.value.trim() === "";
+  let isValidUrl: boolean;
+
+  try {
+    new URL(input_url.value);
+    isValidUrl = true;
+  } catch (err) {
+    isValidUrl = false;
   }
-  return false;
+
+  return isEmpty || !isValidUrl;
 };
 
 const addBookmark = () => {
-  if (input_title.value.trim() === "" || input_url.value.trim() === "") {
-    return;
-  }
+  let maxIdValue = store.reduce((acc, value) => {
+    return (acc = acc > value.id ? acc : value.id);
+  }, 0);
+
   store.push({
-    id: store.length + 1,
+    id: maxIdValue + 1,
     title: input_title.value,
     url: input_url.value,
     //todo: category: input_category.value,
@@ -31,11 +41,9 @@ const addBookmark = () => {
 const deleteBookmark = (id: number) => {
   const bookmarkToDelete = store.findIndex((bookmark) => bookmark.id === id);
 
-  if (bookmarkToDelete > -1) {
+  if (bookmarkToDelete) {
     store.splice(bookmarkToDelete, 1);
   }
-
-  return store;
 };
 </script>
 
@@ -45,7 +53,7 @@ const deleteBookmark = (id: number) => {
       <h4>Add new link</h4>
       <input type="text" placeholder="title" v-model="input_title" />
       <input type="url" placeholder="url" v-model="input_url" />
-      <input type="submit" value="Add a bookmark" :disabled="isBtnDisabled()" />
+      <input type="submit" value="Add a bookmark" :disabled="isValidInputs()" />
       <!-- todo: category input -->
     </form>
   </div>
