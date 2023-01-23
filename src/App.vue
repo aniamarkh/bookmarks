@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import ToDoList from "./components/ToDoList.vue";
+import LinkList from "./components/LinkList.vue";
 </script>
 
 <template>
   <main>
-    <ToDoList />
+    <LinkList />
   </main>
 </template>
 
