@@ -24,17 +24,8 @@ const isInvalidInputs = (): boolean => {
   return isEmpty || invalidUrl;
 };
 
-const addBookmark = (): void => {
-  let maxIdValue = store.reduce((acc, value) => {
-    return (acc = acc > value.id ? acc : value.id);
-  }, 0);
-
-  store.push({
-    id: maxIdValue + 1,
-    title: input_title.value,
-    url: input_url.value,
-    category: input_category.value,
-  });
+const onSubmit = (): void => {
+  store.addBookmark(input_title.value, input_url.value, input_category.value);
 
   input_title.value = "";
   input_url.value = "";
@@ -53,6 +44,7 @@ const addBookmark = (): void => {
         type="submit"
         value="Add a bookmark"
         :disabled="isInvalidInputs()"
+        @click="onSubmit"
       />
     </form>
   </div>

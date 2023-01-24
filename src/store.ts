@@ -1,35 +1,27 @@
 import { reactive } from "vue";
-import type { Bookmark } from "./types";
+import type { Bookmark, Store } from "./types";
+export const store: Store = reactive(
+  {
+    bookmarks: Array(),
+    addBookmark(titleValue, urlValue, categoryValue) {
+      let maxIdValue = this.bookmarks.reduce((acc, value: Bookmark) => {
+        return (acc = acc > value.id ? acc : value.id);
+      }, 0);
+      let newBookmark: Bookmark = {
+        id: maxIdValue + 1,
+        title: titleValue,
+        url: urlValue,
+        category: categoryValue,
+      }
+      this.bookmarks.push(newBookmark);
+    },
 
-export const store: Array<Bookmark> = reactive([
-  {
-    id: 1,
-    title: "Gmail",
-    url: "https://mail.google.com/",
-    category: "Job",
-  },
-  {
-    id: 2,
-    title: "GitHub",
-    url: "https://github.com/",
-    category: "Travel",
-  },
-  {
-    id: 3,
-    title: "YandexMail",
-    url: "https://mail.yandex.ru/",
-    category: "Personal",
-  },
-  {
-    id: 4,
-    title: "GoogleMaps",
-    url: "https://www.google.com/maps",
-    category: "Travel",
-  },
-  {
-    id: 5,
-    title: "Airbnb",
-    url: "https://www.airbnb.com",
-    category: "Travel",
-  },
-]);
+    deleteBookmark(id) {
+      const bookmarkToDelete = this.bookmarks.findIndex((bookmark: Bookmark) => bookmark.id === id);
+
+      if (bookmarkToDelete >= 0) {
+        this.bookmarks.splice(bookmarkToDelete, 1);
+      }
+    },
+  }
+);
