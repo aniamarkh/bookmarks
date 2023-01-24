@@ -10,8 +10,26 @@ export const store: Array<Bookmark> = reactive([
   },
   {
     id: 2,
+    title: "GitHub",
+    url: "https://github.com/",
+    category: "Travel",
+  },
+  {
+    id: 3,
     title: "YandexMail",
     url: "https://mail.yandex.ru/",
     category: "Personal",
+  },
+  {
+    id: 4,
+    title: "GoogleMaps",
+    url: "https://www.google.com/maps",
+    category: "Travel",
+  },
+  {
+    id: 5,
+    title: "Airbnb",
+    url: "https://www.airbnb.com",
+    category: "Travel",
   },
 ]);
