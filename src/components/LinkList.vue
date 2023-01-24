@@ -1,20 +1,12 @@
 <script setup lang="ts">
 import { store } from "../store";
 
-const deleteBookmark = (id: number): void => {
-  const bookmarkToDelete = store.findIndex((bookmark) => bookmark.id === id);
-
-  if (bookmarkToDelete) {
-    store.splice(bookmarkToDelete, 1);
-  }
-};
-
 const getCategories = (): Set<string> => {
-  return new Set(store.map((bookmark) => bookmark.category));
+  return new Set(store.bookmarks.map((bookmark) => bookmark.category));
 };
 
 const filterByCategory = (category: string) => {
-  return store.filter((bookmark) => bookmark.category === category);
+  return store.bookmarks.filter((bookmark) => bookmark.category === category);
 };
 </script>
 
@@ -29,7 +21,7 @@ const filterByCategory = (category: string) => {
       <ul>
         <li v-for="bookmark in filterByCategory(category)" :key="bookmark.id">
           <a :href="bookmark.url" target="_blank">{{ bookmark.title }}</a>
-          <button @click="deleteBookmark(bookmark.id)">×</button>
+          <button @click="store.deleteBookmark(bookmark.id)">×</button>
           <!--todo: <button @click="editBookmark(bookmark.id)">edit</button> -->
         </li>
       </ul>

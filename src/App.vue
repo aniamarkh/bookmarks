@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import LinkList from "./components/LinkList.vue";
-import Form from "./components/Form.vue";
+import Form from "./components/AddBookmarkForm.vue";
 </script>
 
 <template>
