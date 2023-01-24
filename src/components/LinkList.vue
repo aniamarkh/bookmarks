@@ -9,7 +9,7 @@ const deleteBookmark = (id: number): void => {
   }
 };
 
-const formCategories = (): Set<string> => {
+const getCategories = (): Set<string> => {
   return new Set(store.map((bookmark) => bookmark.category));
 };
 
@@ -22,7 +22,7 @@ const filterByCategory = (category: string) => {
   <div class="categories-wrapper">
     <div
       class="category"
-      v-for="(category, index) in formCategories()"
+      v-for="(category, index) in getCategories()"
       :key="index"
     >
       <h4>{{ category }}</h4>
