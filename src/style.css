@@ -1,0 +1,146 @@
+:root {
+  --light-gray: #EEE;
+  --dark-gray: #464646;
+  --gray: #a8a8a8;
+  --white: #FDFDFD;
+
+}
+
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+  font-family: 'Roboto Mono', monospace;
+  color: var(--dark-gray);
+}
+
+html {
+  background-color: #EEE;
+  width: 100%;
+  height: 100%;
+}
+
+.categories-wrapper {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  gap: 15px;
+  padding: 20px;
+  height:100vh;
+}
+.category {
+  display: flex;
+  flex-direction: column;
+  align-content:space-between;
+  background-color: var(--white);
+  padding: 15px;
+  border-radius: 10px;
+  width: 250px;
+  text-align: center;
+}
+
+li {
+  display: flex;
+  flex-direction: row;
+  gap: 4px;
+  justify-content: flex-start;
+  align-items: center;
+  height: 20px;
+  width: 220px;
+}
+
+.bookmark-btn {
+  background: none;
+	color: inherit;
+	border: none;
+  cursor: pointer;
+  align-content: center;
+  display: none;
+}
+
+li:hover .bookmark-btn {
+  display: block;
+}
+
+.bookmark-btn img {
+  width: 20px;
+  height: 20px;
+}
+
+.add-bookmark-btn {
+  width: 30px;
+  height: 30px;
+  align-self: flex-end;
+  background: none;
+	color: inherit;
+	border: none;
+  border-radius: 12px;
+	padding: 5px;
+	font: inherit;
+	cursor: pointer;
+	outline: inherit;
+  transition: all 0.2s;
+}
+
+.add-bookmark-btn img {
+  height: 20px;
+  fill: var(--light-gray);
+}
+
+.add-bookmark-btn:hover {
+  background-color: var(--light-gray);
+}
+
+.new-category-btn {
+  width: 250px;
+  height: 30px;
+  align-self: flex-end;
+  background: none;
+	color: inherit;
+	border: none;
+  border-radius: 10px;
+	padding: 5px;
+	font: inherit;
+	cursor: pointer;
+	outline: inherit;
+  transition: all 0.2s;
+  align-items: center;
+}
+
+.new-category-btn:hover {
+  background-color: var(--white);
+}
+
+.new-category-btn img {
+  height: 20px;
+  fill: var(--light-gray);
+}
+
+
+ul {
+  margin-block-start: 0;
+  margin-block-end: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding: 0;
+}
+
+h3 {
+  margin-bottom: 0.5rem;
+  text-align: left;
+  text-transform: uppercase;
+  overflow:hidden;
+  white-space: nowrap; 
+  -webkit-mask-image: linear-gradient(90deg, var(--dark-gray) 60%, transparent);
+}
+
+a {
+  text-decoration: none;
+  overflow:hidden;
+  white-space: nowrap; 
+  text-align: start;
+  width: 210px;
+  -webkit-mask-image: linear-gradient(90deg, var(--dark-gray) 60%, transparent);
+}

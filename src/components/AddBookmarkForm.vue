@@ -36,7 +36,6 @@ const onSubmit = (): void => {
 <template>
   <div class="form-wrapper">
     <form class="bookmark_form" @submit.prevent="addBookmark">
-      <h4>Add new link</h4>
       <input type="text" placeholder="title" v-model="input_title" />
       <input type="url" placeholder="url" v-model="input_url" />
       <input type="text" placeholder="category" v-model="input_category" />
