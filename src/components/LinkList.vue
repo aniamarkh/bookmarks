@@ -7,7 +7,7 @@ import { ref } from "vue";
 const showCategoryForm = ref(false);
 
 const getCategories = (): Set<string> => {
-  return new Set(store.bookmarks.map((bookmark) => bookmark.category));
+  return store.categories;
 };
 </script>
 

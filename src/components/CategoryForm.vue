@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import type { Ref } from "vue";
+import { store } from "../store.ts";
 
 const input_category: Ref<string> = ref("");
 
@@ -9,13 +10,14 @@ const isInvalidInput = (): boolean => {
 };
 
 const onSubmit = (): void => {
+  store.addCategory(input_category.value);
   input_category.value = "";
 };
 </script>
 
 <template>
   <div class="form-wrapper">
-    <form class="bookmark_form" @submit.prevent="addBookmark">
+    <form class="bookmark_form" @submit="addBookmark">
       <input
         type="text"
         placeholder="category title"

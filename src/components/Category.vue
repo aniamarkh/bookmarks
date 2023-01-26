@@ -4,7 +4,7 @@ import { ref } from "vue";
 import Form from "./BookmarkForm.vue";
 
 const props = defineProps({
-  category: String,
+  category: Object,
 });
 
 const showForm = ref(false);
@@ -15,7 +15,8 @@ const filterByCategory = (category: string) => {
 </script>
 
 <template>
-  <h3>{{ category }}</h3>
+  <h3>{{ category.title }}</h3>
+  <h1>{{ category.id}}</h1>
   <ul>
     <li v-for="bookmark in filterByCategory(category)" :key="bookmark.id">
       <a :href="bookmark.url" target="_blank">{{ bookmark.title }}</a>
