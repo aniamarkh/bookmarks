@@ -36,8 +36,9 @@ html {
   background-color: var(--white);
   padding: 15px;
   border-radius: 10px;
-  width: 250px;
+  width: 280px;
   text-align: center;
+  transition: all 0.3s;
 }
 
 li {
@@ -47,7 +48,7 @@ li {
   justify-content: flex-start;
   align-items: center;
   height: 20px;
-  width: 220px;
+  width: 250px;
 }
 
 .bookmark-btn {
@@ -93,7 +94,7 @@ li:hover .bookmark-btn {
 }
 
 .new-category-btn {
-  width: 250px;
+  width: 280px;
   height: 30px;
   align-self: flex-end;
   background: none;
@@ -141,6 +142,16 @@ a {
   overflow:hidden;
   white-space: nowrap; 
   text-align: start;
-  width: 210px;
+  width: 250px;
   -webkit-mask-image: linear-gradient(90deg, var(--dark-gray) 60%, transparent);
+}
+
+.v-enter-active,
+.v-leave-active {
+  transition: opacity 0.5s ease;
+}
+
+.v-enter-from,
+.v-leave-to {
+  opacity: 0;
 }

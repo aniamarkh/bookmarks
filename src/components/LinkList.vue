@@ -1,15 +1,13 @@
 <script setup lang="ts">
 import { store } from "../store";
-import Form from "./AddBookmarkForm.vue";
+import CategoryForm from "./CategoryForm.vue";
+import CategoryTemplate from "./Category.vue";
+import { ref } from "vue";
 
-console.log(Form);
+const showCategoryForm = ref(false);
 
 const getCategories = (): Set<string> => {
   return new Set(store.bookmarks.map((bookmark) => bookmark.category));
-};
-
-const filterByCategory = (category: string) => {
-  return store.bookmarks.filter((bookmark) => bookmark.category === category);
 };
 </script>
 
@@ -20,27 +18,17 @@ const filterByCategory = (category: string) => {
       v-for="(category, index) in getCategories()"
       :key="index"
     >
-      <h3>{{ category }}</h3>
-      <ul>
-        <li v-for="bookmark in filterByCategory(category)" :key="bookmark.id">
-          <a :href="bookmark.url" target="_blank">{{ bookmark.title }}</a>
-          <button class="bookmark-btn" @click="editBookmark(bookmark.id)">
-            <img src="./assets/edit.svg" alt="edit" />
-          </button>
-          <button
-            class="bookmark-btn"
-            @click="store.deleteBookmark(bookmark.id)"
-          >
-            <img src="./assets/delete.svg" alt="delete" />
-          </button>
-        </li>
-      </ul>
-      <button class="add-bookmark-btn">
-        <img src="./assets/add.svg" alt="add bookmark" />
-      </button>
+      <CategoryTemplate :category="category" />
     </div>
     <div class="new-category">
-      <button class="new-category-btn">
+      <Transition>
+        <CategoryForm v-if="showCategoryForm" />
+      </Transition>
+      <button
+        v-if="!showCategoryForm"
+        class="new-category-btn"
+        @click="showCategoryForm = !showCategoryForm"
+      >
         <img src="./assets/add.svg" alt="add bookmark" />
       </button>
     </div>

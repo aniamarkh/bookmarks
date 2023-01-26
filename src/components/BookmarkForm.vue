@@ -9,9 +9,7 @@ const input_category: Ref<string> = ref("");
 
 const isInvalidInputs = (): boolean => {
   const isEmpty: boolean =
-    input_title.value.trim() === "" ||
-    input_url.value.trim() === "" ||
-    input_category.value.trim() === "";
+    input_title.value.trim() === "" || input_url.value.trim() === "";
   let invalidUrl: boolean;
 
   try {
@@ -29,7 +27,6 @@ const onSubmit = (): void => {
 
   input_title.value = "";
   input_url.value = "";
-  input_category.value = "";
 };
 </script>
 
@@ -38,7 +35,6 @@ const onSubmit = (): void => {
     <form class="bookmark_form" @submit.prevent="addBookmark">
       <input type="text" placeholder="title" v-model="input_title" />
       <input type="url" placeholder="url" v-model="input_url" />
-      <input type="text" placeholder="category" v-model="input_category" />
       <input
         type="submit"
         value="Add a bookmark"
