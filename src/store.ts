@@ -10,9 +10,9 @@ export const store: Store = reactive(
     categories: localCategories,
 
     addCategory(title: string) {
-      let maxKey = this.categories.length ? Math.max(...this.categories.map((el: Category) => { return el.id })) : 0;
-      let newCategory = {
-        id: maxKey + 1,
+      const maxId = this.categories.length ? Math.max(...this.categories.map((el: Category) => { return el.id })) : 0;
+      const newCategory = {
+        id: maxId + 1,
         title: title,
         bookmarks: [],
       };
@@ -20,19 +20,21 @@ export const store: Store = reactive(
       localStorage.setItem("categories", JSON.stringify(this.categories));
     },
 
-    addBookmark(title, url, categoryKey) {
-      // let maxIdValue = this.bookmarks.reduce((acc, value: Bookmark) => {
-      //   return (acc = acc > value.id ? acc : value.id);
-      // }, 0);
+    addBookmark(title: string, url: string, categoryId: number) {
+      let maxId = this.bookmarks.length ? Math.max(...this.bookmarks.map((el: Bookmark) => { return el.id })) : 0;
+      let newBookmark = {
+        id: maxId + 1,
+        title: title,
+        url: url,
+      };
+      this.bookmarks.push(newBookmark);
 
-      // let newBookmark: Bookmark = {
-      //   id: maxIdValue + 1,
-      //   title: titleValue,
-      //   url: urlValue,
-      //   category: categoryValue,
-      // }
-      // this.bookmarks.push(newBookmark);
-      // localStorage.setItem("bookmarks", JSON.stringify(this.bookmarks));
+      const bookmarkCategory = this.categories.find((item: Category) => item.id === categoryId);
+      if (bookmarkCategory) {
+        bookmarkCategory.bookmarks.push(newBookmark.id);
+      };
+      localStorage.setItem("bookmarks", JSON.stringify(this.bookmarks));
+      localStorage.setItem("categories", JSON.stringify(this.categories));
     },
 
     deleteBookmark(id) {

@@ -3,9 +3,12 @@ import { ref } from "vue";
 import type { Ref } from "vue";
 import { store } from "../store";
 
+const props = defineProps({
+  categoryId: Number,
+});
+
 const input_title: Ref<string> = ref("");
 const input_url: Ref<string> = ref("");
-const input_category: Ref<string> = ref("");
 
 const isInvalidInputs = (): boolean => {
   const isEmpty: boolean =
@@ -23,7 +26,7 @@ const isInvalidInputs = (): boolean => {
 };
 
 const onSubmit = (): void => {
-  store.addBookmark(input_title.value, input_url.value, input_category.value);
+  store.addBookmark(input_title.value, input_url.value, props.categoryId);
 
   input_title.value = "";
   input_url.value = "";
