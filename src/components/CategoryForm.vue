@@ -3,6 +3,8 @@ import { ref } from "vue";
 import type { Ref } from "vue";
 import { store } from "../store.ts";
 
+const showCategoryForm = ref(false);
+
 const input_category: Ref<string> = ref("");
 
 const isInvalidInput = (): boolean => {
@@ -10,27 +12,37 @@ const isInvalidInput = (): boolean => {
 };
 
 const onSubmit = (): void => {
-  store.addCategory(input_category.value);
+  showCategoryForm.value = !showCategoryForm.value;
+  store.addCategory(input_category.value.toLowerCase());
   input_category.value = "";
 };
 </script>
 
 <template>
-  <div class="form-wrapper">
-    <form class="bookmark_form" @submit="addBookmark">
-      <input
-        type="text"
-        placeholder="category title"
-        v-model="input_category"
-      />
-      <input
-        type="submit"
-        value="Add a new category"
-        :disabled="isInvalidInput()"
-        @click="onSubmit"
-      />
-    </form>
-  </div>
+  <Transition>
+    <div class="form-wrapper" v-if="showCategoryForm">
+      <form class="bookmark_form" @submit="addBookmark">
+        <input
+          type="text"
+          placeholder="category title"
+          v-model="input_category"
+        />
+        <input
+          type="submit"
+          value="Add a new category"
+          :disabled="isInvalidInput()"
+          @click="onSubmit"
+        />
+      </form>
+    </div>
+  </Transition>
+    <button
+      v-if="!showCategoryForm"
+      class="new-category-btn"
+      @click="showCategoryForm = !showCategoryForm"
+    >
+      <img src="./assets/add.svg" alt="add bookmark" />
+    </button>
 </template>
 
 <style scoped>

@@ -3,6 +3,8 @@ import { ref } from "vue";
 import type { Ref } from "vue";
 import { store } from "../store";
 
+const showBookmarkForm = ref(false);
+
 const props = defineProps({
   categoryId: Number,
 });
@@ -26,26 +28,36 @@ const isInvalidInputs = (): boolean => {
 };
 
 const onSubmit = (): void => {
+  showBookmarkForm.value = !showBookmarkForm.value;
   store.addBookmark(input_title.value, input_url.value, props.categoryId);
-
   input_title.value = "";
   input_url.value = "";
 };
 </script>
 
 <template>
-  <div class="form-wrapper">
-    <form class="bookmark_form" @submit.prevent="addBookmark">
-      <input type="text" placeholder="title" v-model="input_title" />
-      <input type="url" placeholder="url" v-model="input_url" />
-      <input
-        type="submit"
-        value="Add a bookmark"
-        :disabled="isInvalidInputs()"
-        @click="onSubmit"
-      />
-    </form>
-  </div>
+  <Transition>
+    <div class="form-wrapper" v-if="showBookmarkForm">
+      <form class="bookmark_form" @submit.prevent="addBookmark">
+        <input type="text" placeholder="title" v-model="input_title" />
+        <input type="url" placeholder="url" v-model="input_url" />
+        <input
+          type="submit"
+          value="Add a bookmark"
+          :disabled="isInvalidInputs()"
+          @click="onSubmit"
+        />
+      </form>
+    </div>
+  </Transition>
+    <button
+      class="add-bookmark-btn"
+      @click="showBookmarkForm = !showBookmarkForm"
+      v-if="!showBookmarkForm"
+    >
+      <img src="./assets/add.svg" alt="add bookmark" />
+    </button>
+
 </template>
 
 <style scoped>

@@ -37,12 +37,19 @@ export const store: Store = reactive(
       localStorage.setItem("categories", JSON.stringify(this.categories));
     },
 
-    deleteBookmark(id) {
-      const bookmarkToDelete = this.bookmarks.findIndex((bookmark: Bookmark) => bookmark.id === id);
+    deleteBookmark(bookmarkId: number, categoryId: number) {
+      const bookmarkToDelete = this.bookmarks.findIndex((bookmark: Bookmark) => bookmark.id === bookmarkId);
 
       if (bookmarkToDelete >= 0) {
         this.bookmarks.splice(bookmarkToDelete, 1);
         localStorage.setItem("bookmarks", JSON.stringify(this.bookmarks));
+      }
+
+      const bookmarkCategory = this.categories.find((item: Category) => item.id === categoryId);
+      if (bookmarkCategory) {
+        const bookmarkIndex = bookmarkCategory.bookmarks.indexOf(bookmarkId);
+        bookmarkCategory.bookmarks.splice(bookmarkIndex, 1);
+        localStorage.setItem("categories", JSON.stringify(this.categories));
       }
     },
   }

@@ -2,9 +2,6 @@
 import { store } from "../store";
 import CategoryForm from "./CategoryForm.vue";
 import CategoryTemplate from "./Category.vue";
-import { ref } from "vue";
-
-const showCategoryForm = ref(false);
 
 const getCategories = (): Set<string> => {
   return store.categories;
@@ -21,16 +18,7 @@ const getCategories = (): Set<string> => {
       <CategoryTemplate :category="category" />
     </div>
     <div class="new-category">
-      <Transition>
-        <CategoryForm v-if="showCategoryForm" />
-      </Transition>
-      <button
-        v-if="!showCategoryForm"
-        class="new-category-btn"
-        @click="showCategoryForm = !showCategoryForm"
-      >
-        <img src="./assets/add.svg" alt="add bookmark" />
-      </button>
+        <CategoryForm />
     </div>
   </div>
 </template>
