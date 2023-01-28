@@ -21,8 +21,8 @@ export const store: Store = reactive(
     },
 
     addBookmark(title: string, url: string, categoryId: number) {
-      let maxId = this.bookmarks.length ? Math.max(...this.bookmarks.map((el: Bookmark) => { return el.id })) : 0;
-      let newBookmark = {
+      const maxId = this.bookmarks.length ? Math.max(...this.bookmarks.map((el: Bookmark) => { return el.id })) : 0;
+      const newBookmark = {
         id: maxId + 1,
         title: title,
         url: url,
@@ -32,7 +32,7 @@ export const store: Store = reactive(
       const bookmarkCategory = this.categories.find((item: Category) => item.id === categoryId);
       if (bookmarkCategory) {
         bookmarkCategory.bookmarks.push(newBookmark.id);
-      };
+      }
       localStorage.setItem("bookmarks", JSON.stringify(this.bookmarks));
       localStorage.setItem("categories", JSON.stringify(this.categories));
     },

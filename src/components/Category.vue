@@ -2,13 +2,13 @@
 import { store } from "../store";
 import { ref } from "vue";
 import Form from "./BookmarkForm.vue";
-import type { Category, Bookmark } from "../types.ts"
+import type { Category, Bookmark } from "../types"
 
 const props = defineProps({
   category: Object,
 });
 
-const getCategoryBookmarks = (categoryId) => {
+const getCategoryBookmarks = (categoryId: number) => {
   let categoryBookmarks: Array<Bookmark> = [];
   const category: Category = store.categories.find((item: Category) => item.id === categoryId);
   category.bookmarks.forEach((id: number) => {

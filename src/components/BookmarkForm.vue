@@ -3,12 +3,11 @@ import { ref } from "vue";
 import type { Ref } from "vue";
 import { store } from "../store";
 
-const showBookmarkForm = ref(false);
-
 const props = defineProps({
   categoryId: Number,
 });
 
+const showBookmarkForm = ref(false);
 const input_title: Ref<string> = ref("");
 const input_url: Ref<string> = ref("");
 
