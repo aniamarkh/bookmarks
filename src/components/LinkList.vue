@@ -2,8 +2,9 @@
 import { store } from "../store";
 import CategoryForm from "./CategoryForm.vue";
 import CategoryTemplate from "./Category.vue";
+import {Category} from "@/types";
 
-const getCategories = (): Set<string> => {
+const getCategories = (): Array<Category> => {
   return store.categories;
 };
 </script>
