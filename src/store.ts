@@ -20,6 +20,16 @@ export const store: Store = reactive(
       localStorage.setItem("categories", JSON.stringify(this.categories));
     },
 
+    getBookmarksFor(categoryId: number) {
+      const bookmarks: Array<Bookmark> = [];
+      const category: Category = this.categories.find((item: Category) => item.id === categoryId);
+      category.bookmarks.forEach((id: number) => {
+        const bkmk = this.bookmarks.find((item: Bookmark) => item.id === id);
+        bookmarks.push(bkmk);
+      });
+      return bookmarks;
+    },
+
     addBookmark(title: string, url: string, categoryId: number) {
       const maxId = this.bookmarks.length ? Math.max(...this.bookmarks.map((el: Bookmark) => { return el.id })) : 0;
       const newBookmark = {

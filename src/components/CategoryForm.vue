@@ -1,10 +1,9 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import type { Ref } from "vue";
-import { store } from "../store.ts";
+import { store } from "../store";
 
 const showCategoryForm = ref(false);
-
 const input_category: Ref<string> = ref("");
 
 const isInvalidInput = (): boolean => {
