@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { store } from "../store";
 import CategoryForm from "./CategoryForm.vue";
-import CategoryTemplate from "./Category.vue";
+import CategoryCard from "./CategoryCard.vue";
 import type {Category} from "../types";
 
 const getCategories = (): Array<Category> => {
@@ -16,7 +16,7 @@ const getCategories = (): Array<Category> => {
       v-for="(category, index) in getCategories()"
       :key="index"
     >
-      <CategoryTemplate :category="category" />
+      <CategoryCard :category="category" />
     </div>
     <div class="new-category">
         <CategoryForm />

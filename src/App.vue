@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import LinkList from "./components/LinkList.vue";
+import MainApp from "./components/MainApp.vue";
 </script>
 
 <template>
   <main>
-    <LinkList />
+    <MainApp />
   </main>
 </template>
