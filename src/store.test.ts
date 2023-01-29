@@ -7,19 +7,28 @@ const store = _store
 
 test('Add category', () => {
   store.addCategory('Swimming')
-  expect(store.categories).lengthOf(1)
-  expect(store.categories[0].id).toBe(1)
-  expect(store.categories[0].title).toBe('Swimming')
-  expect(store.categories[0].bookmarks).toEqual([])
+  expect(store.categories).toEqual(
+    [{
+      id: 1,
+      title: 'Swimming',
+      bookmarks: []
+    }]
+  )
+  expect(store.bookmarks).toEqual([])
+
+  store.addCategory('Bowling')
+  expect(store.categories).toEqual(
+    [{
+      id: 1,
+      title: 'Swimming',
+      bookmarks: [],
+    },
+    {
+      id: 2,
+      title: 'Bowling',
+      bookmarks: [],
+    }]
+  )
+  expect(store.bookmarks).toEqual([])
 })
 
-test('Add second category', () => {
-  store.addCategory('Bowling')
-  expect(store.categories).lengthOf(2)
-  expect(store.categories[0].id).toBe(1)
-  expect(store.categories[1].id).toBe(2)
-  expect(store.categories[0].title).toBe('Swimming')
-  expect(store.categories[1].title).toBe('Bowling')
-  expect(store.categories[0].bookmarks).toEqual([])
-  expect(store.categories[1].bookmarks).toEqual([])
-})
