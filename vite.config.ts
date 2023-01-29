@@ -15,5 +15,8 @@ export default defineConfig({
     globals: true,
     setupFiles: ['vitest-localstorage-mock'],
     mockReset: false,
+    coverage: {
+      all: true
+    }
   },
 });
