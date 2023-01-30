@@ -5,7 +5,7 @@ import CategoryCard from "./CategoryCard.vue";
 import type {Category} from "../types";
 
 const getCategories = (): Array<Category> => {
-  return store.categories;
+  return store.data.children;
 };
 </script>
 

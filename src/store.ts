@@ -1,66 +1,124 @@
 import { reactive } from "vue";
-import type { Bookmark, Store, Category } from "./types";
+import type { Store, Category, Bookmark } from "./types";
 
-const localBookmarks: Array<Bookmark> = JSON.parse(localStorage.getItem("bookmarks") || '[]');
-const localCategories: Array<Category> = JSON.parse(localStorage.getItem("categories") || '[]');
+// const initDataStr = JSON.stringify({
+//   id: 0,
+//   title: "root",
+//   children: [],
+// });
+// const localData: Data = JSON.parse(localStorage.getItem("data") || initDataStr);
 
 export const store: Store = reactive(
   {
-    bookmarks: localBookmarks,
-    categories: localCategories,
+    data: {
+      id: 0,
+      title: "root",
+      children: [] as Array<Category>,
+    },
+
+    saveToLocalStore() {
+      localStorage.setItem("data", JSON.stringify(this.data));
+    },
+
+    loadFromLocalStore() {
+      console.log("loading");
+      let localData = localStorage.getItem("data");
+      if (localData) {
+        this.data = JSON.parse(localData);
+      };
+    },
+
+    findMaxId(node: Category | Bookmark): number {
+      let maxId = node.id;
+      if ("children" in node) {
+        node.children.forEach((child) => {
+          maxId = Math.max(maxId, this.findMaxId(child));
+        });
+      }
+      return maxId;
+    },
+
+    findNodeById(node: Category | Bookmark, id: number): Category | Bookmark | null {
+      if (node.id === id) {
+        return node;
+      }
+      if ("children" in node && node.children) {
+        for (let i = 0; i < node.children.length; i++) {
+          const foundNode = this.findNodeById(node.children[i], id);
+          if (foundNode) {
+            return foundNode;
+          }
+        }
+      }
+      return null;
+    },
 
     addCategory(title: string) {
-      const maxId = this.categories.length ? Math.max(...this.categories.map((el: Category) => { return el.id })) : 0;
-      const newCategory = {
-        id: maxId + 1,
+      const newId: number = this.findMaxId(this.data) + 1;
+
+      const newCategory: Category = {
+        id: newId,
         title: title,
-        bookmarks: [],
-      };
-      this.categories.push(newCategory);
-      localStorage.setItem("categories", JSON.stringify(this.categories));
+        children: [],
+      }
+
+      this.data.children.push(newCategory);
+      this.saveToLocalStore();
     },
 
-    getBookmarksFor(categoryId: number) {
-      const bookmarks: Array<Bookmark> = [];
-      const category: Category = this.categories.find((item: Category) => item.id === categoryId);
-      category.bookmarks.forEach((id: number) => {
-        const bkmk = this.bookmarks.find((item: Bookmark) => item.id === id);
-        bookmarks.push(bkmk);
-      });
-      return bookmarks;
-    },
-
-    addBookmark(title: string, url: string, categoryId: number) {
-      const maxId = this.bookmarks.length ? Math.max(...this.bookmarks.map((el: Bookmark) => { return el.id })) : 0;
+    addBookmark(nodeId: number, title: string, url: string) {
+      const newId: number = this.findMaxId(this.data) + 1;
       const newBookmark = {
-        id: maxId + 1,
+        id: newId,
         title: title,
         url: url,
       };
-      this.bookmarks.push(newBookmark);
 
-      const bookmarkCategory = this.categories.find((item: Category) => item.id === categoryId);
-      if (bookmarkCategory) {
-        bookmarkCategory.bookmarks.push(newBookmark.id);
-      }
-      localStorage.setItem("bookmarks", JSON.stringify(this.bookmarks));
-      localStorage.setItem("categories", JSON.stringify(this.categories));
+      const bookmarkCategory = this.findNodeById(this.data, nodeId);
+      if (bookmarkCategory && "children" in bookmarkCategory) {
+        bookmarkCategory.children.push(newBookmark);
+      };
+      this.saveToLocalStore();
     },
 
-    deleteBookmark(bookmarkId: number, categoryId: number) {
-      const bookmarkToDelete = this.bookmarks.findIndex((bookmark: Bookmark) => bookmark.id === bookmarkId);
+    // deleteBookmark(bookmarkId: number) {
 
-      if (bookmarkToDelete >= 0) {
-        this.bookmarks.splice(bookmarkToDelete, 1);
-        localStorage.setItem("bookmarks", JSON.stringify(this.bookmarks));
-      }
+    // }
 
-      const bookmarkCategory = this.categories.find((item: Category) => item.id === categoryId);
-      if (bookmarkCategory) {
-        const bookmarkIndex = bookmarkCategory.bookmarks.indexOf(bookmarkId);
-        bookmarkCategory.bookmarks.splice(bookmarkIndex, 1);
-        localStorage.setItem("categories", JSON.stringify(this.categories));
-      }
-    },
+    //   addBookmark(title: string, url: string, categoryId: number) {
+    //     const maxId = this.bookmarks.length ? Math.max(...this.bookmarks.map((el: Bookmark) => { return el.id })) : 0;
+    //     const newBookmark = {
+    //       id: maxId + 1,
+    //       title: title,
+    //       url: url,
+    //     };
+    //     this.bookmarks.push(newBookmark);
+
+    //     const bookmarkCategory = this.categories.find((item: Category) => item.id === categoryId);
+    //     if (bookmarkCategory) {
+    //       bookmarkCategory.bookmarks.push(newBookmark.id);
+    //     }
+    //     localStorage.setItem("bookmarks", JSON.stringify(this.bookmarks));
+    //     localStorage.setItem("categories", JSON.stringify(this.categories));
+    //   },
+
+    //   deleteBookmark(bookmarkId: number, categoryId: number) {
+    //     const bookmarkToDelete = this.bookmarks.findIndex((bookmark: Bookmark) => bookmark.id === bookmarkId);
+
+    //     if (bookmarkToDelete >= 0) {
+    //       this.bookmarks.splice(bookmarkToDelete, 1);
+    //       localStorage.setItem("bookmarks", JSON.stringify(this.bookmarks));
+    //     }
+
+    //     const bookmarkCategory = this.categories.find((item: Category) => item.id === categoryId);
+    //     if (bookmarkCategory) {
+    //       const bookmarkIndex = bookmarkCategory.bookmarks.indexOf(bookmarkId);
+    //       bookmarkCategory.bookmarks.splice(bookmarkIndex, 1);
+    //       localStorage.setItem("categories", JSON.stringify(this.categories));
+    //     }
+    //   },
   }
 );
+
+store.loadFromLocalStore();
+console.log(store);

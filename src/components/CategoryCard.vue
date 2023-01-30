@@ -6,12 +6,14 @@ const props = defineProps({
   category: Object,
 });
 
+
+
 </script>
 
 <template>
   <h3>• {{ category.title }}</h3>
   <ul>
-    <li v-for="bookmark in store.getBookmarksFor(category.id)" :key="bookmark.id">
+    <li v-for="(bookmark, index) in category.children" :key="index">
       <a :href="bookmark.url" target="_blank">{{ bookmark.title }}</a>
       <button class="bookmark-btn" @click="editBookmark(bookmark.id)">
         <img src="./assets/edit.svg" alt="edit" />

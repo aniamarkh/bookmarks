@@ -7,14 +7,22 @@ export interface Bookmark {
 export interface Category {
   id: number;
   title: string;
-  bookmarks: Array<number>;
+  children: Array<(Bookmark | Category)>;
 }
 
+export interface Data {
+  id: 0,
+  title: "root",
+  children: Array<Category>,
+};
+
 export interface Store {
-  bookmarks: Bookmark[];
-  categories: Category[];
+  data: Category;
+  saveToLocalStore(): void;
+  loadFromLocalStore(): void;
+  findMaxId(node: Category): number;
+  findNodeById(node: Category | Bookmark, id: number): Category | Bookmark | null;
   addCategory(title: string): void;
-  getBookmarksFor(categoryId: number): Array<Bookmark>;
-  addBookmark(title: string, url: string, categoryId: number): void;
-  deleteBookmark(bookmarkId: number, categoryId: number): void;
+  addBookmark(nodeId: number, title: string, url: string): void;
+  // deleteBookmark(bookmarkId: number): void;
 }

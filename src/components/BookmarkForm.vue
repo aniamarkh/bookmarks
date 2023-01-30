@@ -28,7 +28,7 @@ const isInvalidInputs = (): boolean => {
 
 const onSubmit = (): void => {
   showBookmarkForm.value = !showBookmarkForm.value;
-  store.addBookmark(input_title.value, input_url.value, props.categoryId);
+  store.addBookmark(props.categoryId, input_title.value, input_url.value);
   input_title.value = "";
   input_url.value = "";
 };
