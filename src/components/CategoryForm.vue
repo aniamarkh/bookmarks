@@ -12,7 +12,7 @@ const isInvalidInput = (): boolean => {
 
 const onSubmit = (): void => {
   showCategoryForm.value = !showCategoryForm.value;
-  store.addCategory(input_category.value.toLowerCase());
+  store.addCategory(input_category.value);
   input_category.value = "";
 };
 </script>
@@ -30,7 +30,7 @@ const onSubmit = (): void => {
           type="submit"
           value="Add a new category"
           :disabled="isInvalidInput()"
-          @click="onSubmit"
+          @click.prevent="onSubmit"
         />
       </form>
     </div>

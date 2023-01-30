@@ -7,100 +7,129 @@ const store = _store
 
 test('Add category', () => {
   store.addCategory('Swimming');
-  expect(store.categories).toEqual(
+  expect(store.data.children).toEqual(
     [{
       id: 1,
       title: 'Swimming',
-      bookmarks: []
+      children: []
     }]
   );
-  expect(store.bookmarks).toEqual([]);
 
   store.addCategory('Bowling');
-  expect(store.categories).toEqual(
+  expect(store.data.children).toEqual(
     [{
       id: 1,
       title: 'Swimming',
-      bookmarks: [],
+      children: [],
     },
     {
       id: 2,
       title: 'Bowling',
-      bookmarks: [],
+      children: [],
     }]
   );
-  expect(store.bookmarks).toEqual([]);
 });
 
 test('Add bookmark', () => {
-  store.addBookmark('My pool', 'http://pool.com/', 1);
-  store.addBookmark('Bowling', 'http://bowling.com/', 2);
+  store.addBookmark(1, 'My pool', 'http://pool.com/');
+  store.addBookmark(2, 'Bowling', 'http://bowling.com/');
 
-  expect(store.categories).toEqual(
+  expect(store.data.children).toEqual(
     [{
       id: 1,
       title: 'Swimming',
-      bookmarks: [1],
+      children: [{
+        id: 3,
+        title: 'My pool',
+        url: 'http://pool.com/',
+      }],
     },
     {
       id: 2,
       title: 'Bowling',
-      bookmarks: [2],
-    }]
-  );
-  expect(store.bookmarks).toEqual(
-    [
-      {
-        id: 1,
-        title: 'My pool',
-        url: 'http://pool.com/',
-      },
-      {
-        id: 2,
+      children: [{
+        id: 4,
         title: 'Bowling',
         url: 'http://bowling.com/',
-      }
-    ]
+      }],
+    }]
   );
-});
-
-test('Get bookmarks for category', () => {
-  let result = store.getBookmarksFor(1);
-  expect(result).toEqual([{
-    id: 1,
-    title: 'My pool',
-    url: 'http://pool.com/',
-  }]);
-  result = store.getBookmarksFor(2);
-  expect(result).toEqual([{
-    id: 2,
-    title: 'Bowling',
-    url: 'http://bowling.com/',
-  }]);
-
 });
 
 test('Delete bookmark', () => {
-  store.deleteBookmark(1, 1);
-  expect(store.categories).toEqual(
+  store.deleteBookmark(3);
+  expect(store.data.children).toEqual(
     [{
       id: 1,
       title: 'Swimming',
-      bookmarks: [],
+      children: [],
     },
     {
       id: 2,
       title: 'Bowling',
-      bookmarks: [2],
-    }]
-  );
-  expect(store.bookmarks).toEqual(
-    [
-      {
-        id: 2,
+      children: [{
+        id: 4,
         title: 'Bowling',
         url: 'http://bowling.com/',
-      }
-    ]
+      }],
+    }]
   );
+});
+
+test('Find Node by Id', () => {
+  let result = store.findNodeById(store.data, 1);
+  expect(result).toEqual({
+    id: 1,
+    title: 'Swimming',
+    children: [],
+  });
+
+  result = store.findNodeById(store.data, 4);
+  expect(result).toEqual({
+    id: 4,
+    title: 'Bowling',
+    url: 'http://bowling.com/',
+  });
+});
+
+test('Find Parent Node by ID', () => {
+  let result = store.findParentNodeById(store.data, 4);
+  expect(result).toEqual({
+    id: 2,
+    title: 'Bowling',
+    children: [{
+      id: 4,
+      title: 'Bowling',
+      url: 'http://bowling.com/',
+    }],
+  });
+
+  result = store.findParentNodeById(store.data, 2);
+  expect(result).toEqual({
+    id: 0,
+    title: 'root',
+    children: [{
+      id: 1,
+      title: 'Swimming',
+      children: [],
+    },
+    {
+      id: 2,
+      title: 'Bowling',
+      children: [{
+        id: 4,
+        title: 'Bowling',
+        url: 'http://bowling.com/',
+      }],
+    }]
+  });
+});
+
+test('FindMaxId', () => {
+  let result = store.findMaxId(store.data);
+  expect(result).toEqual(4);
+
+  store.deleteBookmark(4);
+  result = store.findMaxId(store.data);
+  expect(result).toEqual(2);
 });

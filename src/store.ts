@@ -1,66 +1,105 @@
 import { reactive } from "vue";
-import type { Bookmark, Store, Category } from "./types";
-
-const localBookmarks: Array<Bookmark> = JSON.parse(localStorage.getItem("bookmarks") || '[]');
-const localCategories: Array<Category> = JSON.parse(localStorage.getItem("categories") || '[]');
+import type { Store, Category, Bookmark } from "./types";
 
 export const store: Store = reactive(
   {
-    bookmarks: localBookmarks,
-    categories: localCategories,
+    data: {
+      id: 0,
+      title: "root",
+      children: [] as Array<Category>,
+    },
 
     addCategory(title: string) {
-      const maxId = this.categories.length ? Math.max(...this.categories.map((el: Category) => { return el.id })) : 0;
-      const newCategory = {
-        id: maxId + 1,
+      const newId: number = this.findMaxId(this.data) + 1;
+
+      const newCategory: Category = {
+        id: newId,
         title: title,
-        bookmarks: [],
-      };
-      this.categories.push(newCategory);
-      localStorage.setItem("categories", JSON.stringify(this.categories));
+        children: [],
+      }
+
+      this.data.children.push(newCategory);
+      this.saveToLocalStore();
     },
 
-    getBookmarksFor(categoryId: number) {
-      const bookmarks: Array<Bookmark> = [];
-      const category: Category = this.categories.find((item: Category) => item.id === categoryId);
-      category.bookmarks.forEach((id: number) => {
-        const bkmk = this.bookmarks.find((item: Bookmark) => item.id === id);
-        bookmarks.push(bkmk);
-      });
-      return bookmarks;
-    },
-
-    addBookmark(title: string, url: string, categoryId: number) {
-      const maxId = this.bookmarks.length ? Math.max(...this.bookmarks.map((el: Bookmark) => { return el.id })) : 0;
+    addBookmark(nodeId: number, title: string, url: string) {
+      const newId: number = this.findMaxId(this.data) + 1;
       const newBookmark = {
-        id: maxId + 1,
+        id: newId,
         title: title,
         url: url,
       };
-      this.bookmarks.push(newBookmark);
 
-      const bookmarkCategory = this.categories.find((item: Category) => item.id === categoryId);
-      if (bookmarkCategory) {
-        bookmarkCategory.bookmarks.push(newBookmark.id);
-      }
-      localStorage.setItem("bookmarks", JSON.stringify(this.bookmarks));
-      localStorage.setItem("categories", JSON.stringify(this.categories));
+      const bookmarkCategory = this.findNodeById(this.data, nodeId);
+      if (bookmarkCategory && "children" in bookmarkCategory) {
+        bookmarkCategory.children.push(newBookmark);
+      };
+      this.saveToLocalStore();
     },
 
-    deleteBookmark(bookmarkId: number, categoryId: number) {
-      const bookmarkToDelete = this.bookmarks.findIndex((bookmark: Bookmark) => bookmark.id === bookmarkId);
+    deleteBookmark(bookmarkId: number) {
+      const bookmarkParent = this.findParentNodeById(this.data, bookmarkId);
+      if (bookmarkParent) {
+        const bookmark = this.findNodeById(bookmarkParent, bookmarkId);
+        if (bookmark) {
+          const bookmarkIndex = bookmarkParent.children.indexOf(bookmark);
+          bookmarkParent.children.splice(bookmarkIndex, 1);
+        };
+      };
+      this.saveToLocalStore();
+    },
 
-      if (bookmarkToDelete >= 0) {
-        this.bookmarks.splice(bookmarkToDelete, 1);
-        localStorage.setItem("bookmarks", JSON.stringify(this.bookmarks));
-      }
+    saveToLocalStore() {
+      localStorage.setItem("data", JSON.stringify(this.data));
+    },
 
-      const bookmarkCategory = this.categories.find((item: Category) => item.id === categoryId);
-      if (bookmarkCategory) {
-        const bookmarkIndex = bookmarkCategory.bookmarks.indexOf(bookmarkId);
-        bookmarkCategory.bookmarks.splice(bookmarkIndex, 1);
-        localStorage.setItem("categories", JSON.stringify(this.categories));
+    loadFromLocalStore() {
+      let localData = localStorage.getItem("data");
+      if (localData) {
+        this.data = JSON.parse(localData);
+      };
+    },
+
+    findMaxId(node: Category | Bookmark): number {
+      let maxId = node.id;
+      if ("children" in node) {
+        node.children.forEach((child) => {
+          maxId = Math.max(maxId, this.findMaxId(child));
+        });
       }
+      return maxId;
+    },
+
+    findNodeById(node: Category | Bookmark, id: number): Category | Bookmark | null {
+      if (node.id === id) {
+        return node;
+      }
+      if ("children" in node && node.children) {
+        for (let i = 0; i < node.children.length; i++) {
+          const foundNode = this.findNodeById(node.children[i], id);
+          if (foundNode) {
+            return foundNode;
+          }
+        }
+      }
+      return null;
+    },
+
+    findParentNodeById(node: Category | Bookmark, id: number): Category | null {
+      if ("children" in node) {
+        for (const child of node.children) {
+          if (child.id === id) {
+            return node;
+          }
+          const parent = this.findParentNodeById(child, id);
+          if (parent) {
+            return parent;
+          }
+        }
+      }
+      return null;
     },
   }
 );
+
+store.loadFromLocalStore();
