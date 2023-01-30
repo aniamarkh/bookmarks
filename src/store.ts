@@ -1,13 +1,6 @@
 import { reactive } from "vue";
 import type { Store, Category, Bookmark } from "./types";
 
-// const initDataStr = JSON.stringify({
-//   id: 0,
-//   title: "root",
-//   children: [],
-// });
-// const localData: Data = JSON.parse(localStorage.getItem("data") || initDataStr);
-
 export const store: Store = reactive(
   {
     data: {

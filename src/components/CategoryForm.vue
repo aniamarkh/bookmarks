@@ -30,7 +30,7 @@ const onSubmit = (): void => {
           type="submit"
           value="Add a new category"
           :disabled="isInvalidInput()"
-          @click="onSubmit"
+          @click.prevent="onSubmit"
         />
       </form>
     </div>

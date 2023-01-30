@@ -5,9 +5,6 @@ import Form from "./BookmarkForm.vue";
 const props = defineProps({
   category: Object,
 });
-
-
-
 </script>
 
 <template>
