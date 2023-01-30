@@ -24,5 +24,5 @@ export interface Store {
   findNodeById(node: Category | Bookmark, id: number): Category | Bookmark | null;
   addCategory(title: string): void;
   addBookmark(nodeId: number, title: string, url: string): void;
-  // deleteBookmark(bookmarkId: number): void;
+  deleteBookmark(bookmarkId: number): void;
 }

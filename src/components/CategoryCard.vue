@@ -18,7 +18,7 @@ const props = defineProps({
       <button class="bookmark-btn" @click="editBookmark(bookmark.id)">
         <img src="./assets/edit.svg" alt="edit" />
       </button>
-      <button class="bookmark-btn" @click="store.deleteBookmark(bookmark.id, category.id)">
+      <button class="bookmark-btn" @click="store.deleteBookmark(bookmark.id)">
         <img src="./assets/delete.svg" alt="delete" />
       </button>
     </li>
