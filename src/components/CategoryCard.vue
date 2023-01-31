@@ -2,6 +2,7 @@
 import Form from "./BookmarkForm.vue";
 import BookmarkBody from "./BookmarkBody.vue";
 import CategoryTitle from "./CategoryTitle.vue";
+import SubCategory from "./SubcategoryBody.vue";
 
 const props = defineProps({
   category: Object,
@@ -13,7 +14,7 @@ const props = defineProps({
   <ul>
     <li v-for="(child, index) in category.children" :key="index">
       <BookmarkBody v-if="!child.children" :bookmark="child" />
-      <!-- <SubCategory v-if="child.children.length" :subcategory="child" /> -->
+      <SubCategory v-if="child.children" :subcategory="child" />
     </li>
   </ul>
 

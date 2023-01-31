@@ -143,6 +143,7 @@ h3 {
 }
 
 a {
+  padding-left: 21px;
   text-decoration: none;
   overflow:hidden;
   white-space: nowrap; 
