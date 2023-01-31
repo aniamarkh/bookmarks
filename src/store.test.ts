@@ -56,8 +56,8 @@ test('Add bookmark', () => {
   );
 });
 
-test('Delete bookmark', () => {
-  store.deleteBookmark(3);
+test('Delete node', () => {
+  store.deleteNode(3);
   expect(store.data.children).toEqual(
     [{
       id: 1,
@@ -129,7 +129,78 @@ test('FindMaxId', () => {
   let result = store.findMaxId(store.data);
   expect(result).toEqual(4);
 
-  store.deleteBookmark(4);
+  store.deleteNode(4);
   result = store.findMaxId(store.data);
   expect(result).toEqual(2);
 });
+
+test('Edit Bookmark', () => {
+  store.addBookmark(1, 'My pool', 'http://pool.com/');
+  store.addBookmark(2, 'Bowling', 'http://bowling.com/');
+
+  store.editBookmark(3, 'My fav pool', 'http://favpool.com/');
+  store.editBookmark(4, 'My fav bowling', 'http://bowling.com/');
+
+  expect(store.data.children).toEqual(
+    [{
+      id: 1,
+      title: 'Swimming',
+      children: [{
+        id: 3,
+        title: 'My fav pool',
+        url: 'http://favpool.com/',
+      }],
+    },
+    {
+      id: 2,
+      title: 'Bowling',
+      children: [{
+        id: 4,
+        title: 'My fav bowling',
+        url: 'http://bowling.com/',
+      }],
+    }]
+  );
+});
+
+test('Edit Category', () => {
+  store.editCategory(1, 'Sport');
+  store.editCategory(2, 'Fun');
+
+  expect(store.data.children).toEqual(
+    [{
+      id: 1,
+      title: 'Sport',
+      children: [{
+        id: 3,
+        title: 'My fav pool',
+        url: 'http://favpool.com/',
+      }],
+    },
+    {
+      id: 2,
+      title: 'Fun',
+      children: [{
+        id: 4,
+        title: 'My fav bowling',
+        url: 'http://bowling.com/',
+      }],
+    }]
+  );
+});
+
+test('Delete Category', () => {
+  store.deleteNode(2);
+  expect(store.data.children).toEqual(
+    [{
+      id: 1,
+      title: 'Sport',
+      children: [{
+        id: 3,
+        title: 'My fav pool',
+        url: 'http://favpool.com/',
+      }],
+    }]
+  );
+})
+
