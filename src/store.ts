@@ -21,7 +21,7 @@ export const store: Store = reactive(
       this.saveToLocalStore();
     },
 
-    addCategory(title: string): void {
+    addCategory(parentId: number, title: string): void {
       const newId: number = this.findMaxId(this.data) + 1;
 
       const newCategory: Category = {
@@ -30,8 +30,11 @@ export const store: Store = reactive(
         children: [],
       }
 
-      this.data.children.push(newCategory);
-      this.saveToLocalStore();
+      const parentNode = this.findNodeById(this.data, parentId);
+      if (parentNode && "children" in parentNode) {
+        parentNode.children.push(newCategory);
+        this.saveToLocalStore();
+      }
     },
 
     editCategory(categoryId: number, newTitle: string): void {

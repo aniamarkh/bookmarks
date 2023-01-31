@@ -8,15 +8,29 @@ const props = defineProps({
 });
 
 const input_category: Ref<string> = ref(props.category.title);
-const isInvalidInput = (): boolean => {
-  return input_category.value.trim() === "";
+const input_subcategory: Ref<string> = ref("");
+
+const isInvalidInput = (formType: string): boolean => {
+  if (formType === "subcategory") {
+    return input_subcategory.value.trim() === "";
+  }
+  if (formType === "editcategory") {
+    return input_category.value.trim() === "";
+  }
 };
 
 const showCatEditForm = ref(false);
+const showSubCategoryForm = ref(false);
 
-const onSubmit = () => {
+const editCategory = () => {
   store.editCategory(props.category.id, input_category.value);
   showCatEditForm.value = false;
+}
+
+const addSubCategory = () => {
+  store.addCategory(props.category.id, input_subcategory.value);
+  input_subcategory.value = "";
+  showSubCategoryForm.value = false;
 }
 
 </script>
@@ -24,11 +38,10 @@ const onSubmit = () => {
 <template>
   <div class="category-title">
       <h3 v-if="!showCatEditForm">{{ category.title }}</h3>
-      <form v-if="showCatEditForm" class="category-edit_form" @submit.prevent="onSubmit">
-        <input type="text" placeholder="new category title" v-model="input_category" />
-        <input type="submit" value="edit" :disabled="isInvalidInput()" />
-      </form>
       <div v-if="!showCatEditForm" class="category-btns">
+        <button class="category-btn" @click="showSubCategoryForm = !showSubCategoryForm">
+          <img src="./assets/add.svg" alt="edit" />
+        </button>
         <button class="category-btn" @click="showCatEditForm = !showCatEditForm">
           <img src="./assets/edit.svg" alt="edit" />
         </button>
@@ -36,5 +49,15 @@ const onSubmit = () => {
           <img src="./assets/delete.svg" alt="delete" />
         </button>
       </div>
+  </div>
+  <div class="category-forms">
+    <form v-if="showCatEditForm" class="category-edit_form" @submit.prevent="editCategory">
+      <input type="text" placeholder="new category title" v-model="input_category" />
+      <input type="submit" value="edit" :disabled="isInvalidInput('editcategory')" />
+    </form>
+    <form v-if="showSubCategoryForm" class="sub-category_form" @submit.prevent="addSubCategory">
+      <input type="text" placeholder="category title" v-model="input_subcategory" />
+      <input type="submit" value="add category" :disabled="isInvalidInput('subcategory')" />
+    </form>
   </div>
 </template>

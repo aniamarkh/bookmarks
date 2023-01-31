@@ -12,7 +12,7 @@ const isInvalidInput = (): boolean => {
 
 const onSubmit = (): void => {
   showCategoryForm.value = !showCategoryForm.value;
-  store.addCategory(input_category.value);
+  store.addCategory(0, input_category.value);
   input_category.value = "";
 };
 </script>

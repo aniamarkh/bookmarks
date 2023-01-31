@@ -11,8 +11,9 @@ const props = defineProps({
 <template>
   <CategoryTitle :category="category"/>
   <ul>
-    <li v-for="(bookmark, index) in category.children" :key="index">
-      <BookmarkBody :bookmark="bookmark"/>
+    <li v-for="(child, index) in category.children" :key="index">
+      <BookmarkBody v-if="!child.children" :bookmark="child" />
+      <!-- <SubCategory v-if="child.children.length" :subcategory="child" /> -->
     </li>
   </ul>
 

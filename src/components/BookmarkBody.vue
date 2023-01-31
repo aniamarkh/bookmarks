@@ -43,14 +43,9 @@ const onSubmit = (): void => {
       <img src="./assets/delete.svg" alt="delete" />
     </button>
   </div>
-    <form class="bookmark-edit_form" v-if="showEditForm" 
-    @submit.prevent="onSubmit">
-      <input type="text" placeholder="new title" v-model="input_newTitle"/>
-      <input type="url" placeholder="new url" v-model="input_newUrl"/>
-      <input
-        type="submit"
-        value="Edit bookmark"
-        :disabled="isInvalidInputs()"
-      />
-    </form>
+  <form class="bookmark-edit_form" v-if="showEditForm" @submit.prevent="onSubmit">
+    <input type="text" placeholder="new title" v-model="input_newTitle"/>
+    <input type="url" placeholder="new url" v-model="input_newUrl"/>
+    <input type="submit" value="Edit bookmark" :disabled="isInvalidInputs()" />
+  </form>
 </template>
