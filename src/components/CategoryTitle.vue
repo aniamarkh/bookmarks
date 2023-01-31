@@ -24,7 +24,7 @@ const onSubmit = () => {
 <template>
   <div class="category-title">
       <h3 v-if="!showCatEditForm">{{ category.title }}</h3>
-      <form v-if="showCatEditForm" class="bookmark-edit_form" @submit.prevent="onSubmit">
+      <form v-if="showCatEditForm" class="category-edit_form" @submit.prevent="onSubmit">
         <input type="text" placeholder="new category title" v-model="input_category" />
         <input type="submit" value="edit" :disabled="isInvalidInput()" />
       </form>

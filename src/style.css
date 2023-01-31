@@ -198,6 +198,14 @@ a {
 
 .bookmark-edit_form {
   display: flex;
+  flex-direction: column;
+  gap: 4px;
+  height:auto;
+  margin-bottom: 0.5rem;
+}
+
+.category-edit_form {
+  display: flex;
   flex-direction: row;
   gap: 4px;
   height:21px;
