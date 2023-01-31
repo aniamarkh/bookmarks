@@ -42,6 +42,10 @@ html {
 }
 
 li {
+  list-style-type: none;
+}
+
+.bookmark-wrapper {
   display: flex;
   flex-direction: row;
   gap: 4px;

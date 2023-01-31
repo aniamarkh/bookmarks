@@ -9,7 +9,7 @@ export const store: Store = reactive(
       children: [] as Array<Category>,
     },
 
-    addCategory(title: string) {
+    addCategory(title: string): void {
       const newId: number = this.findMaxId(this.data) + 1;
 
       const newCategory: Category = {
@@ -22,7 +22,7 @@ export const store: Store = reactive(
       this.saveToLocalStore();
     },
 
-    addBookmark(nodeId: number, title: string, url: string) {
+    addBookmark(nodeId: number, title: string, url: string): void {
       const newId: number = this.findMaxId(this.data) + 1;
       const newBookmark = {
         id: newId,
@@ -37,7 +37,7 @@ export const store: Store = reactive(
       this.saveToLocalStore();
     },
 
-    deleteBookmark(bookmarkId: number) {
+    deleteBookmark(bookmarkId: number): void {
       const bookmarkParent = this.findParentNodeById(this.data, bookmarkId);
       if (bookmarkParent) {
         const bookmark = this.findNodeById(bookmarkParent, bookmarkId);
@@ -49,11 +49,20 @@ export const store: Store = reactive(
       this.saveToLocalStore();
     },
 
-    saveToLocalStore() {
+    editBookmark(bookmarkId: number, newTitle: string, newUrl: string): void {
+      const bookmarkNode = this.findNodeById(this.data, bookmarkId);
+      if (bookmarkNode && "url" in bookmarkNode) {
+        bookmarkNode.title = newTitle;
+        bookmarkNode.url = newUrl;
+      };
+      this.saveToLocalStore();
+    },
+
+    saveToLocalStore(): void {
       localStorage.setItem("data", JSON.stringify(this.data));
     },
 
-    loadFromLocalStore() {
+    loadFromLocalStore(): void {
       let localData = localStorage.getItem("data");
       if (localData) {
         this.data = JSON.parse(localData);

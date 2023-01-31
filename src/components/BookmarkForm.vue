@@ -37,14 +37,13 @@ const onSubmit = (): void => {
 <template>
   <Transition>
     <div class="form-wrapper" v-if="showBookmarkForm">
-      <form class="bookmark_form" @submit.prevent="addBookmark">
+      <form class="bookmark_form" @submit.prevent="onSubmit">
         <input type="text" placeholder="title" v-model="input_title" />
         <input type="url" placeholder="url" v-model="input_url" />
         <input
           type="submit"
           value="Add a bookmark"
           :disabled="isInvalidInputs()"
-          @click="onSubmit"
         />
       </form>
     </div>
