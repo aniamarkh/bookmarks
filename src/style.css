@@ -52,7 +52,8 @@ li {
   justify-content: flex-start;
   align-items: center;
   height: 20px;
-  width: 250px;
+  width: auto;
+  padding-left: 6px;
 }
 
 .bookmark-btn {
@@ -64,7 +65,7 @@ li {
   display: none;
 }
 
-li:hover .bookmark-btn {
+.bookmark-wrapper:hover .bookmark-btn {
   display: block;
 }
 
@@ -143,7 +144,6 @@ h3 {
 }
 
 a {
-  padding-left: 21px;
   text-decoration: none;
   overflow:hidden;
   white-space: nowrap; 

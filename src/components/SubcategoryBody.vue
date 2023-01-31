@@ -2,18 +2,23 @@
 import { ref } from "vue";
 import type { Ref } from "vue";
 import { store } from "../store";
+import BookmarkBody from "./BookmarkBody.vue";
+import SubCategory from "./SubcategoryBody.vue";
+import BookmarkForm from "./BookmarkForm.vue";
 
 const props = defineProps({
   subcategory: Object,
 });
-const input_category: Ref<string> = ref(props.subcategory.title);
-const isOpen: Ref<boolean> = ref(false);
+// const input_category: Ref<string> = ref(props.subcategory.title);
 
+const isOpen: Ref<boolean> = ref(false);
+const showAddBookmarkForm: Ref<boolean> = ref(false);
+const closeForm = () => showAddBookmarkForm.value = false;
 </script>
 
 <template>
-  <div class="subcategory-wrapper" @click="isOpen=!isOpen">
-    <h4 class="subcategory-title">
+  <div class="subcategory-wrapper">
+    <h4 class="subcategory-title" @click="isOpen=!isOpen">
       <div v-if="!isOpen" class="icon">
         <img src="./assets/arrow-right.svg" alt="close"/>
       </div>
@@ -24,17 +29,23 @@ const isOpen: Ref<boolean> = ref(false);
     </h4>
     <div class="subcategory-btns">
       <button class="category-btn">
-        <img src="./assets/add.svg" alt="edit" />
+        <img src="./assets/add.svg" alt="add" @click="showAddBookmarkForm=!showAddBookmarkForm"/>
       </button>
-      <button class="category-btn">
+      <!-- <button class="category-btn">
         <img src="./assets/edit.svg" alt="edit" />
-      </button>
+      </button> -->
       <button class="category-btn" @click="store.deleteNode(subcategory.id)">
         <img src="./assets/delete.svg" alt="delete" />
       </button>
     </div>
   </div>
-  
+  <ul v-if="isOpen">
+    <li v-for="(child, index) in subcategory.children" :key="index">
+      <BookmarkBody v-if="!child.children" :bookmark="child" />
+      <SubCategory v-if="child.children" :subcategory="child" />
+    </li>
+  </ul>
+  <BookmarkForm v-if="showAddBookmarkForm" :categoryId="subcategory.id" @close-form="closeForm"/>
   <!-- <form v-if="showEditForm" class="category-edit_form" @submit.prevent="editCategory">
     <input type="text" placeholder="new category title" v-model="input_category" />
     <input type="submit" value="edit" :disabled="isInvalidInput('editcategory')" />
@@ -48,6 +59,7 @@ const isOpen: Ref<boolean> = ref(false);
   justify-content: space-between;
   height: 21px;
   cursor: pointer;
+  width: 250px;
 }
 
 .subcategory-title {
@@ -75,7 +87,11 @@ const isOpen: Ref<boolean> = ref(false);
 }
 
 .icon img {
-  width: 21px;
-  heigth: 21px;
+  width: 19px;
+  heigth: 19px;
+}
+
+ul {
+  padding-left: 21px;
 }
 </style>
