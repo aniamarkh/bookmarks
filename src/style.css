@@ -137,7 +137,8 @@ h3 {
   text-align: left;
   text-transform: uppercase;
   overflow:hidden;
-  white-space: nowrap; 
+  white-space: nowrap;
+  width: 250px;
   -webkit-mask-image: linear-gradient(90deg, var(--dark-gray) 60%, transparent);
 }
 
@@ -158,4 +159,51 @@ a {
 .v-enter-from,
 .v-leave-to {
   opacity: 0;
+}
+
+.bookmark_form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.category-title {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.category-btns {
+  display: none;
+  flex-direction: row;
+  gap: 4px;
+}
+
+.category-title:hover .category-btns {
+  display: flex;
+}
+
+.category-btn {
+  background: none;
+	color: inherit;
+	border: none;
+  cursor: pointer;
+  align-content: center;
+}
+
+.category-btn img {
+  height: 20px;
+  fill: var(--light-gray);
+}
+
+.bookmark-edit_form {
+  display: flex;
+  flex-direction: row;
+  gap: 4px;
+  height:21px;
+  margin-bottom: 0.5rem;
+}
+
+.bookmark-edit_form:hover .category-btns {
+  display: none;
 }

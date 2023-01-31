@@ -18,9 +18,10 @@ export interface Data {
 
 export interface Store {
   data: Category;
+  deleteNode(nodeId: number): void;
   addCategory(title: string): void;
+  editCategory(categoryId: number, newTitle: string): void;
   addBookmark(nodeId: number, title: string, url: string): void;
-  deleteBookmark(bookmarkId: number): void;
   editBookmark(bookmarkId: number, newTitle: string, newUrl: string): void;
   saveToLocalStore(): void;
   loadFromLocalStore(): void;

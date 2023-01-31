@@ -18,36 +18,13 @@ const onSubmit = (): void => {
 </script>
 
 <template>
-  <Transition>
     <div class="form-wrapper" v-if="showCategoryForm">
-      <form class="bookmark_form" @submit="addBookmark">
-        <input
-          type="text"
-          placeholder="category title"
-          v-model="input_category"
-        />
-        <input
-          type="submit"
-          value="Add a new category"
-          :disabled="isInvalidInput()"
-          @click.prevent="onSubmit"
-        />
+      <form class="bookmark_form" @submit.prevent="onSubmit">
+        <input type="text" placeholder="category title" v-model="input_category"/>
+        <input type="submit" value="Add a new category" :disabled="isInvalidInput()"/>
       </form>
     </div>
-  </Transition>
-    <button
-      v-if="!showCategoryForm"
-      class="new-category-btn"
-      @click="showCategoryForm = !showCategoryForm"
-    >
+    <button v-if="!showCategoryForm" class="new-category-btn" @click="showCategoryForm = !showCategoryForm">
       <img src="./assets/add.svg" alt="add bookmark" />
     </button>
 </template>
-
-<style scoped>
-.bookmark_form {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-</style>

@@ -35,7 +35,6 @@ const onSubmit = (): void => {
 </script>
 
 <template>
-  <Transition>
     <div class="form-wrapper" v-if="showBookmarkForm">
       <form class="bookmark_form" @submit.prevent="onSubmit">
         <input type="text" placeholder="title" v-model="input_title" />
@@ -47,21 +46,7 @@ const onSubmit = (): void => {
         />
       </form>
     </div>
-  </Transition>
-    <button
-      class="add-bookmark-btn"
-      @click="showBookmarkForm = !showBookmarkForm"
-      v-if="!showBookmarkForm"
-    >
+    <button class="add-bookmark-btn" @click="showBookmarkForm = !showBookmarkForm" v-if="!showBookmarkForm">
       <img src="./assets/add.svg" alt="add bookmark" />
     </button>
-
 </template>
-
-<style scoped>
-.bookmark_form {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-</style>

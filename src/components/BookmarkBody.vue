@@ -34,16 +34,15 @@ const onSubmit = (): void => {
 </script>
 
 <template>
-  <div class="bookmark-wrapper">
+  <div class="bookmark-wrapper" v-if="!showEditForm">
     <a :href="bookmark.url" target="_blank">{{ bookmark.title }}</a>
     <button class="bookmark-btn" @click="showEditForm = !showEditForm">
       <img src="./assets/edit.svg" alt="edit" />
     </button>
-    <button class="bookmark-btn" @click="store.deleteBookmark(bookmark.id)">
+    <button class="bookmark-btn" @click="store.deleteNode(bookmark.id)">
       <img src="./assets/delete.svg" alt="delete" />
     </button>
   </div>
-  <Transition>
     <form class="bookmark-edit_form" v-if="showEditForm" 
     @submit.prevent="onSubmit">
       <input type="text" placeholder="new title" v-model="input_newTitle"/>
@@ -54,5 +53,4 @@ const onSubmit = (): void => {
         :disabled="isInvalidInputs()"
       />
     </form>
-  </Transition>
 </template>

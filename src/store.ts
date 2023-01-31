@@ -9,6 +9,18 @@ export const store: Store = reactive(
       children: [] as Array<Category>,
     },
 
+    deleteNode(nodeId: number) {
+      const parentNode = this.findParentNodeById(this.data, nodeId);
+      if (parentNode) {
+        const nodeToDelete = this.findNodeById(this.data, nodeId);
+        if (nodeToDelete) {
+          const nodeToDeleteIndex = parentNode.children.indexOf(nodeToDelete);
+          parentNode.children.splice(nodeToDeleteIndex, 1);
+        };
+      };
+      this.saveToLocalStore();
+    },
+
     addCategory(title: string): void {
       const newId: number = this.findMaxId(this.data) + 1;
 
@@ -19,6 +31,14 @@ export const store: Store = reactive(
       }
 
       this.data.children.push(newCategory);
+      this.saveToLocalStore();
+    },
+
+    editCategory(categoryId: number, newTitle: string): void {
+      const categoryNode = this.findNodeById(this.data, categoryId);
+      if (categoryNode) {
+        categoryNode.title = newTitle;
+      }
       this.saveToLocalStore();
     },
 
@@ -33,18 +53,6 @@ export const store: Store = reactive(
       const bookmarkCategory = this.findNodeById(this.data, nodeId);
       if (bookmarkCategory && "children" in bookmarkCategory) {
         bookmarkCategory.children.push(newBookmark);
-      };
-      this.saveToLocalStore();
-    },
-
-    deleteBookmark(bookmarkId: number): void {
-      const bookmarkParent = this.findParentNodeById(this.data, bookmarkId);
-      if (bookmarkParent) {
-        const bookmark = this.findNodeById(bookmarkParent, bookmarkId);
-        if (bookmark) {
-          const bookmarkIndex = bookmarkParent.children.indexOf(bookmark);
-          bookmarkParent.children.splice(bookmarkIndex, 1);
-        };
       };
       this.saveToLocalStore();
     },
