@@ -7,7 +7,9 @@ const props = defineProps({
   categoryId: Number,
 });
 
-const showBookmarkForm = ref(false);
+const emit = defineEmits(["close-form"]);
+const sendCloseFormEvent = () => emit("close-form");
+
 const input_title: Ref<string> = ref("");
 const input_url: Ref<string> = ref("");
 
@@ -27,15 +29,16 @@ const isInvalidInputs = (): boolean => {
 };
 
 const onSubmit = (): void => {
-  showBookmarkForm.value = !showBookmarkForm.value;
   store.addBookmark(props.categoryId, input_title.value, input_url.value);
   input_title.value = "";
   input_url.value = "";
+    sendCloseFormEvent();
+
 };
 </script>
 
 <template>
-    <div class="form-wrapper" v-if="showBookmarkForm">
+    <div class="form-wrapper">
       <form class="bookmark_form" @submit.prevent="onSubmit">
         <input type="text" placeholder="title" v-model="input_title" />
         <input type="url" placeholder="url" v-model="input_url" />
@@ -46,7 +49,4 @@ const onSubmit = (): void => {
         />
       </form>
     </div>
-    <button class="add-bookmark-btn" @click="showBookmarkForm = !showBookmarkForm" v-if="!showBookmarkForm">
-      <img src="./assets/add.svg" alt="add bookmark" />
-    </button>
 </template>
