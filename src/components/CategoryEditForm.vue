@@ -11,7 +11,6 @@ const emit = defineEmits(["close-form"]);
 const sendCloseFormEvent = () => emit("close-form");
 
 const input_category: Ref<string> = ref(props.category.title);
-const showEditCategoryForm = ref(true);
 
 const isInvalidInput = (): boolean => {
   return input_category.value.trim() === "";
@@ -26,7 +25,7 @@ const editCategory = () => {
 
 
 <template>
-  <form v-if="showEditCategoryForm" class="category-edit_form" @submit.prevent="editCategory">
+  <form class="category-edit_form" @submit.prevent="editCategory">
     <input type="text" placeholder="new category title" v-model="input_category" />
     <input type="submit" value="edit" :disabled="isInvalidInput()" />
   </form>

@@ -2,6 +2,12 @@
 import { store } from "../store";
 import CategoryForm from "./CategoryForm.vue";
 import CategoryCard from "./CategoryCard.vue";
+import { ref } from "vue";
+import type { Ref } from "vue";
+
+const showCategoryForm: Ref<boolean> = ref(false);
+const closeCategoryForm = () => showCategoryForm.value = false;
+
 </script>
 
 <template>
@@ -14,7 +20,10 @@ import CategoryCard from "./CategoryCard.vue";
       <CategoryCard :category="category" />
     </div>
     <div class="new-category">
-        <CategoryForm />
+        <CategoryForm v-if="showCategoryForm" @close-form="closeCategoryForm"/>
+        <button v-if="!showCategoryForm" class="new-category-btn" @click="showCategoryForm = !showCategoryForm">
+          <img src="./assets/add.svg" alt="add bookmark" />
+        </button>
     </div>
   </div>
 </template>
