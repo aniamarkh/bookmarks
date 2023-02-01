@@ -32,8 +32,7 @@ const onSubmit = (): void => {
   store.addBookmark(props.categoryId, input_title.value, input_url.value);
   input_title.value = "";
   input_url.value = "";
-    sendCloseFormEvent();
-
+  sendCloseFormEvent();
 };
 </script>
 

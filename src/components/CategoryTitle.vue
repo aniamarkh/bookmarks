@@ -2,6 +2,7 @@
 import { store } from "../store";
 import { ref } from "vue";
 import type { Ref } from "vue";
+import CategoryEditForm from "./CategoryEditForm.vue"
 
 const props = defineProps({
   category: Object,
@@ -22,10 +23,7 @@ const isInvalidInput = (formType: string): boolean => {
 const showCatEditForm = ref(false);
 const showSubCategoryForm = ref(false);
 
-const editCategory = () => {
-  store.editCategory(props.category.id, input_category.value);
-  showCatEditForm.value = false;
-}
+const closeEditCategoryForm = () => showCatEditForm.value = false;
 
 const addSubCategory = () => {
   store.addCategory(props.category.id, input_subcategory.value);
@@ -51,10 +49,7 @@ const addSubCategory = () => {
       </div>
   </div>
   <div class="category-forms">
-    <form v-if="showCatEditForm" class="category-edit_form" @submit.prevent="editCategory">
-      <input type="text" placeholder="new category title" v-model="input_category" />
-      <input type="submit" value="edit" :disabled="isInvalidInput('editcategory')" />
-    </form>
+    <CategoryEditForm v-if="showCatEditForm" :category="category" @close-form="closeEditCategoryForm"/>
     <form v-if="showSubCategoryForm" class="sub-category_form" @submit.prevent="addSubCategory">
       <input type="text" placeholder="category title" v-model="input_subcategory" />
       <input type="submit" value="add category" :disabled="isInvalidInput('subcategory')" />
