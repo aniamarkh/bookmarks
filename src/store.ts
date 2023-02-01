@@ -9,7 +9,19 @@ export const store: Store = reactive(
       children: [] as Array<Category>,
     },
 
-    addCategory(title: string) {
+    deleteNode(nodeId: number) {
+      const parentNode = this.findParentNodeById(this.data, nodeId);
+      if (parentNode) {
+        const nodeToDelete = this.findNodeById(this.data, nodeId);
+        if (nodeToDelete) {
+          const nodeToDeleteIndex = parentNode.children.indexOf(nodeToDelete);
+          parentNode.children.splice(nodeToDeleteIndex, 1);
+        };
+      };
+      this.saveToLocalStore();
+    },
+
+    addCategory(parentId: number, title: string): void {
       const newId: number = this.findMaxId(this.data) + 1;
 
       const newCategory: Category = {
@@ -18,11 +30,22 @@ export const store: Store = reactive(
         children: [],
       }
 
-      this.data.children.push(newCategory);
+      const parentNode = this.findNodeById(this.data, parentId);
+      if (parentNode && "children" in parentNode) {
+        parentNode.children.push(newCategory);
+        this.saveToLocalStore();
+      }
+    },
+
+    editCategory(categoryId: number, newTitle: string): void {
+      const categoryNode = this.findNodeById(this.data, categoryId);
+      if (categoryNode) {
+        categoryNode.title = newTitle;
+      }
       this.saveToLocalStore();
     },
 
-    addBookmark(nodeId: number, title: string, url: string) {
+    addBookmark(nodeId: number, title: string, url: string): void {
       const newId: number = this.findMaxId(this.data) + 1;
       const newBookmark = {
         id: newId,
@@ -37,23 +60,20 @@ export const store: Store = reactive(
       this.saveToLocalStore();
     },
 
-    deleteBookmark(bookmarkId: number) {
-      const bookmarkParent = this.findParentNodeById(this.data, bookmarkId);
-      if (bookmarkParent) {
-        const bookmark = this.findNodeById(bookmarkParent, bookmarkId);
-        if (bookmark) {
-          const bookmarkIndex = bookmarkParent.children.indexOf(bookmark);
-          bookmarkParent.children.splice(bookmarkIndex, 1);
-        };
+    editBookmark(bookmarkId: number, newTitle: string, newUrl: string): void {
+      const bookmarkNode = this.findNodeById(this.data, bookmarkId);
+      if (bookmarkNode && "url" in bookmarkNode) {
+        bookmarkNode.title = newTitle;
+        bookmarkNode.url = newUrl;
       };
       this.saveToLocalStore();
     },
 
-    saveToLocalStore() {
+    saveToLocalStore(): void {
       localStorage.setItem("data", JSON.stringify(this.data));
     },
 
-    loadFromLocalStore() {
+    loadFromLocalStore(): void {
       let localData = localStorage.getItem("data");
       if (localData) {
         this.data = JSON.parse(localData);

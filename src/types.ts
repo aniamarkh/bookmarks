@@ -18,9 +18,11 @@ export interface Data {
 
 export interface Store {
   data: Category;
-  addCategory(title: string): void;
+  deleteNode(nodeId: number): void;
+  addCategory(parentId: number, title: string): void;
+  editCategory(categoryId: number, newTitle: string): void;
   addBookmark(nodeId: number, title: string, url: string): void;
-  deleteBookmark(bookmarkId: number): void;
+  editBookmark(bookmarkId: number, newTitle: string, newUrl: string): void;
   saveToLocalStore(): void;
   loadFromLocalStore(): void;
   findMaxId(node: Category): number;
