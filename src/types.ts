@@ -2,6 +2,7 @@ export interface Bookmark {
   id: number;
   title: string;
   url: string;
+  favicon: string;
 }
 
 export interface Category {
@@ -28,4 +29,5 @@ export interface Store {
   findMaxId(node: Category): number;
   findNodeById(node: Category | Bookmark, id: number): Category | Bookmark | null;
   findParentNodeById(node: Category | Bookmark, id: number): Category | null;
+  getFaviconLink(url: string): Promise<string>;
 }

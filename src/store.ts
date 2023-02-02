@@ -45,15 +45,17 @@ export const store: Store = reactive(
       this.saveToLocalStore();
     },
 
-    addBookmark(nodeId: number, title: string, url: string): void {
+    async addBookmark(nodeId: number, title: string, url: string): Promise<void> {
       const newId: number = this.findMaxId(this.data) + 1;
+      const bookmarkCategory = this.findNodeById(this.data, nodeId);
+      const faviconLink = await this.getFaviconLink(url);
       const newBookmark = {
         id: newId,
         title: title,
         url: url,
+        favicon: faviconLink,
       };
 
-      const bookmarkCategory = this.findNodeById(this.data, nodeId);
       if (bookmarkCategory && "children" in bookmarkCategory) {
         bookmarkCategory.children.push(newBookmark);
       };
@@ -119,6 +121,24 @@ export const store: Store = reactive(
       }
       return null;
     },
+
+    async getFaviconLink(url: string): Promise<string> {
+      let domain = new URL(url).hostname;
+      if (domain.startsWith("www.")) {
+        domain = domain.slice(4);
+      }
+      console.log(domain);
+      try {
+        const response = await fetch(`https://favicongrabber.com/api/grab/${domain}`);
+        const data = await response.json() as { icons: { type: string; src: string; }[]; };
+        const favicon = data.icons[0].src;
+        console.log(favicon);
+        return favicon;
+      } catch (error) {
+        console.error("There was a problem with the fetch operation:", error);
+        return "";
+      }
+    }
   }
 );
 
