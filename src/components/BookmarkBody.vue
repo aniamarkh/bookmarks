@@ -35,6 +35,7 @@ const onSubmit = (): void => {
 
 <template>
   <div class="bookmark-wrapper" v-if="!showEditForm">
+    <img class="favicon" v-bind:src="bookmark.favicon" />
     <a :href="bookmark.url" target="_blank">{{ bookmark.title }}</a>
     <button class="bookmark-btn" @click="showEditForm = !showEditForm">
       <img src="./assets/edit.svg" alt="edit" />
@@ -49,3 +50,11 @@ const onSubmit = (): void => {
     <input type="submit" value="Edit bookmark" :disabled="isInvalidInputs()" />
   </form>
 </template>
+
+<style scoped> 
+.favicon {
+  width: 18px;
+  height: 18px;
+  margin-right: 5px;
+}
+</style>
