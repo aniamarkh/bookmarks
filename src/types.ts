@@ -29,5 +29,5 @@ export interface Store {
   findMaxId(node: Category): number;
   findNodeById(node: Category | Bookmark, id: number): Category | Bookmark | null;
   findParentNodeById(node: Category | Bookmark, id: number): Category | null;
-  getFaviconLink(url: string): Promise<string>;
+  getFaviconLink(url: string, bookmark: Bookmark): void;
 }

@@ -54,7 +54,6 @@ const onSubmit = (): void => {
 <style scoped> 
 .favicon {
   width: 18px;
-  height: 18px;
   margin-right: 5px;
 }
 </style>
