@@ -6,6 +6,8 @@ import BookmarkBody from "./BookmarkBody.vue";
 import SubCategory from "./SubcategoryBody.vue";
 import BookmarkForm from "./BookmarkForm.vue";
 import CategoryEditForm from "./CategoryEditForm.vue";
+import Draggable from "vuedraggable";
+
 
 const props = defineProps({
   subcategory: Object,
@@ -46,12 +48,19 @@ const closeEditCategoryForm = () => showEditCategoryForm.value = false;
 
   <CategoryEditForm v-if="showEditCategoryForm" :category="subcategory" @close-form="closeEditCategoryForm"/>
 
-  <ul v-if="isOpen">
-    <li v-for="(child, index) in subcategory.children" :key="index">
-      <BookmarkBody v-if="!child.children" :bookmark="child" />
-      <SubCategory v-if="child.children" :subcategory="child" />
-    </li>
-  </ul>
+  <Draggable
+    class="subcat-items"
+    :list="subcategory.children" 
+    group="bookmarks"
+    item-key="id"
+    @end="store.saveToLocalStore()">
+    <template #item="{element}">
+      <div class="subcat-item" v-if="isOpen">
+        <BookmarkBody v-if="!element.children" :bookmark="element" />
+        <SubCategory v-if="element.children" :subcategory="element" />
+      </div>
+    </template>
+  </Draggable>
 
   <BookmarkForm v-if="showAddBookmarkForm" :categoryId="subcategory.id" @close-form="closeAddBookmarkForm"/>
 </template>
@@ -88,6 +97,11 @@ const closeEditCategoryForm = () => showEditCategoryForm.value = false;
   text-align: start;
   width: 250px;
   -webkit-mask-image: linear-gradient(90deg, var(--dark-gray) 60%, transparent);
+}
+
+.subcat-items {
+  padding-left: 1.5rem;
+  margin-bottom: .5rem;
 }
 
 .icon img {
