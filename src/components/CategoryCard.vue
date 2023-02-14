@@ -14,6 +14,17 @@ const props = defineProps({
 const showBookmarkForm: Ref<boolean> = ref(false);
 // https://stackoverflow.com/questions/73105353/change-ref-of-the-parent-from-child-component-using-vue-3
 const closeForm = () => showBookmarkForm.value = false;
+
+const validateDrop = (evt) => {
+  const draggedElement = evt.dragged;
+  if (draggedElement.classList.contains("bookmarkbody")) {
+    const targetNode = evt.to;
+    if (targetNode.classList.contains("categories-wrapper")) {
+      return false;
+    }
+  }
+  return true;
+}
 </script>
 
 <template>
@@ -22,9 +33,10 @@ const closeForm = () => showBookmarkForm.value = false;
     :list="category.children" 
     group="bookmarks"
     item-key="id"
+    :move="validateDrop"
     @end="store.saveToLocalStore()">
     <template #item="{element}">
-      <div>
+      <div :class=" element.children ? 'subcatbody' : 'bookmarkbody' ">
         <BookmarkBody v-if="!element.children" :bookmark="element" />
         <SubCategory v-if="element.children" :subcategory="element" />
       </div>

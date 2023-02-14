@@ -19,6 +19,17 @@ const showEditCategoryForm: Ref<boolean> = ref(false);
 
 const closeAddBookmarkForm = () => showAddBookmarkForm.value = false;
 const closeEditCategoryForm = () => showEditCategoryForm.value = false;
+
+const validateDrop = (evt) => {
+  const draggedElement = evt.dragged;
+  if (draggedElement.classList.contains("bookmarkbody")) {
+    const targetNode = evt.to;
+    if (targetNode.classList.contains("categories-wrapper")) {
+      return false;
+    }
+  }
+  return true;
+}
 </script>
 
 <template>
@@ -53,9 +64,10 @@ const closeEditCategoryForm = () => showEditCategoryForm.value = false;
     :list="subcategory.children" 
     group="bookmarks"
     item-key="id"
+    :move="validateDrop"
     @end="store.saveToLocalStore()">
     <template #item="{element}">
-      <div class="subcat-item" v-if="isOpen">
+      <div :class=" element.children ? 'subcatbody' : 'bookmarkbody' " v-if="isOpen">
         <BookmarkBody v-if="!element.children" :bookmark="element" />
         <SubCategory v-if="element.children" :subcategory="element" />
       </div>

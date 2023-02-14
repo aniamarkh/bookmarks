@@ -10,8 +10,6 @@ import Draggable from "vuedraggable";
 
 const showCategoryForm: Ref<boolean> = ref(false);
 const closeCategoryForm = () => showCategoryForm.value = false;
-
-
 </script>
 
 <template>
@@ -24,7 +22,6 @@ const closeCategoryForm = () => showCategoryForm.value = false;
     <template #item="{element}">
       <div class="category">
         <CategoryCard v-if="element.children" :category="element" />
-        <BookmarkBody v-if="!element.children" :bookmark="element" />
       </div>
     </template>
     
