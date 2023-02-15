@@ -109,8 +109,8 @@ const validateDrop = (evt) => {
 }
 
 .subcat-items {
-  padding-left: 1.5rem;
-  margin-bottom: .5rem;
+  padding-left: 1rem;
+  margin-top: -.2rem;
 }
 
 .icon img {

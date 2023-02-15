@@ -58,7 +58,6 @@ li {
   align-items: center;
   height: 20px;
   width: auto;
-  padding-left: 6px;
 }
 
 .bookmark-btn {
@@ -208,4 +207,8 @@ a {
 
 .bookmark-edit_form:hover .category-btns {
   display: none;
+}
+
+.subcatbody {
+  margin: .7rem 0;
 }
