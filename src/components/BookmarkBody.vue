@@ -121,5 +121,4 @@ input {
   width: auto;
   justify-content: flex-end;
 }
-
 </style>
