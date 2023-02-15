@@ -6,6 +6,8 @@ import BookmarkBody from "./BookmarkBody.vue";
 import SubCategory from "./SubcategoryBody.vue";
 import BookmarkForm from "./BookmarkForm.vue";
 import CategoryEditForm from "./CategoryEditForm.vue";
+import Draggable from "vuedraggable";
+
 
 const props = defineProps({
   subcategory: Object,
@@ -17,6 +19,17 @@ const showEditCategoryForm: Ref<boolean> = ref(false);
 
 const closeAddBookmarkForm = () => showAddBookmarkForm.value = false;
 const closeEditCategoryForm = () => showEditCategoryForm.value = false;
+
+const validateDrop = (evt) => {
+  const draggedElement = evt.dragged;
+  if (draggedElement.classList.contains("bookmarkbody")) {
+    const targetNode = evt.to;
+    if (targetNode.classList.contains("categories-wrapper")) {
+      return false;
+    }
+  }
+  return true;
+}
 </script>
 
 <template>
@@ -30,7 +43,6 @@ const closeEditCategoryForm = () => showEditCategoryForm.value = false;
       </div>
       {{ subcategory.title }}
     </h4>
-
     <div class="subcategory-btns">
       <button class="category-btn" @click="showAddBookmarkForm=!showAddBookmarkForm">
         <img src="./assets/add.svg" alt="add"/>
@@ -43,17 +55,24 @@ const closeEditCategoryForm = () => showEditCategoryForm.value = false;
       </button>
     </div>
   </div>
-
+  
+  <BookmarkForm v-if="showAddBookmarkForm" :categoryId="subcategory.id" @close-form="closeAddBookmarkForm"/>
   <CategoryEditForm v-if="showEditCategoryForm" :category="subcategory" @close-form="closeEditCategoryForm"/>
 
-  <ul v-if="isOpen">
-    <li v-for="(child, index) in subcategory.children" :key="index">
-      <BookmarkBody v-if="!child.children" :bookmark="child" />
-      <SubCategory v-if="child.children" :subcategory="child" />
-    </li>
-  </ul>
-
-  <BookmarkForm v-if="showAddBookmarkForm" :categoryId="subcategory.id" @close-form="closeAddBookmarkForm"/>
+  <Draggable
+    class="subcat-items"
+    :list="subcategory.children" 
+    group="bookmarks"
+    item-key="id"
+    :move="validateDrop"
+    @end="store.saveToLocalStore()">
+    <template #item="{element}">
+      <div :class=" element.children ? 'subcatbody' : 'bookmarkbody' " v-if="isOpen">
+        <BookmarkBody v-if="!element.children" :bookmark="element" />
+        <SubCategory v-if="element.children" :subcategory="element" />
+      </div>
+    </template>
+  </Draggable>
 </template>
 
 <style scoped>
@@ -63,7 +82,6 @@ const closeEditCategoryForm = () => showEditCategoryForm.value = false;
   justify-content: space-between;
   height: 21px;
   cursor: pointer;
-  width: 250px;
 }
 
 .subcategory-title {
@@ -88,6 +106,11 @@ const closeEditCategoryForm = () => showEditCategoryForm.value = false;
   text-align: start;
   width: 250px;
   -webkit-mask-image: linear-gradient(90deg, var(--dark-gray) 60%, transparent);
+}
+
+.subcat-items {
+  padding-left: 1rem;
+  margin-top: -.2rem;
 }
 
 .icon img {
