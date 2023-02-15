@@ -38,14 +38,92 @@ const onSubmit = (): void => {
 
 <template>
     <div class="form-wrapper">
-      <form class="bookmark_form" @submit.prevent="onSubmit">
+      <form class="form">
         <input type="text" placeholder="title" v-model="input_title" />
         <input type="url" placeholder="url" v-model="input_url" />
-        <input
-          type="submit"
-          value="Add a bookmark"
-          :disabled="isInvalidInputs()"
-        />
+        <div class="bookmark-form--btns">
+          <button class="submit-btn" :disabled="isInvalidInputs()" @click.prevent="onSubmit"></button>
+          <button class="cancel-btn" @click="sendCloseFormEvent"></button>
+        </div>
+
       </form>
     </div>
 </template>
+
+<style scoped>
+.form-wrapper {
+  width:auto;
+  display: flex;
+  justify-content: center;
+  padding-top: 1rem;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: .5rem;
+  width: 280px;
+}
+
+.bookmark-form--btns {
+  display: flex;
+  flex-direction: row;
+  gap: .5rem;
+  width: 280px;
+  justify-content: flex-end;
+}
+
+.submit-btn, .cancel-btn {
+  cursor: pointer;
+  background-color: inherit;
+  min-width: 40px;
+  min-height: 30px;
+  color: inherit;
+	border: none;
+  border-radius: 12px;
+  padding: 0 0.8rem;
+	font: inherit;
+	cursor: pointer;
+	outline: inherit;
+  transition: all 0.2s;
+  align-items: center;
+}
+
+.cancel-btn {
+  background-image: url("./assets/close.svg");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 1rem;
+}
+
+.submit-btn {
+  background-image: url("./assets/done.svg");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 1rem;
+}
+
+.submit-btn:hover, .cancel-btn:hover {
+    background-color: var(--light-gray);
+}
+
+.submit-btn:disabled {
+  pointer-events: none;
+  opacity: 0;
+}
+
+input {
+  width: auto;
+  min-height: 30px;
+  background-color: var(--light-gray);
+	color: inherit;
+	border: none;
+  border-radius: 10px;
+  padding: 0.2rem;
+	font: inherit;
+	outline: inherit;
+  transition: all 0.2s;
+  align-items: center;
+  justify-content: center;
+}
+</style>

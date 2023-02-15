@@ -67,6 +67,7 @@ export const store: Store = reactive(
       if (bookmarkNode && "url" in bookmarkNode) {
         bookmarkNode.title = newTitle;
         bookmarkNode.url = newUrl;
+        this.getFaviconLink(newUrl, bookmarkNode);
       };
       this.saveToLocalStore();
     },

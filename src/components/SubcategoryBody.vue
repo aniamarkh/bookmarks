@@ -43,7 +43,6 @@ const validateDrop = (evt) => {
       </div>
       {{ subcategory.title }}
     </h4>
-
     <div class="subcategory-btns">
       <button class="category-btn" @click="showAddBookmarkForm=!showAddBookmarkForm">
         <img src="./assets/add.svg" alt="add"/>
@@ -56,7 +55,8 @@ const validateDrop = (evt) => {
       </button>
     </div>
   </div>
-
+  
+  <BookmarkForm v-if="showAddBookmarkForm" :categoryId="subcategory.id" @close-form="closeAddBookmarkForm"/>
   <CategoryEditForm v-if="showEditCategoryForm" :category="subcategory" @close-form="closeEditCategoryForm"/>
 
   <Draggable
@@ -73,8 +73,6 @@ const validateDrop = (evt) => {
       </div>
     </template>
   </Draggable>
-
-  <BookmarkForm v-if="showAddBookmarkForm" :categoryId="subcategory.id" @close-form="closeAddBookmarkForm"/>
 </template>
 
 <style scoped>
@@ -84,7 +82,6 @@ const validateDrop = (evt) => {
   justify-content: space-between;
   height: 21px;
   cursor: pointer;
-  width: 250px;
 }
 
 .subcategory-title {

@@ -21,15 +21,8 @@ const isInvalidInput = (formType: string): boolean => {
 };
 
 const showCatEditForm = ref(false);
-const showSubCategoryForm = ref(false);
 
 const closeEditCategoryForm = () => showCatEditForm.value = false;
-
-const addSubCategory = () => {
-  store.addCategory(props.category.id, input_subcategory.value);
-  input_subcategory.value = "";
-  showSubCategoryForm.value = false;
-}
 
 </script>
 
@@ -37,9 +30,6 @@ const addSubCategory = () => {
   <div class="category-title">
       <h3 v-if="!showCatEditForm">{{ category.title }}</h3>
       <div v-if="!showCatEditForm" class="category-btns">
-        <button class="category-btn" @click="showSubCategoryForm = !showSubCategoryForm">
-          <img src="./assets/add.svg" alt="edit" />
-        </button>
         <button class="category-btn" @click="showCatEditForm = !showCatEditForm">
           <img src="./assets/edit.svg" alt="edit" />
         </button>
@@ -50,9 +40,5 @@ const addSubCategory = () => {
   </div>
   <div class="category-forms">
     <CategoryEditForm v-if="showCatEditForm" :category="category" @close-form="closeEditCategoryForm"/>
-    <form v-if="showSubCategoryForm" class="sub-category_form" @submit.prevent="addSubCategory">
-      <input type="text" placeholder="category title" v-model="input_subcategory" />
-      <input type="submit" value="add category" :disabled="isInvalidInput('subcategory')" />
-    </form>
   </div>
 </template>

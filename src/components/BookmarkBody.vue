@@ -47,7 +47,10 @@ const onSubmit = (): void => {
   <form class="bookmark-edit_form" v-if="showEditForm" @submit.prevent="onSubmit">
     <input type="text" placeholder="new title" v-model="input_newTitle"/>
     <input type="url" placeholder="new url" v-model="input_newUrl"/>
-    <input type="submit" value="Edit bookmark" :disabled="isInvalidInputs()" />
+    <div class="bookmark-form--btns">
+      <button class="submit-btn" :disabled="isInvalidInputs()" @click.prevent="onSubmit"></button>
+      <button class="cancel-btn" @click="sendCloseFormEvent"></button>
+    </div>
   </form>
 </template>
 
@@ -56,4 +59,67 @@ const onSubmit = (): void => {
   width: 18px;
   margin-right: 5px;
 }
+
+.submit-btn, .cancel-btn {
+  cursor: pointer;
+  background-color: inherit;
+  min-width: 40px;
+  min-height: 30px;
+  color: inherit;
+	border: none;
+  border-radius: 12px;
+  padding: 0 0.8rem;
+	font: inherit;
+	cursor: pointer;
+	outline: inherit;
+  transition: all 0.2s;
+  align-items: center;
+}
+
+.cancel-btn {
+  background-image: url("./assets/close.svg");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 1rem;
+}
+
+.submit-btn {
+  background-image: url("./assets/done.svg");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 1rem;
+}
+
+.submit-btn:hover, .cancel-btn:hover {
+    background-color: var(--light-gray);
+}
+
+.submit-btn:disabled {
+  pointer-events: none;
+  opacity: 0;
+}
+
+input {
+  width: auto;
+  min-height: 30px;
+  background-color: var(--light-gray);
+	color: inherit;
+	border: none;
+  border-radius: 10px;
+  padding: 0.2rem;
+	font: inherit;
+	outline: inherit;
+  transition: all 0.2s;
+  align-items: center;
+  justify-content: center;
+}
+
+.bookmark-form--btns {
+  display: flex;
+  flex-direction: row;
+  gap: .5rem;
+  width: auto;
+  justify-content: flex-end;
+}
+
 </style>
