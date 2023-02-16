@@ -4,7 +4,7 @@ import type { Ref } from "vue";
 import { store } from "../store";
 
 const props = defineProps({
-  bookmark: Object,
+  bookmark: { type: Object, required: true },
 });
 
 const showEditForm = ref(false);
@@ -49,7 +49,7 @@ const onSubmit = (): void => {
     <input type="url" placeholder="new url" v-model="input_newUrl"/>
     <div class="bookmark-form--btns">
       <button class="submit-btn" :disabled="isInvalidInputs()" @click.prevent="onSubmit"></button>
-      <button class="cancel-btn" @click="sendCloseFormEvent"></button>
+      <button class="cancel-btn" @click="!showEditForm"></button>
     </div>
   </form>
 </template>

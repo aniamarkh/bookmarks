@@ -5,19 +5,20 @@ import type { Ref } from "vue";
 import CategoryEditForm from "./CategoryEditForm.vue"
 
 const props = defineProps({
-  category: Object,
+  category: { type: Object, required: true },
 });
 
 const input_category: Ref<string> = ref(props.category.title);
 const input_subcategory: Ref<string> = ref("");
 
-const isInvalidInput = (formType: string): boolean => {
+const isInvalidInput = (formType: "subcategory" | "editcategory"): boolean => {
   if (formType === "subcategory") {
     return input_subcategory.value.trim() === "";
   }
   if (formType === "editcategory") {
     return input_category.value.trim() === "";
   }
+  return false;
 };
 
 const showCatEditForm = ref(false);

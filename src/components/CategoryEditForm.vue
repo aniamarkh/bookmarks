@@ -4,7 +4,7 @@ import { ref } from "vue";
 import type { Ref } from "vue";
 
 const props = defineProps({
-  category: Object,
+  category: { type: Object, required: true },
 });
 
 const emit = defineEmits(["close-form"]);

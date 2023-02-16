@@ -6,16 +6,16 @@ import BookmarkBody from "./BookmarkBody.vue";
 import CategoryTitle from "./CategoryTitle.vue";
 import SubCategory from "./SubcategoryBody.vue";
 import Draggable from "vuedraggable";
-import { store } from "../store.ts";
+import { store } from "../store";
 
 const props = defineProps({
-  category: Object,
+  category:  { type: Object, required: true },
 });
 const showBookmarkForm: Ref<boolean> = ref(false);
 // https://stackoverflow.com/questions/73105353/change-ref-of-the-parent-from-child-component-using-vue-3
 const closeForm = () => showBookmarkForm.value = false;
 
-const validateDrop = (evt) => {
+const validateDrop = (evt: any) => {
   const draggedElement = evt.dragged;
   if (draggedElement.classList.contains("bookmarkbody")) {
     const targetNode = evt.to;

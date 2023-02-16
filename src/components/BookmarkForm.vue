@@ -4,7 +4,7 @@ import type { Ref } from "vue";
 import { store } from "../store";
 
 const props = defineProps({
-  categoryId: Number,
+  categoryId:  { type: Number, required: true },
 });
 
 const emit = defineEmits(["close-form"]);

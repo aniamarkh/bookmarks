@@ -10,7 +10,7 @@ import Draggable from "vuedraggable";
 
 
 const props = defineProps({
-  subcategory: Object,
+  subcategory:  { type: Object, required: true },
 });
 
 const isOpen: Ref<boolean> = ref(true);
@@ -20,7 +20,7 @@ const showEditCategoryForm: Ref<boolean> = ref(false);
 const closeAddBookmarkForm = () => showAddBookmarkForm.value = false;
 const closeEditCategoryForm = () => showEditCategoryForm.value = false;
 
-const validateDrop = (evt) => {
+const validateDrop = (evt: any) => {
   const draggedElement = evt.dragged;
   if (draggedElement.classList.contains("bookmarkbody")) {
     const targetNode = evt.to;
@@ -115,7 +115,7 @@ const validateDrop = (evt) => {
 
 .icon img {
   width: 19px;
-  heigth: 19px;
+  height: 19px;
 }
 
 ul {
