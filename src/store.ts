@@ -57,7 +57,7 @@ export const store: Store = reactive(
 
       if (title === "") {
         await this.updateBookmarkTitle(url, newBookmark);
-      }
+      };
 
       if (bookmarkCategory && "children" in bookmarkCategory) {
         bookmarkCategory.children.push(newBookmark);
@@ -137,17 +137,30 @@ export const store: Store = reactive(
     },
 
     async updateBookmarkTitle(urlInput: string, bookmark: Bookmark): Promise<void> {
-      const response = await fetch(urlInput);
-      const html = await response.text();
-      const parser = new DOMParser();
-      const doc = parser.parseFromString(html, 'text/html');
-      if (doc) {
-        const title = doc.querySelector('title');
-        if (title) {
-          bookmark.title = title.textContent as string;
+      const fetchPromise = fetch(urlInput).then(async (response) => {
+        if (response.ok) {
+          const html = await response.text();
+          const parser = new DOMParser();
+          const doc = parser.parseFromString(html, 'text/html');
+          if (doc) {
+            const title = doc.querySelector('title');
+            if (title) {
+              bookmark.title = title.textContent as string;
+            }
+          }
+        } else {
+          bookmark.title = urlInput;
         }
-      }
-    }
+      }).catch((error) => {
+        console.log(error);
+        bookmark.title = urlInput;
+      });
+    
+      await Promise.race([
+        fetchPromise,
+        new Promise((_, reject) => setTimeout(() => reject(new Error('Timeout')), 3000))
+      ]);
+    },
   }
 );
 
