@@ -4,7 +4,7 @@
   "description": "Manage bookmarks extension",
   "version": "1",
   "icons": {
-    "128": "assets/logo-128.png"
+    "128": "logo-128.png"
   },
   "chrome_url_overrides": {
     "newtab": "index.html"
