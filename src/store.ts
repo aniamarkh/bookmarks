@@ -55,10 +55,15 @@ export const store: Store = reactive(
         favicon: "",
       };
 
+      if (title === "") {
+        await this.updateBookmarkTitle(url, newBookmark);
+      }
+
       if (bookmarkCategory && "children" in bookmarkCategory) {
         bookmarkCategory.children.push(newBookmark);
         this.updateFaviconLink(url, newBookmark);
       };
+
       this.saveToLocalStore();
     },
 
@@ -127,10 +132,22 @@ export const store: Store = reactive(
       const url = new URL(chrome.runtime.getURL("/_favicon/"));
       url.searchParams.set("pageUrl", urlInput);
       url.searchParams.set("size", "18");
-      console.log(url.toString());
       bookmark.favicon = url.toString();
       this.saveToLocalStore();
     },
+
+    async updateBookmarkTitle(urlInput: string, bookmark: Bookmark): Promise<void> {
+      const response = await fetch(urlInput);
+      const html = await response.text();
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(html, 'text/html');
+      if (doc) {
+        const title = doc.querySelector('title');
+        if (title) {
+          bookmark.title = title.textContent as string;
+        }
+      }
+    }
   }
 );
 

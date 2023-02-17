@@ -14,8 +14,7 @@ const input_title: Ref<string> = ref("");
 const input_url: Ref<string> = ref("");
 
 const isInvalidInputs = (): boolean => {
-  const isEmpty: boolean =
-    input_title.value.trim() === "" || input_url.value.trim() === "";
+  const isEmpty: boolean = input_url.value.trim() === "";
   let invalidUrl: boolean;
 
   try {
