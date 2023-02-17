@@ -57,7 +57,7 @@ export const store: Store = reactive(
 
       if (bookmarkCategory && "children" in bookmarkCategory) {
         bookmarkCategory.children.push(newBookmark);
-        this.getFaviconLink(url, newBookmark);
+        this.updateFaviconLink(url, newBookmark);
       };
       this.saveToLocalStore();
     },
@@ -67,7 +67,7 @@ export const store: Store = reactive(
       if (bookmarkNode && "url" in bookmarkNode) {
         bookmarkNode.title = newTitle;
         bookmarkNode.url = newUrl;
-        this.getFaviconLink(newUrl, bookmarkNode);
+        this.updateFaviconLink(newUrl, bookmarkNode);
       };
       this.saveToLocalStore();
     },
@@ -123,10 +123,12 @@ export const store: Store = reactive(
       return null;
     },
 
-    getFaviconLink(url: string, bookmark: Bookmark): void {
-      let domain = new URL(url).hostname;
-      let faviconLink = `https://s2.googleusercontent.com/s2/favicons?domain_url=${domain}`;
-      bookmark.favicon = faviconLink;
+    updateFaviconLink(urlInput: string, bookmark: Bookmark): void {
+      const url = new URL(chrome.runtime.getURL("/_favicon/"));
+      url.searchParams.set("pageUrl", urlInput);
+      url.searchParams.set("size", "18");
+      console.log(url.toString());
+      bookmark.favicon = url.toString();
       this.saveToLocalStore();
     },
   }
