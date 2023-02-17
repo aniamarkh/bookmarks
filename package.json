@@ -13,6 +13,8 @@
     "coverage": "vitest run --coverage"
   },
   "dependencies": {
+    "@types/chrome": "^0.0.213",
+    "serve": "^14.2.0",
     "vue": "^3.2.45",
     "vuedraggable": "^4.1.0"
   },
