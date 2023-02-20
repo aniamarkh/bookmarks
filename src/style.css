@@ -72,11 +72,6 @@ li {
   display: block;
 }
 
-.bookmark-btn img {
-  width: 20px;
-  height: 20px;
-}
-
 .add-bookmark-btn {
   width: 30px;
   height: 30px;
@@ -90,11 +85,14 @@ li {
 	cursor: pointer;
 	outline: inherit;
   transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 5px;
 }
 
-.add-bookmark-btn img {
-  height: 20px;
-  fill: var(--light-gray);
+.add-bookmark-btn svg {
+  fill: var(--dark-gray);
 }
 
 .add-bookmark-btn:hover {
@@ -121,9 +119,8 @@ li {
   background-color: var(--white);
 }
 
-.new-category-btn img {
-  height: 20px;
-  fill: var(--light-gray);
+.new-category-btn svg {
+  fill: var(--dark-gray);
 }
 
 
