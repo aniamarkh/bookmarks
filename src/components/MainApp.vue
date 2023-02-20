@@ -2,7 +2,7 @@
 import { store } from "../store";
 import CategoryForm from "./CategoryForm.vue";
 import CategoryCard from "./CategoryCard.vue";
-import TopPanel from "./TopPanel.vue";
+import ToolsPanel from "./ToolsPanel.vue";
 import { ref } from "vue";
 import type { Ref } from "vue";
 import Draggable from "vuedraggable";
@@ -13,7 +13,7 @@ const closeCategoryForm = () => showCategoryForm.value = false;
 </script>
 
 <template>
-  <TopPanel />
+  <ToolsPanel />
   <Draggable 
     class="categories-wrapper"
     :list="store.data.children" 
