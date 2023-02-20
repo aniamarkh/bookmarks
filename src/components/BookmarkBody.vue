@@ -23,13 +23,10 @@ const isInvalidInputs = (): boolean => {
 };
 
 const onSubmit = (): void => {
-  let title: string;
   if (bookmarkProp.title === "") {
     store.updateBookmarkTitle(bookmarkProp.url, bookmarkProp.id);
-  } else {
-    title = bookmarkProp.title;
   }
-  store.editBookmark(bookmarkProp.id, title, bookmarkProp.url);
+  store.editBookmark(bookmarkProp.id, bookmarkProp.title, bookmarkProp.url);
   showEditForm.value = false;
 }
 </script>
