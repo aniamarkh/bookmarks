@@ -16,8 +16,8 @@ export const store: Store = reactive(
         if (nodeToDelete) {
           const nodeToDeleteIndex = parentNode.children.indexOf(nodeToDelete);
           parentNode.children.splice(nodeToDeleteIndex, 1);
-        };
-      };
+        }
+      }
       this.saveToLocalStore();
     },
 
@@ -55,15 +55,14 @@ export const store: Store = reactive(
         favicon: "",
       };
 
-      if (title === "") {
-        await this.updateBookmarkTitle(url, newBookmark);
-      };
-
-      if (bookmarkCategory && "children" in bookmarkCategory) {
+      const isCategory = bookmarkCategory && "children" in bookmarkCategory;
+      if (isCategory) {
         bookmarkCategory.children.push(newBookmark);
         this.updateFaviconLink(url, newBookmark);
-      };
-
+        if (title === "") {
+          this.updateBookmarkTitle(url, newBookmark.id);
+        }
+      }
       this.saveToLocalStore();
     },
 
@@ -73,7 +72,7 @@ export const store: Store = reactive(
         bookmarkNode.title = newTitle;
         bookmarkNode.url = newUrl;
         this.updateFaviconLink(newUrl, bookmarkNode);
-      };
+      }
       this.saveToLocalStore();
     },
 
@@ -82,10 +81,10 @@ export const store: Store = reactive(
     },
 
     loadFromLocalStore(): void {
-      let localData = localStorage.getItem("data");
+      const localData = localStorage.getItem("data");
       if (localData) {
         this.data = JSON.parse(localData);
-      };
+      }
     },
 
     findMaxId(node: Category | Bookmark): number {
@@ -136,7 +135,7 @@ export const store: Store = reactive(
       this.saveToLocalStore();
     },
 
-    async updateBookmarkTitle(urlInput: string, bookmark: Bookmark): Promise<void> {
+    async updateBookmarkTitle(urlInput: string, bookmarkId: number): Promise<void> {
       const fetchPromise = fetch(urlInput).then(async (response) => {
         if (response.ok) {
           const html = await response.text();
@@ -145,15 +144,16 @@ export const store: Store = reactive(
           if (doc) {
             const title = doc.querySelector('title');
             if (title) {
-              bookmark.title = title.textContent as string;
+              const titleContent = title.textContent as string;
+              this.editBookmark(bookmarkId, titleContent, urlInput);
             }
           }
         } else {
-          bookmark.title = urlInput;
+          throw new Error("Error while fetching bookmark title");
         }
       }).catch((error) => {
-        console.log(error);
-        bookmark.title = urlInput;
+        console.error(error);
+        this.editBookmark(bookmarkId, urlInput, urlInput);
       });
     
       await Promise.race([

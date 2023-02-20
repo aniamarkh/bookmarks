@@ -15,7 +15,7 @@ export interface Data {
   id: 0,
   title: "root",
   children: Array<Category>,
-};
+}
 
 export interface Store {
   data: Category;
