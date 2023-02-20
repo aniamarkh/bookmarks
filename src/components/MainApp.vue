@@ -2,7 +2,6 @@
 import { store } from "../store";
 import CategoryForm from "./CategoryForm.vue";
 import CategoryCard from "./CategoryCard.vue";
-import BookmarkBody from "./BookmarkBody.vue";
 import { ref } from "vue";
 import type { Ref } from "vue";
 import Draggable from "vuedraggable";

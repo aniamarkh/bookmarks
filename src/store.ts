@@ -16,8 +16,8 @@ export const store: Store = reactive(
         if (nodeToDelete) {
           const nodeToDeleteIndex = parentNode.children.indexOf(nodeToDelete);
           parentNode.children.splice(nodeToDeleteIndex, 1);
-        };
-      };
+        }
+      }
       this.saveToLocalStore();
     },
 
@@ -55,10 +55,14 @@ export const store: Store = reactive(
         favicon: "",
       };
 
-      if (bookmarkCategory && "children" in bookmarkCategory) {
+      const isCategory = bookmarkCategory && "children" in bookmarkCategory;
+      if (isCategory) {
         bookmarkCategory.children.push(newBookmark);
         this.updateFaviconLink(url, newBookmark);
-      };
+        if (title === "") {
+          this.updateBookmarkTitle(url, newBookmark.id);
+        }
+      }
       this.saveToLocalStore();
     },
 
@@ -68,7 +72,7 @@ export const store: Store = reactive(
         bookmarkNode.title = newTitle;
         bookmarkNode.url = newUrl;
         this.updateFaviconLink(newUrl, bookmarkNode);
-      };
+      }
       this.saveToLocalStore();
     },
 
@@ -77,10 +81,10 @@ export const store: Store = reactive(
     },
 
     loadFromLocalStore(): void {
-      let localData = localStorage.getItem("data");
+      const localData = localStorage.getItem("data");
       if (localData) {
         this.data = JSON.parse(localData);
-      };
+      }
     },
 
     findMaxId(node: Category | Bookmark): number {
@@ -127,9 +131,35 @@ export const store: Store = reactive(
       const url = new URL(chrome.runtime.getURL("/_favicon/"));
       url.searchParams.set("pageUrl", urlInput);
       url.searchParams.set("size", "18");
-      console.log(url.toString());
       bookmark.favicon = url.toString();
       this.saveToLocalStore();
+    },
+
+    async updateBookmarkTitle(urlInput: string, bookmarkId: number): Promise<void> {
+      const fetchPromise = fetch(urlInput).then(async (response) => {
+        if (response.ok) {
+          const html = await response.text();
+          const parser = new DOMParser();
+          const doc = parser.parseFromString(html, 'text/html');
+          if (doc) {
+            const title = doc.querySelector('title');
+            if (title) {
+              const titleContent = title.textContent as string;
+              this.editBookmark(bookmarkId, titleContent, urlInput);
+            }
+          }
+        } else {
+          throw new Error("Error while fetching bookmark title");
+        }
+      }).catch((error) => {
+        console.error(error);
+        this.editBookmark(bookmarkId, urlInput, urlInput);
+      });
+    
+      await Promise.race([
+        fetchPromise,
+        new Promise((_, reject) => setTimeout(() => reject(new Error('Timeout')), 3000))
+      ]);
     },
   }
 );

@@ -15,7 +15,7 @@ export interface Data {
   id: 0,
   title: "root",
   children: Array<Category>,
-};
+}
 
 export interface Store {
   data: Category;
@@ -30,4 +30,5 @@ export interface Store {
   findNodeById(node: Category | Bookmark, id: number): Category | Bookmark | null;
   findParentNodeById(node: Category | Bookmark, id: number): Category | null;
   updateFaviconLink(urlInput: string, bookmark: Bookmark): void;
+  updateBookmarkTitle(urlInput: string, bookmarkId: number): Promise<void>
 }
