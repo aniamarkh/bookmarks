@@ -23,10 +23,10 @@ const onSubmit = (): void => {
       <form class="form">
         <input type="text" placeholder="category title" v-model="input_category"/>
         <button class="submit-btn" :disabled="isInvalidInput()" @click.prevent="onSubmit">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -5 50 50" height="20" width="20"><path d="M18.9 35.7 7.7 24.5l2.15-2.15 9.05 9.05 19.2-19.2 2.15 2.15Z"/></svg>
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="5 -5 50 50" height="20" width="20"><path d="M18.9 35.7 7.7 24.5l2.15-2.15 9.05 9.05 19.2-19.2 2.15 2.15Z"/></svg>
         </button>
         <button class="cancel-btn" @click="sendCloseFormEvent">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -5 50 50" height="20" width="20"><path d="m12.45 37.65-2.1-2.1L21.9 24 10.35 12.45l2.1-2.1L24 21.9l11.55-11.55 2.1 2.1L26.1 24l11.55 11.55-2.1 2.1L24 26.1Z"/></svg>
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="5 -5 50 50" height="20" width="20"><path d="m12.45 37.65-2.1-2.1L21.9 24 10.35 12.45l2.1-2.1L24 21.9l11.55-11.55 2.1 2.1L26.1 24l11.55 11.55-2.1 2.1L24 26.1Z"/></svg>
         </button>
       </form>
 </template>
@@ -45,7 +45,7 @@ input[type="text"] {
   width: 320px;
   min-height: 30px;
   align-self: flex-end;
-  background-color: var(--white);
+  background-color: var(--cards);
 	color: inherit;
 	border: none;
   border-radius: 10px;
@@ -74,11 +74,16 @@ input[type="text"] {
 }
 
 .submit-btn svg, .cancel-btn svg {
-  fill: var(--dark-gray);
+  fill: var(--text);
+  transition: all .2s;
 }
 
 .submit-btn:hover, .cancel-btn:hover {
-    background-color: var(--white);
+  background-color: var(--background);
+}
+
+.submit-btn:hover svg, .cancel-btn:hover svg{
+  transform: scale(1.2);
 }
 
 .submit-btn:disabled {

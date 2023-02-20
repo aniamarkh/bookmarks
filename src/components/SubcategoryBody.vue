@@ -105,7 +105,7 @@ const validateDrop = (evt: any) => {
   white-space: nowrap; 
   text-align: start;
   width: 250px;
-  -webkit-mask-image: linear-gradient(90deg, var(--dark-gray) 60%, transparent);
+  -webkit-mask-image: linear-gradient(90deg, var(--text) 60%, transparent);
 }
 
 .subcat-items {

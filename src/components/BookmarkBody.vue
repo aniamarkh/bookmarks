@@ -79,11 +79,16 @@ const onSubmit = (): void => {
 }
 
 .submit-btn svg, .cancel-btn svg {
-  fill: var(--dark-gray);
+  fill: var(--text);
+  transition: all .2s;
 }
 
 .submit-btn:hover, .cancel-btn:hover {
-    background-color: var(--light-gray);
+  background-color: var(--background);
+}
+
+.submit-btn:hover svg, .cancel-btn:hover svg{
+  transform: scale(1.2);
 }
 
 .submit-btn:disabled {
@@ -94,7 +99,7 @@ const onSubmit = (): void => {
 input {
   width: auto;
   min-height: 30px;
-  background-color: var(--light-gray);
+  background-color: var(--background);
 	color: inherit;
 	border: none;
   border-radius: 10px;
