@@ -18,9 +18,16 @@ const changeTheme = (theme: Theme) => {
   cssVarColors.forEach((el, index) => {
     document.documentElement.style.setProperty(el, themeColors[theme][index]);
   });
-}
+};
 
+const changeFontSize = (fontSize: number) => {
+  document.documentElement.style.setProperty("--text-size", `${fontSize + "px"}`);
+  document.documentElement.style.setProperty("--title-size", `${(fontSize + 6) + "px"}`);
+};
 
+const alignCards = (align: "flex-start" | "center") => {
+  document.documentElement.style.setProperty("--align", align);
+};
 const value = 500;
 </script>
 
@@ -40,9 +47,9 @@ const value = 500;
       </div>
       <div class="text-size">
         <h4>Text size:</h4>
-        <button class="btn" style="font-size: 16px">S</button>
-        <button class="btn" style="font-size: 18px">M</button>
-        <button class="btn" style="font-size: 22px">L</button>
+        <button class="btn" style="font-size: 16px" @click="changeFontSize(16)">S</button>
+        <button class="btn" style="font-size: 18px" @click="changeFontSize(18)">M</button>
+        <button class="btn" style="font-size: 22px" @click="changeFontSize(22)">L</button>
       </div>
       <div class="font-select">
         <h4>Font Family:</h4>
@@ -55,10 +62,10 @@ const value = 500;
       </div>
       <div class="cards-align">
         <h4>Card align:</h4>
-        <button class="align-btn btn">
+        <button class="align-btn btn" @click="alignCards('flex-start')">
           <img src="./assets/left.svg" />
         </button>
-        <button class="align-btn btn">
+        <button class="align-btn btn" @click="alignCards('center')">
           <img src="./assets/center.svg" />
         </button>
       </div>
@@ -84,8 +91,8 @@ const value = 500;
     top: 10px;
     right: 90px;
     background-color: var(--cards);
-    width: 300px;
-    height: 290px;
+    width: auto;
+    height: auto;
     border-radius: 15px;
     box-shadow: 0px 0px 17px -7px rgba(0,0,0,0.4);
   }
