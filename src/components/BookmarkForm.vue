@@ -85,14 +85,9 @@ const onSubmit = (): void => {
   border-radius: 12px;
   padding: 0 0.8rem;
 	font: inherit;
-	cursor: pointer;
 	outline: inherit;
   transition: all 0.2s;
   align-items: center;
-}
-
-.submit-btn:hover, .cancel-btn:hover {
-    background-color: var(--background);
 }
 
 .submit-btn svg, .cancel-btn svg {
