@@ -2,6 +2,8 @@
 import Slider from '@vueform/slider'
 import "@vueform/slider/themes/default.css";
 import type Theme from "../types";
+import { ref } from "vue";
+import type { Ref } from "vue";
 
 const emit = defineEmits(["close-form"]);
 const sendCloseFormEvent = () => emit("close-form");
@@ -28,7 +30,12 @@ const changeFontSize = (fontSize: number) => {
 const alignCards = (align: "flex-start" | "center") => {
   document.documentElement.style.setProperty("--align", align);
 };
-const value = 500;
+
+const columnWidth: Ref<number> = ref(320);
+const changeColumnWidth = () => {
+  console.log(`${columnWidth.value + "px"}`);
+  document.documentElement.style.setProperty("--column-width", `${columnWidth.value + "px"}` );
+}
 </script>
 
 <template>
@@ -71,13 +78,14 @@ const value = 500;
       </div>
       <div class="column-width">
         <h4>Categories width:</h4>
-        <Slider v-model="value" class="slider"
+        <Slider v-model="columnWidth" class="slider"
           :min="300"
           :max="600"
           :step="10"
-          :tooltips="false"
-          :default="value"
-          show-tooltip="drag" />
+          :default="columnWidth"
+          @update="changeColumnWidth()"
+          tooltip-position="bottom"
+          />
       </div>
     </div>
   </div>

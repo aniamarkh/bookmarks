@@ -110,7 +110,7 @@ li {
 }
 
 .new-category-btn {
-  width: 320px;
+  width: var(--column-width);
   height: 30px;
   align-self: flex-end;
   background: none;
@@ -155,7 +155,7 @@ h3 {
   text-transform: uppercase;
   overflow:hidden;
   white-space: nowrap;
-  width: 300px;
+  width: calc(var(--column-width) - 20px);
   -webkit-mask-image: linear-gradient(90deg, var(--text) 85%, transparent);
 }
 
@@ -164,7 +164,7 @@ a {
   overflow:hidden;
   white-space: nowrap; 
   text-align: start;
-  width: 300px;
+  width: calc(var(--column-width) - 20px);
   -webkit-mask-image: linear-gradient(90deg, var(--text) 85%, transparent);
 }
 

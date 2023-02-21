@@ -64,14 +64,14 @@ const onSubmit = (): void => {
   display: flex;
   flex-direction: column;
   gap: .5rem;
-  width: 280px;
+  width: calc(var(--column-width) - 40px);
 }
 
 .bookmark-form--btns {
   display: flex;
   flex-direction: row;
   gap: .5rem;
-  width: 280px;
+  width: calc(var(--column-width) - 40px);
   justify-content: flex-end;
 }
 
