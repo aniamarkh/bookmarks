@@ -1,5 +1,12 @@
-import { reactive } from "vue";
+import { reactive, ref } from "vue";
 import type { Store, Category, Bookmark } from "./types";
+
+export const fontOptions = ref([
+  { title: "Roboto Slab", css: "'Roboto Slab', sans-serif" },
+  { title: "Monserrat", css: "'Montserrat', sans-serif" },
+  { title: "Playfair Display", css: "'Playfair Display', serif" },
+  { title: "Roboto Condensed", css: "'Roboto Condensed', sans-serif" },
+]);
 
 export const store: Store = reactive(
   {
@@ -7,6 +14,10 @@ export const store: Store = reactive(
       id: 0,
       title: "root",
       children: [] as Array<Category>,
+    },
+
+    settings: {
+      fontFamily: fontOptions.value[0].css,
     },
 
     deleteNode(nodeId: number) {
@@ -155,7 +166,7 @@ export const store: Store = reactive(
         console.error(error);
         this.editBookmark(bookmarkId, urlInput, urlInput);
       });
-    
+
       await Promise.race([
         fetchPromise,
         new Promise((_, reject) => setTimeout(() => reject(new Error('Timeout')), 3000))

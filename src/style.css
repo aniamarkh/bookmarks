@@ -8,6 +8,7 @@
   --bkmrk-margin: 0.3rem;
   --align: flex-start;
   --column-width: 320px;
+  --font-family: 'Roboto Slab', sans-serif;
 }
 
 
@@ -15,7 +16,7 @@
 	margin: 0;
 	padding: 0;
 	box-sizing: border-box;
-  font-family: 'Roboto Slab', sans-serif;
+  font-family: var(--font-family);
   color: var(--text);
   font-size: var(--text-size);
 }

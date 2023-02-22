@@ -19,8 +19,13 @@ export interface Data {
   children: Array<Category>,
 }
 
+export interface Settings {
+  fontFamily: string,
+}
+
 export interface Store {
   data: Category;
+  settings: Settings,
   deleteNode(nodeId: number): void;
   addCategory(parentId: number, title: string): void;
   editCategory(categoryId: number, newTitle: string): void;

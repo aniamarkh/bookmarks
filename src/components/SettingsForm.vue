@@ -3,6 +3,7 @@ import Slider from '@vueform/slider'
 import "@vueform/slider/themes/default.css";
 import { ref } from "vue";
 import type { Ref } from "vue";
+import { store, fontOptions } from "../store";
 
 const emit = defineEmits(["close-form"]);
 const sendCloseFormEvent = () => emit("close-form");
@@ -41,7 +42,12 @@ const columnWidth: Ref<number> = ref(320);
 const changeColumnWidth = () => {
   console.log(`${columnWidth.value + "px"}`);
   document.documentElement.style.setProperty("--column-width", `${columnWidth.value + "px"}` );
+};
+
+const onFontSelect = (event) => {
+  document.documentElement.style.setProperty("--font-family", event.target.value);
 }
+
 </script>
 
 <template>
@@ -66,11 +72,10 @@ const changeColumnWidth = () => {
       </div>
       <div class="font-select">
         <h4>Font Family:</h4>
-        <select>
-          <option value="'Roboto Slab', serif" style="font-family: 'Roboto Slab', serif">Roboto Slab</option>
-          <option value="'Montserrat', sans-serif" style="font-family: 'Montserrat', sans-serif">Montserrat</option>
-          <option value="'Roboto Condensed', sans-serif" style="'Roboto Condensed', sans-serif">Roboto Condensed</option>
-          <option value="'Playfair Display', serif" style="'Playfair Display', serif">Playfair Display</option>
+        <select name="FontFamily" v-model="store.settings.fontFamily" @change="onFontSelect">
+          <option v-for="(option, index) in fontOptions" :key="index" :value="option.css" :style="{'font-family': option.css}">
+            {{ option.title }}
+          </option>
         </select>
       </div>
       <div class="cards-align">
