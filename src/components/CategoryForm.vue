@@ -39,10 +39,10 @@ const onSubmit = (): void => {
   gap: .5rem;
   justify-content: center;
   align-items: center;
-  width: 320px;
+  width: var(--column-width);
 }
 input[type="text"] {
-  width: 320px;
+  width: var(--column-width);
   min-height: 30px;
   align-self: flex-end;
   background-color: var(--cards);

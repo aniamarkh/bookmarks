@@ -36,16 +36,16 @@ const validateDrop = (evt: any) => {
   <div class="subcategory-wrapper" v-if="!showEditCategoryForm">
     <h4 class="subcategory-title" @click="isOpen=!isOpen">
       <div v-if="!isOpen" class="icon">
-        <img src="./assets/arrow-right.svg" alt="close"/>
+        <svg xmlns="http://www.w3.org/2000/svg" height="20" width="20" viewBox="0 2 40 40"><path d="M17.167 27.167V12.833L24.333 20Z"/></svg>
       </div>
       <div v-if="isOpen" class="icon">
-        <img src="./assets/arrow-down.svg" alt="open"/>
+        <svg xmlns="http://www.w3.org/2000/svg" height="20" width="20" viewBox="0 2 40 40"><path d="m20 24.333-7.167-7.166h14.334Z"/></svg>
       </div>
       {{ subcategory.title }}
     </h4>
     <div class="subcategory-btns">
       <button class="category-btn" @click="showAddBookmarkForm=!showAddBookmarkForm">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" height="18" width="18"><path d="M22.5 38V25.5H10v-3h12.5V10h3v12.5H38v3H25.5V38Z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 5 40 40" height="20" width="20"><path d="M22.5 38V25.5H10v-3h12.5V10h3v12.5H38v3H25.5V38Z"/></svg>
       </button>
       <button class="category-btn" @click="showEditCategoryForm=!showEditCategoryForm">
         <svg xmlns="http://www.w3.org/2000/svg" height="20" width="20"><path d="M4.583 15.667h.896l8.083-8.084-.895-.916-8.084 8.083Zm10.771-8.625-2.125-2.167.833-.833q.271-.271.615-.271t.635.271l.896.916q.25.25.23.636-.021.385-.271.635Zm-.542.541-8.958 8.938H3.729v-2.146l8.938-8.917Zm-1.687-.458-.458-.458.895.916Z"/></svg>
@@ -113,9 +113,8 @@ const validateDrop = (evt: any) => {
   margin-top: -.2rem;
 }
 
-.icon img {
-  width: 19px;
-  height: 19px;
+.icon svg {
+  fill: var(--text);
 }
 
 ul {

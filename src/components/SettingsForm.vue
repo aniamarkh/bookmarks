@@ -26,6 +26,11 @@ const changeTheme = (theme: string) => {
 const changeFontSize = (fontSize: number) => {
   document.documentElement.style.setProperty("--text-size", `${fontSize + "px"}`);
   document.documentElement.style.setProperty("--title-size", `${(fontSize + 6) + "px"}`);
+  if (fontSize === 22) {
+    document.documentElement.style.setProperty("--bkmrk-margin", ".6rem");
+  } else {
+    document.documentElement.style.setProperty("--bkmrk-margin", ".3rem");
+  }
 };
 
 const alignCards = (align: "flex-start" | "center") => {
@@ -71,10 +76,10 @@ const changeColumnWidth = () => {
       <div class="cards-align">
         <h4>Card align:</h4>
         <button class="align-btn btn" @click="alignCards('flex-start')">
-          <img src="./assets/left.svg" />
+          <svg xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 96 960 960" width="20"><path d="M154.001 901.999v-51.998h651.998v51.998H154.001Zm0-150v-51.998h459.998v51.998H154.001Zm0-150v-51.998h651.998v51.998H154.001Zm0-150v-51.998h459.998v51.998H154.001Zm0-150v-51.998h651.998v51.998H154.001Z"/></svg>
         </button>
         <button class="align-btn btn" @click="alignCards('center')">
-          <img src="./assets/center.svg" />
+          <svg xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 96 960 960" width="20"><path d="M154.001 901.999v-51.998h651.998v51.998H154.001Zm144-150v-51.998h363.998v51.998H298.001Zm-144-150v-51.998h651.998v51.998H154.001Zm144-150v-51.998h363.998v51.998H298.001Zm-144-150v-51.998h651.998v51.998H154.001Z"/></svg>
         </button>
       </div>
       <div class="column-width">
@@ -85,7 +90,7 @@ const changeColumnWidth = () => {
           :step="10"
           :default="columnWidth"
           @update="changeColumnWidth()"
-          tooltip-position="bottom"
+          :tooltips="false"
           />
       </div>
     </div>
@@ -234,17 +239,16 @@ const changeColumnWidth = () => {
     justify-content: center;
   }
 
+  .align-btn svg {
+    fill: var(--text);
+  }
+
   .slider {
     width: 100px;
     --slider-handle-width: 16px;
     --slider-bg: #c2c2c2;
-    --slider-connect-bg: var(--medium);
-    --slider-tooltip-bg: var(--medium);
-    --slider-handle-ring-color: var(--medium);
+    --slider-connect-bg: var(--background);
+    --slider-handle-ring-color: var(--background);
     --slider-tooltip-py: 0px;
   }
-
-
-
-
 </style>
