@@ -34,5 +34,3 @@ export interface Store {
   updateFaviconLink(urlInput: string, bookmark: Bookmark): void;
   updateBookmarkTitle(urlInput: string, bookmarkId: number): Promise<void>
 }
-
-export type Theme = "dark" | "light" | "pink" | "blue" | "coffee"; 

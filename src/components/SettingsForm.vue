@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import Slider from '@vueform/slider'
 import "@vueform/slider/themes/default.css";
-import type Theme from "../types";
 import { ref } from "vue";
 import type { Ref } from "vue";
 
@@ -16,10 +15,12 @@ const themeColors = {
   coffee: ["#eaddcf", "#020826", "#8c7851", "#f9f4ef"],
 };
 const cssVarColors = ["--background", "--text", "--medium", "--cards"];
-const changeTheme = (theme: Theme) => {
-  cssVarColors.forEach((el, index) => {
-    document.documentElement.style.setProperty(el, themeColors[theme][index]);
-  });
+const changeTheme = (theme: string) => {
+  if (themeColors[theme as keyof Object]) { 
+    cssVarColors.forEach((el, index) => {
+      document.documentElement.style.setProperty(el, themeColors[theme as keyof typeof themeColors][index]);
+    });
+  }
 };
 
 const changeFontSize = (fontSize: number) => {
