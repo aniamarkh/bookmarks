@@ -1,23 +1,12 @@
 import { reactive, ref } from "vue";
 import type { Store, Category, Bookmark } from "./types";
 
-export const fontOptions = ref([
-  { title: "Roboto Slab", css: "'Roboto Slab', sans-serif" },
-  { title: "Monserrat", css: "'Montserrat', sans-serif" },
-  { title: "Playfair Display", css: "'Playfair Display', serif" },
-  { title: "Roboto Condensed", css: "'Roboto Condensed', sans-serif" },
-]);
-
 export const store: Store = reactive(
   {
     data: {
       id: 0,
       title: "root",
       children: [] as Array<Category>,
-    },
-
-    settings: {
-      fontFamily: fontOptions.value[0].css,
     },
 
     deleteNode(nodeId: number) {

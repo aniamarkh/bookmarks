@@ -1,53 +1,11 @@
 <script setup lang="ts">
 import Slider from '@vueform/slider'
 import "@vueform/slider/themes/default.css";
-import { ref } from "vue";
-import type { Ref } from "vue";
-import { store, fontOptions } from "../store";
+import { settings, fontSizes, fontOptions, cardsWidth } from "../settings";
+
 
 const emit = defineEmits(["close-form"]);
 const sendCloseFormEvent = () => emit("close-form");
-
-const themeColors = {
-  light: ["#f0f0f0", "#181818", "#8d8d8d", "#f7f7f7"],
-  dark: ["#202020", "#e0e0e0", "#8d8d8d", "#303030"],
-  pink: ["#ffc6c7", "#33272a", "#fff", "#fff2f2"],
-  blue: ["#e3f6f5", "#272343", "#bae8e8", "#fffffe"],
-  coffee: ["#eaddcf", "#020826", "#8c7851", "#f9f4ef"],
-};
-const cssVarColors = ["--background", "--text", "--medium", "--cards"];
-const changeTheme = (theme: string) => {
-  if (themeColors[theme as keyof Object]) { 
-    cssVarColors.forEach((el, index) => {
-      document.documentElement.style.setProperty(el, themeColors[theme as keyof typeof themeColors][index]);
-    });
-  }
-};
-
-const changeFontSize = (fontSize: number) => {
-  document.documentElement.style.setProperty("--text-size", `${fontSize + "px"}`);
-  document.documentElement.style.setProperty("--title-size", `${(fontSize + 6) + "px"}`);
-  if (fontSize === 22) {
-    document.documentElement.style.setProperty("--bkmrk-margin", ".6rem");
-  } else {
-    document.documentElement.style.setProperty("--bkmrk-margin", ".3rem");
-  }
-};
-
-const alignCards = (align: "flex-start" | "center") => {
-  document.documentElement.style.setProperty("--align", align);
-};
-
-const columnWidth: Ref<number> = ref(320);
-const changeColumnWidth = () => {
-  console.log(`${columnWidth.value + "px"}`);
-  document.documentElement.style.setProperty("--column-width", `${columnWidth.value + "px"}` );
-};
-
-const onFontSelect = (event) => {
-  document.documentElement.style.setProperty("--font-family", event.target.value);
-}
-
 </script>
 
 <template>
@@ -58,21 +16,24 @@ const onFontSelect = (event) => {
       </button>
       <h4>Color theme:</h4>
       <div class="theme-btns">
-        <button class="theme-btn btn-dark" @click="changeTheme('dark')"></button>
-        <button class="theme-btn btn-light" @click="changeTheme('light')"></button>
-        <button class="theme-btn btn-pink" @click="changeTheme('pink')"></button>
-        <button class="theme-btn btn-blue" @click="changeTheme('blue')"></button>
-        <button class="theme-btn btn-coffee" @click="changeTheme('coffee')"></button>
+        <button class="theme-btn btn-light" @click="settings.setTheme('light')"></button>
+        <button class="theme-btn btn-dark" @click="settings.setTheme('dark')"></button>
+        <button class="theme-btn btn-pink" @click="settings.setTheme('pink')"></button>
+        <button class="theme-btn btn-blue" @click="settings.setTheme('blue')"></button>
+        <button class="theme-btn btn-coffee" @click="settings.setTheme('coffee')"></button>
       </div>
-      <div class="text-size">
+      <div class="font-size">
         <h4>Text size:</h4>
-        <button class="btn" style="font-size: 16px" @click="changeFontSize(16)">S</button>
-        <button class="btn" style="font-size: 18px" @click="changeFontSize(18)">M</button>
-        <button class="btn" style="font-size: 22px" @click="changeFontSize(22)">L</button>
+        <button v-for="(size, index) in fontSizes" :key="index" 
+          :style="{ fontSize: size.mainSize + 'px' }"
+          class="btn"
+          @click="settings.setFontSize(size)">
+          {{ size.title }}
+        </button>
       </div>
       <div class="font-select">
         <h4>Font Family:</h4>
-        <select name="FontFamily" v-model="store.settings.fontFamily" @change="onFontSelect">
+        <select name="FontFamily" v-model="settings.styles.fontFamily" @change="settings.setFont">
           <option v-for="(option, index) in fontOptions" :key="index" :value="option.css" :style="{'font-family': option.css}">
             {{ option.title }}
           </option>
@@ -80,21 +41,21 @@ const onFontSelect = (event) => {
       </div>
       <div class="cards-align">
         <h4>Card align:</h4>
-        <button class="align-btn btn" @click="alignCards('flex-start')">
+        <button class="align-btn btn" @click="settings.setCardsAlign('flex-start')">
           <svg xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 96 960 960" width="20"><path d="M154.001 901.999v-51.998h651.998v51.998H154.001Zm0-150v-51.998h459.998v51.998H154.001Zm0-150v-51.998h651.998v51.998H154.001Zm0-150v-51.998h459.998v51.998H154.001Zm0-150v-51.998h651.998v51.998H154.001Z"/></svg>
         </button>
-        <button class="align-btn btn" @click="alignCards('center')">
+        <button class="align-btn btn" @click="settings.setCardsAlign('center')">
           <svg xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 96 960 960" width="20"><path d="M154.001 901.999v-51.998h651.998v51.998H154.001Zm144-150v-51.998h363.998v51.998H298.001Zm-144-150v-51.998h651.998v51.998H154.001Zm144-150v-51.998h363.998v51.998H298.001Zm-144-150v-51.998h651.998v51.998H154.001Z"/></svg>
         </button>
       </div>
-      <div class="column-width">
+      <div class="cards-width">
         <h4>Categories width:</h4>
-        <Slider v-model="columnWidth" class="slider"
+        <Slider v-model="cardsWidth" class="slider"
           :min="300"
           :max="600"
           :step="10"
-          :default="columnWidth"
-          @update="changeColumnWidth()"
+          :default="cardsWidth"
+          @update="settings.setCardWidth()"
           :tooltips="false"
           />
       </div>
@@ -192,7 +153,7 @@ const onFontSelect = (event) => {
     background: linear-gradient(to left, #8c7851 50%, #eaddcf 50%);
   }
 
-  .text-size {
+  .font-size {
     display: flex;
     flex-direction: row;
     gap: 10px;
@@ -217,7 +178,7 @@ const onFontSelect = (event) => {
     transform: scale(1.1);
   }
 
-  .font-select, .cards-align, .column-width {
+  .font-select, .cards-align, .cards-width {
     display: flex;
     flex-direction: row;
     align-items: center;

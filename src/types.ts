@@ -19,13 +19,34 @@ export interface Data {
   children: Array<Category>,
 }
 
-export interface Settings {
+export interface Styles {
+  colorTheme: Array<string>,
+  fontSize: fontSize,
   fontFamily: string,
+  align: string,
+  cardsWidth: number,
+}
+
+export interface fontSize {
+  title: string,
+  mainSize: number,
+  titleSize: number,
+  margin: number,
+}
+
+export interface Settings {
+  styles: Styles,
+  saveToLocalSettings(): void,
+  loadFromLocalStore(): void,
+  setTheme(theme: string): void,
+  setFontSize(fontSize: fontSize): void,
+  setFont(event: Event): void,
+  setCardsAlign(alignCss: string): void,
+  setCardWidth(): void,
 }
 
 export interface Store {
   data: Category;
-  settings: Settings,
   deleteNode(nodeId: number): void;
   addCategory(parentId: number, title: string): void;
   editCategory(categoryId: number, newTitle: string): void;
