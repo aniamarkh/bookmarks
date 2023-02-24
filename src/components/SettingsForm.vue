@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import Slider from '@vueform/slider'
 import "@vueform/slider/themes/default.css";
-import { settings, fontSizes, fontOptions, cardsWidth } from "../settings";
+import { settings, fontSizes, fontOptions, cardsWidth, themes } from "../settings";
 
 
 const emit = defineEmits(["close-form"]);
@@ -16,11 +16,11 @@ const sendCloseFormEvent = () => emit("close-form");
       </button>
       <h4>Color theme:</h4>
       <div class="theme-btns">
-        <button class="theme-btn btn-light" @click="settings.setTheme('light')"></button>
-        <button class="theme-btn btn-dark" @click="settings.setTheme('dark')"></button>
-        <button class="theme-btn btn-pink" @click="settings.setTheme('pink')"></button>
-        <button class="theme-btn btn-blue" @click="settings.setTheme('blue')"></button>
-        <button class="theme-btn btn-coffee" @click="settings.setTheme('coffee')"></button>
+        <button class="theme-btn btn-light" @click="settings.setTheme(themes.light)"></button>
+        <button class="theme-btn btn-dark" @click="settings.setTheme(themes.dark)"></button>
+        <button class="theme-btn btn-pink" @click="settings.setTheme(themes.pink)"></button>
+        <button class="theme-btn btn-blue" @click="settings.setTheme(themes.blue)"></button>
+        <button class="theme-btn btn-coffee" @click="settings.setTheme(themes.coffee)"></button>
       </div>
       <div class="font-size">
         <h4>Text size:</h4>
