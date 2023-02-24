@@ -5,7 +5,7 @@
   --cards: #f7f7f7;
   --text-size: 16px;
   --title-size: 22px;
-  --bkmrk-margin: 0.3rem;
+  --bkmrk-margin: 3px;
   --align: flex-start;
   --column-width: 320px;
   --font-family: 'Roboto Slab', sans-serif;
@@ -45,7 +45,7 @@ html {
 }
 
 .category {
-  max-height: 98%;
+  max-height: 100%;
   display: flex;
   flex-direction: column;
   align-content:space-between;

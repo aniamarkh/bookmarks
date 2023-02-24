@@ -32,6 +32,7 @@ const closeForm = () => showSettingsForm.value = false;
 <style scoped>
 .top-panel {
   position: absolute;
+  right: 10px;
   z-index: 2;
   width: 100vw;
   height: 60px;
