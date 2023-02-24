@@ -58,6 +58,7 @@ export const settings: Settings = reactive(
       document.documentElement.style.setProperty("--bkmrk-margin", `${(local.fontSize.margin) + "px"}`);
       document.documentElement.style.setProperty("--font-family", local.fontFamily);
       document.documentElement.style.setProperty("--align", local.align);
+      cardsWidth.value = local.cardsWidth;
       document.documentElement.style.setProperty("--column-width", `${local.cardsWidth + "px"}`);
     },
 
