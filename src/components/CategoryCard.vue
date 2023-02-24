@@ -30,6 +30,7 @@ const validateDrop = (evt: any) => {
 <template>
   <CategoryTitle :category="category"/>
   <Draggable 
+    :empty-insert-threshold="100"
     :list="category.children" 
     group="bookmarks"
     item-key="id"

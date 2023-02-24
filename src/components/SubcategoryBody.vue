@@ -60,6 +60,7 @@ const validateDrop = (evt: any) => {
   <CategoryEditForm v-if="showEditCategoryForm" :category="subcategory" @close-form="closeEditCategoryForm"/>
 
   <Draggable
+    :empty-insert-threshold="20"
     class="subcat-items"
     :list="subcategory.children" 
     group="bookmarks"

@@ -14,7 +14,8 @@ const closeCategoryForm = () => showCategoryForm.value = false;
 
 <template>
   <ToolsPanel />
-  <Draggable 
+  <Draggable
+    :empty-insert-threshold="20"
     class="categories-wrapper"
     :list="store.data.children" 
     group="bookmarks"
