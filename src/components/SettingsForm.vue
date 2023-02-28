@@ -1,7 +1,8 @@
 <script setup lang="ts">
+// import {ref} from "vue";
 import Slider from '@vueform/slider'
 import "@vueform/slider/themes/default.css";
-import { settings, fontSizes, fontOptions, cardsWidth, themes } from "../settings";
+import { settings, fontSizes, fontOptions, cardsWidth, columnsCount, themes } from "../settings";
 
 
 const emit = defineEmits(["close-form"]);
@@ -11,6 +12,14 @@ const wrapper = document.querySelector(".categories-wrapper");
 if (wrapper) {
   wrapper.addEventListener("click", sendCloseFormEvent);
 }
+
+// const checkOverflow = () => {
+//   const scrollable = document.querySelector(".categories-wrapper");
+//   console.log(scrollable.scrollWidth > scrollable.clientWidth ? false : true);
+//   return scrollable.scrollWidth > scrollable.clientWidth ? false : true;
+// }
+
+// const isOverflow = ref(checkOverflow());
 </script>
 
 <template>
@@ -62,6 +71,17 @@ if (wrapper) {
           :default="cardsWidth"
           @update="settings.setCardWidth()"
           :tooltips="false"
+          />
+      </div>
+            <div class="columns-count">
+        <h4>Columns count:</h4>
+        <Slider v-model="columnsCount" class="slider"
+          :min="1"
+          :max="6"
+          :step="1"
+          :default="columnsCount"
+          @update="settings.setColumnsCount()"
+          tooltip-position="bottom"
           />
       </div>
     </div>
@@ -183,7 +203,7 @@ if (wrapper) {
     transform: scale(1.1);
   }
 
-  .font-select, .cards-align, .cards-width {
+  .font-select, .cards-align, .cards-width, .columns-count {
     display: flex;
     flex-direction: row;
     align-items: center;

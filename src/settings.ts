@@ -26,6 +26,8 @@ export const cardsAlign = ref("flex-start");
 
 export const cardsWidth = ref(320);
 
+export const columnsCount = ref(3);
+
 export const settings: Settings = reactive(
   {
     styles: {
@@ -34,6 +36,7 @@ export const settings: Settings = reactive(
       fontFamily: fontOptions.value[0].css,
       align: cardsAlign.value,
       cardsWidth: cardsWidth.value,
+      columnsCount: columnsCount.value,
     },
 
     saveToLocalSettings(): void {
@@ -99,6 +102,13 @@ export const settings: Settings = reactive(
       document.documentElement.style.setProperty("--column-width", `${cardsWidth.value + "px"}`);
 
       this.styles.cardsWidth = cardsWidth.value;
+      this.saveToLocalSettings();
+    },
+
+    setColumnsCount(): void {
+      document.documentElement.style.setProperty("--columns-count", `${columnsCount.value}`);
+
+      this.styles.columnsCount = cardsWidth.value;
       this.saveToLocalSettings();
     }
   }
