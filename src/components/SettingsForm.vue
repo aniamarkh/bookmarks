@@ -1,7 +1,9 @@
 <script setup lang="ts">
+// import {ref} from "vue";
 import Slider from '@vueform/slider'
 import "@vueform/slider/themes/default.css";
-import { settings, fontSizes, fontOptions, cardsWidth, themes } from "../settings";
+import { settings, fontSizes, fontOptions, themes, columnsCount } from "../settings";
+
 
 
 const emit = defineEmits(["close-form"]);
@@ -44,24 +46,15 @@ if (wrapper) {
           </option>
         </select>
       </div>
-      <div class="cards-align">
-        <h4>Card align:</h4>
-        <button class="align-btn btn" @click="settings.setCardsAlign('flex-start')">
-          <svg xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 96 960 960" width="20"><path d="M154.001 901.999v-51.998h651.998v51.998H154.001Zm0-150v-51.998h459.998v51.998H154.001Zm0-150v-51.998h651.998v51.998H154.001Zm0-150v-51.998h459.998v51.998H154.001Zm0-150v-51.998h651.998v51.998H154.001Z"/></svg>
-        </button>
-        <button class="align-btn btn" @click="settings.setCardsAlign('center')">
-          <svg xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 96 960 960" width="20"><path d="M154.001 901.999v-51.998h651.998v51.998H154.001Zm144-150v-51.998h363.998v51.998H298.001Zm-144-150v-51.998h651.998v51.998H154.001Zm144-150v-51.998h363.998v51.998H298.001Zm-144-150v-51.998h651.998v51.998H154.001Z"/></svg>
-        </button>
-      </div>
-      <div class="cards-width">
-        <h4>Categories width:</h4>
-        <Slider v-model="cardsWidth" class="slider"
-          :min="300"
-          :max="600"
-          :step="10"
-          :default="cardsWidth"
-          @update="settings.setCardWidth()"
-          :tooltips="false"
+      <div class="columns-count">
+        <h4>Columns count:</h4>
+        <Slider v-model="columnsCount" class="slider"
+          :min="1"
+          :max="5"
+          :step="1"
+          :default="columnsCount"
+          @update="settings.setColumnsCount()"
+          tooltip-position="bottom"
           />
       </div>
     </div>
@@ -80,6 +73,7 @@ if (wrapper) {
     height: auto;
     border-radius: 15px;
     box-shadow: 0px 0px 17px -7px rgba(0,0,0,0.4);
+    padding: 10px;
   }
 
   .close-btn {
@@ -183,7 +177,7 @@ if (wrapper) {
     transform: scale(1.1);
   }
 
-  .font-select, .cards-align, .cards-width {
+  .font-select, .cards-align, .cards-width, .columns-count {
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -221,5 +215,6 @@ if (wrapper) {
     --slider-connect-bg: var(--background);
     --slider-handle-ring-color: var(--background);
     --slider-tooltip-py: 0px;
+    --slider-tooltip-bg: #c2c2c2;
   }
 </style>

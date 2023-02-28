@@ -1,5 +1,6 @@
 import { reactive, ref } from "vue";
 import type { Store, Category, Bookmark } from "./types";
+import { settings } from "./settings";
 
 export const store: Store = reactive(
   {
@@ -7,6 +8,21 @@ export const store: Store = reactive(
       id: 0,
       title: "root",
       children: [] as Array<Category>,
+      columns: [[]] as Array<Array<Category>>,
+    },
+
+    arrangeCards(cards: Array<Category>): void {
+      const columns = settings.styles.columnsCount;
+      const maxCardsInColumn = Math.ceil(cards.length / columns);
+      const columnsArrays: Array<Array<Category>> = Array.from({ length: columns }, () => []);
+
+      cards.forEach((card: Category, index) => {
+        const columnIndex = Math.floor(index / maxCardsInColumn);
+        const columnByIndex = columnsArrays[columnIndex];
+        columnByIndex.push(card);
+      })
+      this.data.columns = columnsArrays;
+      this.saveToLocalStore();
     },
 
     deleteNode(nodeId: number) {
@@ -16,25 +32,30 @@ export const store: Store = reactive(
         if (nodeToDelete) {
           const nodeToDeleteIndex = parentNode.children.indexOf(nodeToDelete);
           parentNode.children.splice(nodeToDeleteIndex, 1);
+
+          if ("children" in nodeToDelete) {
+            this.data.columns.forEach((column, index) => {
+              if (column.filter(el => el.id === nodeToDelete.id).length) {
+                const indexInColumn = column.map(obj => obj.id).indexOf(nodeToDelete.id);
+                this.data.columns[index].splice(indexInColumn, 1);
+              }
+            });
+          }
         }
       }
       this.saveToLocalStore();
     },
 
-    addCategory(parentId: number, title: string): void {
+    addCategory(title: string): void {
       const newId: number = this.findMaxId(this.data) + 1;
-
       const newCategory: Category = {
         id: newId,
         title: title,
         children: [],
       }
-
-      const parentNode = this.findNodeById(this.data, parentId);
-      if (parentNode && "children" in parentNode) {
-        parentNode.children.push(newCategory);
-        this.saveToLocalStore();
-      }
+      this.data.children.push(newCategory);
+      this.data.columns[0].push(newCategory);
+      this.saveToLocalStore();
     },
 
     editCategory(categoryId: number, newTitle: string): void {
@@ -77,6 +98,7 @@ export const store: Store = reactive(
     },
 
     saveToLocalStore(): void {
+      this.data.children = this.data.columns.flat();
       localStorage.setItem("data", JSON.stringify(this.data));
     },
 

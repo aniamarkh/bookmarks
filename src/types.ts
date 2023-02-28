@@ -17,6 +17,32 @@ export interface Data {
   id: 0,
   title: "root",
   children: Array<Category>,
+  columns: Array<Array<Category>>,
+}
+
+export interface Styles {
+  colorTheme: Array<string>,
+  fontSize: fontSize,
+  fontFamily: string,
+  columnsCount: number,
+}
+
+export interface fontSize {
+  title: string,
+  mainSize: number,
+  titleSize: number,
+  margin: number,
+}
+
+export interface Settings {
+  styles: Styles,
+  saveToLocalSettings(): void,
+  loadFromLocalStore(): void,
+  onLoad(): void,
+  setTheme(theme: Array<string>): void,
+  setFontSize(fontSize: fontSize): void,
+  setFont(event: Event): void,
+  setColumnsCount(): void,
 }
 
 export interface Styles {
@@ -47,9 +73,10 @@ export interface Settings {
 }
 
 export interface Store {
-  data: Category;
+  data: Data;
+  arrangeCards(cards: Array<Category>): void
   deleteNode(nodeId: number): void;
-  addCategory(parentId: number, title: string): void;
+  addCategory(title: string): void;
   editCategory(categoryId: number, newTitle: string): void;
   addBookmark(nodeId: number, title: string, url: string): void;
   editBookmark(bookmarkId: number, newTitle: string, newUrl: string): void;

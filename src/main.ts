@@ -1,16 +1,6 @@
 import { createApp } from "vue";
 import App from "./App.vue";
 import "./style.css"
+import { cardsWidth } from "./settings";
 
 createApp(App).mount("#app");
-
-const scrollable = document.querySelector(".categories-wrapper");
-if (scrollable) {
-  window.addEventListener("wheel", event => {
-    if (event.deltaY > 0) {
-      scrollable.scrollLeft += 50;
-    } else {
-      scrollable.scrollLeft -= 50;
-    }
-  });
-}
