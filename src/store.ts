@@ -1,4 +1,4 @@
-import { reactive } from "vue";
+import { reactive, ref } from "vue";
 import type { Store, Category, Bookmark } from "./types";
 import { settings } from "./settings";
 

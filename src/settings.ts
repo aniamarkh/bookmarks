@@ -2,6 +2,7 @@ import type { Settings, fontSize } from "./types";
 import { reactive, ref } from "vue";
 import { store } from "./store";
 
+
 export const themes = {
   light: ["#f0f0f0", "#181818", "#8d8d8d", "#f7f7f7"],
   dark: ["#303030", "#e0e0e0", "#8d8d8d", "#1a1a1a"],

@@ -5,6 +5,7 @@ import "@vueform/slider/themes/default.css";
 import { settings, fontSizes, fontOptions, themes, columnsCount } from "../settings";
 
 
+
 const emit = defineEmits(["close-form"]);
 const sendCloseFormEvent = () => emit("close-form");
 
@@ -12,7 +13,6 @@ const wrapper = document.querySelector(".categories-wrapper");
 if (wrapper) {
   wrapper.addEventListener("click", sendCloseFormEvent);
 }
-
 </script>
 
 <template>
