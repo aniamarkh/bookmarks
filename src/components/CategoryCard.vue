@@ -29,7 +29,9 @@ const validateDrop = (evt: any) => {
 
 <template>
   <CategoryTitle :category="category"/>
-  <Draggable 
+  <Draggable
+    class="bookmarks-list"
+    :empty-insert-threshold="100"
     :list="category.children" 
     group="bookmarks"
     item-key="id"
@@ -44,7 +46,7 @@ const validateDrop = (evt: any) => {
   </Draggable>
 
   <button class="add-bookmark-btn" @click="showBookmarkForm = !showBookmarkForm" v-if="!showBookmarkForm">
-    <img src="./assets/add.svg" alt="add bookmark" />
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="3 5 40 40" height="20" width="20"><path d="M22.5 38V25.5H10v-3h12.5V10h3v12.5H38v3H25.5V38Z"/></svg>
   </button>
   <Form v-if="showBookmarkForm" :categoryId="category.id" @close-form="closeForm"/>
 

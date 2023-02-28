@@ -1,4 +1,4 @@
-import { reactive } from "vue";
+import { reactive, ref } from "vue";
 import type { Store, Category, Bookmark } from "./types";
 
 export const store: Store = reactive(
@@ -155,7 +155,7 @@ export const store: Store = reactive(
         console.error(error);
         this.editBookmark(bookmarkId, urlInput, urlInput);
       });
-    
+
       await Promise.race([
         fetchPromise,
         new Promise((_, reject) => setTimeout(() => reject(new Error('Timeout')), 3000))

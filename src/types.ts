@@ -1,3 +1,5 @@
+import type { Ref } from "vue";
+
 export interface Bookmark {
   id: number;
   title: string;
@@ -15,6 +17,33 @@ export interface Data {
   id: 0,
   title: "root",
   children: Array<Category>,
+}
+
+export interface Styles {
+  colorTheme: Array<string>,
+  fontSize: fontSize,
+  fontFamily: string,
+  align: string,
+  cardsWidth: number,
+}
+
+export interface fontSize {
+  title: string,
+  mainSize: number,
+  titleSize: number,
+  margin: number,
+}
+
+export interface Settings {
+  styles: Styles,
+  saveToLocalSettings(): void,
+  loadFromLocalStore(): void,
+  onLoad(): void,
+  setTheme(theme: Array<string>): void,
+  setFontSize(fontSize: fontSize): void,
+  setFont(event: Event): void,
+  setCardsAlign(alignCss: string): void,
+  setCardWidth(): void,
 }
 
 export interface Store {

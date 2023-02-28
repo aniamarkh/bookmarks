@@ -6,7 +6,6 @@ import { store } from "../store";
 const props = defineProps({
   bookmark: { type: Object as () => Bookmark, required: true },
 });
-
 const bookmarkProp: Bookmark = toRef(props, "bookmark").value;
 
 const showEditForm = ref(false);
@@ -14,25 +13,20 @@ const showEditForm = ref(false);
 const isInvalidInputs = (): boolean => {
   const isEmpty: boolean = bookmarkProp.url.trim() === "";
   let invalidUrl: boolean;
-
   try {
     new URL(bookmarkProp.url);
     invalidUrl = false;
   } catch (err) {
     invalidUrl = true;
   }
-
   return isEmpty || invalidUrl;
 };
 
 const onSubmit = (): void => {
-  let title: string;
   if (bookmarkProp.title === "") {
     store.updateBookmarkTitle(bookmarkProp.url, bookmarkProp.id);
-  } else {
-    title = bookmarkProp.title;
   }
-  store.editBookmark(bookmarkProp.id, title, bookmarkProp.url);
+  store.editBookmark(bookmarkProp.id, bookmarkProp.title, bookmarkProp.url);
   showEditForm.value = false;
 }
 </script>
@@ -52,8 +46,12 @@ const onSubmit = (): void => {
     <input type="text" placeholder="new title" v-model="bookmarkProp.title"/>
     <input type="url" placeholder="new url" v-model="bookmarkProp.url"/>
     <div class="bookmark-form--btns">
-      <button class="submit-btn" :disabled="isInvalidInputs()" @click.prevent="onSubmit"></button>
-      <button class="cancel-btn" @click="!showEditForm"></button>
+      <button class="submit-btn" :disabled="isInvalidInputs()" @click.prevent="onSubmit">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -5 50 50" height="20" width="20"><path d="M18.9 35.7 7.7 24.5l2.15-2.15 9.05 9.05 19.2-19.2 2.15 2.15Z"/></svg>
+      </button>
+      <button class="cancel-btn" @click="!showEditForm">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -5 50 50" height="20" width="20"><path d="m12.45 37.65-2.1-2.1L21.9 24 10.35 12.45l2.1-2.1L24 21.9l11.55-11.55 2.1 2.1L26.1 24l11.55 11.55-2.1 2.1L24 26.1Z"/></svg>
+      </button>
     </div>
   </form>
 </template>
@@ -80,22 +78,17 @@ const onSubmit = (): void => {
   align-items: center;
 }
 
-.cancel-btn {
-  background-image: url("./assets/close.svg");
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: 1rem;
-}
-
-.submit-btn {
-  background-image: url("./assets/done.svg");
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: 1rem;
+.submit-btn svg, .cancel-btn svg {
+  fill: var(--text);
+  transition: all .2s;
 }
 
 .submit-btn:hover, .cancel-btn:hover {
-    background-color: var(--light-gray);
+  background-color: var(--background);
+}
+
+.submit-btn:hover svg, .cancel-btn:hover svg{
+  transform: scale(1.2);
 }
 
 .submit-btn:disabled {
@@ -106,7 +99,7 @@ const onSubmit = (): void => {
 input {
   width: auto;
   min-height: 30px;
-  background-color: var(--light-gray);
+  background-color: var(--background);
 	color: inherit;
 	border: none;
   border-radius: 10px;
