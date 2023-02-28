@@ -42,7 +42,6 @@ main {
   gap: 20px;
   justify-content: center;
   padding: 60px 20px 0 20px;
-  /* min-height: 95vh; */
   height: auto;
   width: 100vw;
 }

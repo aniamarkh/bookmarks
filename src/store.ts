@@ -53,7 +53,6 @@ export const store: Store = reactive(
         title: title,
         children: [],
       }
-      this.data.children.push(newCategory);
       this.data.columns[0].push(newCategory);
       this.saveToLocalStore();
     },

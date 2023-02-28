@@ -24,7 +24,7 @@ const validateDrop = (evt: any) => {
   const draggedElement = evt.dragged;
   if (draggedElement.classList.contains("bookmarkbody")) {
     const targetNode = evt.to;
-    if (targetNode.classList.contains("categories-wrapper")) {
+    if (targetNode.classList.contains("categories-column")) {
       return false;
     }
   }

@@ -11,10 +11,6 @@ import { columnsCount } from "../settings";
 const showCategoryForm: Ref<boolean> = ref(false);
 const closeCategoryForm = () => showCategoryForm.value = false;
 
-const atend = () => {
-  store.data.children = store.data.columns.flat();
-  store.saveToLocalStore();
-}
 </script>
 
 <template>
@@ -28,7 +24,7 @@ const atend = () => {
       :list="column" 
       group="bookmarks"
       item-key="id"
-      @end="atend">
+      @end="store.saveToLocalStore()">
       <template #item="{element}">
         <div class="category">
           <CategoryCard :category="element" />

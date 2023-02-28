@@ -49,8 +49,7 @@ export interface Styles {
   colorTheme: Array<string>,
   fontSize: fontSize,
   fontFamily: string,
-  align: string,
-  cardsWidth: number,
+  columnsCount: number,
 }
 
 export interface fontSize {
@@ -68,13 +67,12 @@ export interface Settings {
   setTheme(theme: Array<string>): void,
   setFontSize(fontSize: fontSize): void,
   setFont(event: Event): void,
-  setCardsAlign(alignCss: string): void,
-  setCardWidth(): void,
+  setColumnsCount(): void,
 }
 
 export interface Store {
   data: Data;
-  arrangeCards(cards: Array<Category>): void
+  arrangeCards(cards: Array<Category>): void;
   deleteNode(nodeId: number): void;
   addCategory(title: string): void;
   editCategory(categoryId: number, newTitle: string): void;
