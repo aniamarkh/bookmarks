@@ -13,7 +13,7 @@ const emit = defineEmits(["close-form"]);
 const sendCloseFormEvent = () => emit("close-form");
 
 const onSubmit = (): void => {
-  store.addCategory(0, input_category.value);
+  store.addCategory(input_category.value);
   input_category.value = "";
   sendCloseFormEvent();
 };
@@ -42,7 +42,7 @@ const onSubmit = (): void => {
   width: var(--column-width);
 }
 input[type="text"] {
-  width: var(--column-width);
+  width: calc(var(--column-width)-60px);
   min-height: 30px;
   align-self: flex-end;
   background-color: var(--cards);

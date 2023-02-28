@@ -6,9 +6,7 @@
   --text-size: 16px;
   --title-size: 22px;
   --bkmrk-margin: 3px;
-  --align: flex-start;
   --column-width: 320px;
-  --columns-count: 3;
   --font-family: 'Roboto Slab', sans-serif;
 }
 
@@ -25,6 +23,13 @@
 html {
   background-color: var(--background);
   scroll-behavior: smooth;
+  overflow-x: hidden;
+}
+
+main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .bookmarkbody {
@@ -32,32 +37,31 @@ html {
 }
 
 .categories-wrapper {
-  /* display: flex;
-  flex-direction: column;
-  flex-wrap: wrap;
-  align-content: var(--align);
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  gap: 20px;
+  justify-content: center;
   padding: 60px 20px 0 20px;
-  gap: 15px;  */
-  margin: 0 auto;
-  column-count: var(--columns-count);
-  padding: 60px 20px 20px 20px;
+  /* min-height: 95vh; */
   height: auto;
-  width: calc(var(--column-width) * var(--columns-count) + 150px);
-  overflow-y: hidden;
-  overflow-x: hidden;
+  width: 100vw;
+}
 
+.categories-column {
+  width: var(--column-width);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 
 .category {
-  break-inside: avoid-column;
-
   max-height: 100%;
   display: flex;
   flex-direction: column;
   align-content:space-between;
   background-color: var(--cards);
   padding: 15px;
-  margin: 0 20px 20px 20px;
   border-radius: 10px;
   width: var(--column-width);
   text-align: center;
@@ -132,10 +136,14 @@ li {
   background-color: var(--background);
 }
 
+.new-category {
+  margin: 20px auto 10px auto;
+}
+
 .new-category-btn {
   width: var(--column-width);
   height: 30px;
-  align-self: flex-end;
+  align-self: center;
   background: none;
 	color: inherit;
 	border: none;
@@ -145,9 +153,6 @@ li {
 	cursor: pointer;
 	outline: inherit;
   transition: all .2s;
-  align-items: center;
-  margin: 0 20px 20px 20px;
-
 }
 
 .new-category-btn:hover {

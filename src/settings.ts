@@ -1,5 +1,6 @@
 import type { Settings, fontSize } from "./types";
 import { reactive, ref } from "vue";
+import { store } from "./store";
 
 export const themes = {
   light: ["#f0f0f0", "#181818", "#8d8d8d", "#f7f7f7"],
@@ -26,7 +27,7 @@ export const cardsAlign = ref("flex-start");
 
 export const cardsWidth = ref(320);
 
-export const columnsCount = ref(3);
+export const columnsCount = ref(1);
 
 export const settings: Settings = reactive(
   {
@@ -34,8 +35,6 @@ export const settings: Settings = reactive(
       colorTheme: themes.light,
       fontSize: fontSizes[0],
       fontFamily: fontOptions.value[0].css,
-      align: cardsAlign.value,
-      cardsWidth: cardsWidth.value,
       columnsCount: columnsCount.value,
     },
 
@@ -60,9 +59,7 @@ export const settings: Settings = reactive(
       document.documentElement.style.setProperty("--title-size", `${(local.fontSize.titleSize) + "px"}`);
       document.documentElement.style.setProperty("--bkmrk-margin", `${(local.fontSize.margin) + "px"}`);
       document.documentElement.style.setProperty("--font-family", local.fontFamily);
-      document.documentElement.style.setProperty("--align", local.align);
-      cardsWidth.value = local.cardsWidth;
-      document.documentElement.style.setProperty("--column-width", `${local.cardsWidth + "px"}`);
+      columnsCount.value = local.columnsCount;
     },
 
     setTheme(themeColors: Array<string>): void {
@@ -91,56 +88,11 @@ export const settings: Settings = reactive(
       this.saveToLocalSettings();
     },
 
-    setCardsAlign(alignCss: string): void {
-      document.documentElement.style.setProperty("--align", alignCss);
-
-      this.styles.align = alignCss;
-      this.saveToLocalSettings();
-    },
-
-    setCardWidth(): void {
-      document.documentElement.style.setProperty("--column-width", `${cardsWidth.value + "px"}`);
-
-      this.styles.cardsWidth = cardsWidth.value;
-      this.saveToLocalSettings();
-    },
-
     setColumnsCount(): void {
-      document.documentElement.style.setProperty("--columns-count", `${columnsCount.value}`);
-
-      this.styles.columnsCount = cardsWidth.value;
+      this.styles.columnsCount = columnsCount.value;
+      store.arrangeCards(store.data.children);
       this.saveToLocalSettings();
+      store.saveToLocalStore();
     }
   }
 )
-
-// window.addEventListener("load", function (event) {
-//   console.log("beforeload");
-//   settings.loadFromLocalStore();
-//   const local = settings.styles;
-//   cssVarColors.forEach((el, index) => {
-//     document.documentElement.style.setProperty(el, local.colorTheme[index]);
-//   });
-//   document.documentElement.style.setProperty("--text-size", `${local.fontSize.mainSize + "px"}`);
-//   document.documentElement.style.setProperty("--title-size", `${(local.fontSize.titleSize) + "px"}`);
-//   document.documentElement.style.setProperty("--bkmrk-margin", `${(local.fontSize.margin) + "px"}`);
-//   document.documentElement.style.setProperty("--font-family", local.fontFamily);
-//   document.documentElement.style.setProperty("--align", local.align);
-//   document.documentElement.style.setProperty("--column-width", `${local.cardsWidth + "px"}`);
-// });
-
-// window.onload = function (event) {
-//   console.log("beforeload");
-//   event.preventDefault();
-//   settings.loadFromLocalStore();
-//   const local = settings.styles;
-//   cssVarColors.forEach((el, index) => {
-//     document.documentElement.style.setProperty(el, local.colorTheme[index]);
-//   });
-//   document.documentElement.style.setProperty("--text-size", `${local.fontSize.mainSize + "px"}`);
-//   document.documentElement.style.setProperty("--title-size", `${(local.fontSize.titleSize) + "px"}`);
-//   document.documentElement.style.setProperty("--bkmrk-margin", `${(local.fontSize.margin) + "px"}`);
-//   document.documentElement.style.setProperty("--font-family", local.fontFamily);
-//   document.documentElement.style.setProperty("--align", local.align);
-//   document.documentElement.style.setProperty("--column-width", `${local.cardsWidth + "px"}`);
-// };
