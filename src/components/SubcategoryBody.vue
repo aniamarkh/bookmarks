@@ -133,6 +133,7 @@ ul {
   background-color: var(--background);
   height: calc(var(--text-size) + 10px);
   padding: 4px 10px;
+  width: 280px;
 }
 .sortable-chosen {
   opacity: 0.8;

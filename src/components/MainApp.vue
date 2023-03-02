@@ -49,7 +49,7 @@ const modifyDragItem = (dataTransfer: DataTransfer) => {
 <style scoped>
 .sortable-ghost {
   overflow: hidden;
-  height: 60px;
+  height: calc(var(--title-size) + 30px);
   width: 290px;
 }
 .sortable-chosen {
