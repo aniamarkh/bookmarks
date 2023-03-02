@@ -186,3 +186,4 @@ export const store: Store = reactive(
 );
 
 store.loadFromLocalStore();
+store.data.children = store.data.columns.flat();

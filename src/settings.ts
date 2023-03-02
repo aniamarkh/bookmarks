@@ -5,7 +5,7 @@ import { store } from "./store";
 
 export const themes = {
   light: ["#f0f0f0", "#181818", "#8d8d8d", "#f7f7f7"],
-  dark: ["#303030", "#e0e0e0", "#8d8d8d", "#1a1a1a"],
+  dark: ["#121212", "#b4b4b4", "#FFFFFF", "#1D1D1D"],
   pink: ["#ffc6c7", "#33272a", "#fff", "#fff2f2"],
   blue: ["#e3f6f5", "#272343", "#bae8e8", "#fffffe"],
   coffee: ["#eaddcf", "#020826", "#8c7851", "#f9f4ef"],
@@ -14,8 +14,8 @@ export const cssVarColors = ["--background", "--text", "--medium", "--cards"];
 
 export const fontSizes = [
   { title: "S", mainSize: 16, titleSize: 22, margin: 3 },
-  { title: "M", mainSize: 18, titleSize: 24, margin: 6 },
-  { title: "L", mainSize: 22, titleSize: 28, margin: 9 },
+  { title: "M", mainSize: 18, titleSize: 24, margin: 5 },
+  { title: "L", mainSize: 22, titleSize: 28, margin: 8 },
 ];
 
 export const fontOptions = ref([

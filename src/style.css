@@ -31,8 +31,9 @@ main {
   flex-direction: column;
   align-items: center;
 }
-.bookmarkbody {
+.bookmarkbody, .subcarbody {
   margin: var(--bkmrk-margin);
+  transition: all 0.3s;
 }
 
 .categories-wrapper {
@@ -50,6 +51,7 @@ main {
   width: var(--column-width);
   display: flex;
   flex-direction: column;
+  align-items: center;
   gap: 20px;
 }
 
@@ -65,10 +67,7 @@ main {
   text-align: center;
   transition: all 0.3s;
   box-shadow: 0px 0px 17px -7px rgba(0,0,0,0.4);
-}
-
-.bookmarks-list {
-  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 li {
@@ -78,11 +77,31 @@ li {
 .bookmark-wrapper {
   display: flex;
   flex-direction: row;
-  gap: 4px;
-  justify-content: flex-start;
+  justify-content: space-between;
   align-items: center;
-  height: 20px;
-  width: auto;
+  height: calc(var(--text-size) + 4px);
+  background-color: inherit;
+  width: inherit;
+}
+
+.bookmark-title {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 4px;
+  width: calc(100% + 20px);
+  -webkit-mask-image: linear-gradient(90deg, var(--text) 85%, transparent);
+  overflow-x: hidden;
+}
+
+.bookmark-btns {
+  display: none;
+  flex-direction: row;
+  gap: 4px;
+}
+
+.bookmark-list {
+  width: 280px;
 }
 
 .bookmark-btn {
@@ -91,15 +110,14 @@ li {
 	border: none;
   cursor: pointer;
   align-content: center;
-  display: none;
 }
 
 .bookmark-btn svg {
   fill: var(--text);
 }
 
-.bookmark-wrapper:hover .bookmark-btn {
-  display: block;
+.bookmark-wrapper:hover .bookmark-btns {
+  display: flex;
 }
 
 .add-bookmark-btn {
@@ -189,11 +207,8 @@ h3 {
 
 a {
   text-decoration: none;
-  overflow:hidden;
   white-space: nowrap; 
   text-align: start;
-  width: calc(var(--column-width) - 20px);
-  -webkit-mask-image: linear-gradient(90deg, var(--text) 85%, transparent);
 }
 
 .v-enter-active,
@@ -244,8 +259,4 @@ a {
 
 .bookmark-edit_form:hover .category-btns {
   display: none;
-}
-
-.subcatbody {
-  margin: .7rem 0;
 }

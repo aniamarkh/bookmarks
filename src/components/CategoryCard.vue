@@ -25,18 +25,23 @@ const validateDrop = (evt: any) => {
   }
   return true;
 }
+
+const modifyDragItem = (dataTransfer: DataTransfer) => {
+  dataTransfer.setDragImage(document.createElement('div'), 0, 0);
+};
 </script>
 
 <template>
   <CategoryTitle :category="category"/>
   <Draggable
     class="bookmarks-list"
-    :empty-insert-threshold="100"
+    :empty-insert-threshold="50"
     :list="category.children" 
     group="bookmarks"
     item-key="id"
     :move="validateDrop"
-    @end="store.saveToLocalStore()">
+    @end="store.saveToLocalStore()"
+    :setData="modifyDragItem">
     <template #item="{element}">
       <div :class=" element.children ? 'subcatbody' : 'bookmarkbody' ">
         <BookmarkBody v-if="!element.children" :bookmark="element" />
@@ -51,3 +56,18 @@ const validateDrop = (evt: any) => {
   <Form v-if="showBookmarkForm" :categoryId="category.id" @close-form="closeForm"/>
 
 </template>
+
+<style scoped>
+.sortable-ghost {
+  border-radius: 5px;
+  overflow: hidden;
+  background-color: var(--background);
+  height: calc(var(--text-size) + 10px);
+  padding: 4px 10px;
+  width: 280px;
+}
+
+.sortable-chosen {
+  opacity: 0.8;
+}
+</style>

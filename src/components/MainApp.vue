@@ -11,6 +11,9 @@ import { columnsCount } from "../settings";
 const showCategoryForm: Ref<boolean> = ref(false);
 const closeCategoryForm = () => showCategoryForm.value = false;
 
+const modifyDragItem = (dataTransfer: DataTransfer) => {
+  dataTransfer.setDragImage(document.createElement('div'), 0, 0);
+};
 </script>
 
 <template>
@@ -19,12 +22,14 @@ const closeCategoryForm = () => showCategoryForm.value = false;
     <Draggable
       v-for="(column, index) in store.data.columns"
       :key="index"
-      :empty-insert-threshold="20"
+      :empty-insert-threshold="10"
       class="categories-column"
       :list="column" 
       group="bookmarks"
       item-key="id"
-      @end="store.saveToLocalStore()">
+      @end="store.saveToLocalStore()"
+      :setData="modifyDragItem"
+      >
       <template #item="{element}">
         <div class="category">
           <CategoryCard :category="element" />
@@ -39,3 +44,15 @@ const closeCategoryForm = () => showCategoryForm.value = false;
     </button>
   </div>
 </template>
+
+
+<style scoped>
+.sortable-ghost {
+  overflow: hidden;
+  height: 60px;
+  width: 290px;
+}
+.sortable-chosen {
+  opacity: 0.8;
+}
+</style>

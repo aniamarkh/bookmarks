@@ -30,6 +30,10 @@ const validateDrop = (evt: any) => {
   }
   return true;
 }
+
+const modifyDragItem = (dataTransfer: DataTransfer) => {
+  dataTransfer.setDragImage(document.createElement('div'), 0, 0);
+};
 </script>
 
 <template>
@@ -66,7 +70,8 @@ const validateDrop = (evt: any) => {
     group="bookmarks"
     item-key="id"
     :move="validateDrop"
-    @end="store.saveToLocalStore()">
+    @end="store.saveToLocalStore()"
+    :setData="modifyDragItem">
     <template #item="{element}">
       <div :class=" element.children ? 'subcatbody' : 'bookmarkbody' " v-if="isOpen">
         <BookmarkBody v-if="!element.children" :bookmark="element" />
@@ -81,13 +86,13 @@ const validateDrop = (evt: any) => {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  height: 21px;
   cursor: pointer;
 }
 
 .subcategory-title {
   display: flex;
   flex-direction: row;
+  margin-bottom: var(--bkmrk-margin);
 }
 
 .subcategory-btns {
@@ -105,13 +110,13 @@ const validateDrop = (evt: any) => {
   overflow:hidden;
   white-space: nowrap; 
   text-align: start;
-  width: 250px;
-  -webkit-mask-image: linear-gradient(90deg, var(--text) 60%, transparent);
+  width: calc(var(--column-width) - 30px);
+  -webkit-mask-image: linear-gradient(90deg, var(--text) 80%, transparent);
 }
 
 .subcat-items {
   padding-left: 1rem;
-  margin-top: -.2rem;
+  margin-top: -.5rem;
 }
 
 .icon svg {
@@ -120,5 +125,16 @@ const validateDrop = (evt: any) => {
 
 ul {
   padding-left: 21px;
+}
+
+.sortable-ghost {
+  border-radius: 5px;
+  overflow: hidden;
+  background-color: var(--background);
+  height: calc(var(--text-size) + 10px);
+  padding: 4px 10px;
+}
+.sortable-chosen {
+  opacity: 0.8;
 }
 </style>
