@@ -2,6 +2,7 @@
 import { ref } from "vue";
 import type { Ref } from "vue";
 import { store } from "../store";
+import { settings } from "../settings";
 import BookmarkBody from "./BookmarkBody.vue";
 import SubCategory from "./SubcategoryBody.vue";
 import BookmarkForm from "./BookmarkForm.vue";
@@ -47,7 +48,7 @@ const modifyDragItem = (dataTransfer: DataTransfer) => {
       </div>
       {{ subcategory.title }}
     </h4>
-    <div class="subcategory-btns">
+    <div class="subcategory-btns" v-if="settings.edit">
       <button class="category-btn" @click="showAddBookmarkForm=!showAddBookmarkForm">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 5 40 40" height="20" width="20"><path d="M22.5 38V25.5H10v-3h12.5V10h3v12.5H38v3H25.5V38Z"/></svg>
       </button>
@@ -71,7 +72,8 @@ const modifyDragItem = (dataTransfer: DataTransfer) => {
     item-key="id"
     :move="validateDrop"
     @end="store.saveToLocalStore()"
-    :setData="modifyDragItem">
+    :setData="modifyDragItem"
+    :disabled="!settings.edit">
     <template #item="{element}">
       <div :class=" element.children ? 'subcatbody' : 'bookmarkbody' " v-if="isOpen">
         <BookmarkBody v-if="!element.children" :bookmark="element" />

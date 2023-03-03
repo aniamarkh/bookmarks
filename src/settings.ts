@@ -30,6 +30,8 @@ export const cardsWidth = ref(320);
 
 export const columnsCount = ref(1);
 
+// export const edit = ref(true);
+
 export const settings: Settings = reactive(
   {
     styles: {
@@ -39,14 +41,19 @@ export const settings: Settings = reactive(
       columnsCount: columnsCount.value,
     },
 
+    edit: true,
+
     saveToLocalSettings(): void {
       localStorage.setItem("settings", JSON.stringify(this.styles));
+      localStorage.setItem("edit", JSON.stringify(this.edit));
     },
 
     loadFromLocalStore(): void {
       const localSettings = localStorage.getItem("settings");
-      if (localSettings) {
+      const localEdit = localStorage.getItem("edit");
+      if (localSettings && localEdit) {
         this.styles = JSON.parse(localSettings);
+        this.edit = JSON.parse(localEdit);
       }
     },
 

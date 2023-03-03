@@ -61,6 +61,7 @@ export interface fontSize {
 
 export interface Settings {
   styles: Styles,
+  edit: boolean,
   saveToLocalSettings(): void,
   loadFromLocalStore(): void,
   onLoad(): void,

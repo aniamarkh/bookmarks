@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { store } from "../store";
+import { settings } from "../settings";
 import CategoryForm from "./CategoryForm.vue";
 import CategoryCard from "./CategoryCard.vue";
 import ToolsPanel from "./ToolsPanel.vue";
@@ -10,7 +11,7 @@ import { columnsCount } from "../settings";
 
 const showCategoryForm: Ref<boolean> = ref(false);
 const closeCategoryForm = () => showCategoryForm.value = false;
-
+console.log(settings.edit);
 const modifyDragItem = (dataTransfer: DataTransfer) => {
   dataTransfer.setDragImage(document.createElement('div'), 0, 0);
 };
@@ -29,6 +30,7 @@ const modifyDragItem = (dataTransfer: DataTransfer) => {
       item-key="id"
       @end="store.saveToLocalStore()"
       :setData="modifyDragItem"
+      :disabled="!settings.edit"
       >
       <template #item="{element}">
         <div class="category">
@@ -37,7 +39,7 @@ const modifyDragItem = (dataTransfer: DataTransfer) => {
       </template>
     </Draggable>
   </div>
-  <div class="new-category">
+  <div class="new-category" v-if="settings.edit">
     <CategoryForm v-if="showCategoryForm" @close-form="closeCategoryForm"/>
     <button v-if="!showCategoryForm" class="new-category-btn" @click="showCategoryForm = !showCategoryForm">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="5 3 40 40" height="20" width="20"><path d="M22.5 38V25.5H10v-3h12.5V10h3v12.5H38v3H25.5V38Z"/></svg>
