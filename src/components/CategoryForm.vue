@@ -17,11 +17,15 @@ const onSubmit = (): void => {
   input_category.value = "";
   sendCloseFormEvent();
 };
+
+const vFocus = {
+  mounted: (el) => el.focus()
+}
 </script>
 
 <template>
       <form class="form">
-        <input type="text" placeholder="category title" v-model="input_category"/>
+        <input v-focus type="text" placeholder="category title" v-model="input_category"/>
         <button class="submit-btn" :disabled="isInvalidInput()" @click.prevent="onSubmit">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="5 -5 50 50" height="20" width="20"><path d="M18.9 35.7 7.7 24.5l2.15-2.15 9.05 9.05 19.2-19.2 2.15 2.15Z"/></svg>
         </button>

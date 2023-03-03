@@ -29,6 +29,10 @@ const onSubmit = (): void => {
   store.editBookmark(bookmarkProp.id, bookmarkProp.title, bookmarkProp.url);
   showEditForm.value = false;
 }
+
+const vFocus = {
+  mounted: (el) => el.focus()
+}
 </script>
 
 <template>
@@ -47,7 +51,7 @@ const onSubmit = (): void => {
     </div>
   </div>
   <form class="bookmark-edit_form" v-if="showEditForm" @submit.prevent="onSubmit">
-    <input type="text" placeholder="new title" v-model="bookmarkProp.title"/>
+    <input v-focus type="text" placeholder="new title" v-model="bookmarkProp.title"/>
     <input type="url" placeholder="new url" v-model="bookmarkProp.url"/>
     <div class="bookmark-form--btns">
       <button class="submit-btn" :disabled="isInvalidInputs()" @click.prevent="onSubmit">
