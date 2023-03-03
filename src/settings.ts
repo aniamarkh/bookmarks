@@ -30,8 +30,6 @@ export const cardsWidth = ref(320);
 
 export const columnsCount = ref(1);
 
-// export const edit = ref(true);
-
 export const settings: Settings = reactive(
   {
     styles: {
