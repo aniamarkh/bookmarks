@@ -11,6 +11,8 @@ export const store: Store = reactive(
       columns: [[]] as Array<Array<Category>>,
     },
 
+    closed: [] as Array<number>,
+
     arrangeCards(cards: Array<Category>): void {
       const columns = settings.styles.columnsCount;
       const maxCardsInColumn = Math.ceil(cards.length / columns);
@@ -99,12 +101,18 @@ export const store: Store = reactive(
     saveToLocalStore(): void {
       this.data.children = this.data.columns.flat();
       localStorage.setItem("data", JSON.stringify(this.data));
+      localStorage.setItem("closed", JSON.stringify(this.closed));
     },
 
     loadFromLocalStore(): void {
       const localData = localStorage.getItem("data");
+      const localClosed = localStorage.getItem("closed");
+
       if (localData) {
         this.data = JSON.parse(localData);
+      }
+      if (localClosed) {
+        this.closed = JSON.parse(localClosed);
       }
     },
 

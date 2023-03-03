@@ -14,7 +14,6 @@ const props = defineProps({
   subcategory:  { type: Object, required: true },
 });
 
-const isOpen: Ref<boolean> = ref(true);
 const showAddBookmarkForm: Ref<boolean> = ref(false);
 const showEditCategoryForm: Ref<boolean> = ref(false);
 
@@ -35,15 +34,35 @@ const validateDrop = (evt: any) => {
 const modifyDragItem = (dataTransfer: DataTransfer) => {
   dataTransfer.setDragImage(document.createElement('div'), 0, 0);
 };
+
+const toggleSubcat = (id: number) => {
+  const idIndex = store.closed.indexOf(id);
+  if (idIndex >= 0) {
+    store.closed.splice(idIndex, 1);
+  } else {
+    store.closed.push(id);
+  }
+  store.saveToLocalStore();
+};
+
+const isClosed = (id: number) => {
+  const idIndex = store.closed.indexOf(id);
+  if (idIndex >= 0) {
+    return false;
+  } else {
+    return true;
+  }
+};
+
 </script>
 
 <template>
   <div class="subcategory-wrapper" v-if="!showEditCategoryForm">
-    <h4 class="subcategory-title" @click="isOpen=!isOpen">
-      <div v-if="!isOpen" class="icon">
+    <h4 class="subcategory-title" @click="toggleSubcat(subcategory.id)">
+      <div v-if="!isClosed(subcategory.id)" class="icon">
         <svg xmlns="http://www.w3.org/2000/svg" height="20" width="20" viewBox="0 2 40 40"><path d="M17.167 27.167V12.833L24.333 20Z"/></svg>
       </div>
-      <div v-if="isOpen" class="icon">
+      <div v-if="isClosed(subcategory.id)" class="icon">
         <svg xmlns="http://www.w3.org/2000/svg" height="20" width="20" viewBox="0 2 40 40"><path d="m20 24.333-7.167-7.166h14.334Z"/></svg>
       </div>
       {{ subcategory.title }}
@@ -75,7 +94,7 @@ const modifyDragItem = (dataTransfer: DataTransfer) => {
     :setData="modifyDragItem"
     :disabled="!settings.edit">
     <template #item="{element}">
-      <div :class=" element.children ? 'subcatbody' : 'bookmarkbody' " v-if="isOpen">
+      <div :class=" element.children ? 'subcatbody' : 'bookmarkbody' " v-if="isClosed(subcategory.id)">
         <BookmarkBody v-if="!element.children" :bookmark="element" />
         <SubCategory v-if="element.children" :subcategory="element" />
       </div>

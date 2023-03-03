@@ -22,7 +22,7 @@ const editCategory = () => {
 }
 
 const vFocus = {
-  mounted: (el) => el.focus()
+  mounted: (el: HTMLInputElement) => el.focus()
 }
 </script>
 

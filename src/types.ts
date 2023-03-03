@@ -73,6 +73,7 @@ export interface Settings {
 
 export interface Store {
   data: Data;
+  closed: Array<number>,
   arrangeCards(cards: Array<Category>): void;
   deleteNode(nodeId: number): void;
   addCategory(title: string): void;
