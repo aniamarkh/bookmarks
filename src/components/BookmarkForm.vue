@@ -33,13 +33,17 @@ const onSubmit = (): void => {
   input_url.value = "";
   sendCloseFormEvent();
 };
+
+const vFocus = {
+  mounted: (el: HTMLInputElement) => el.focus()
+}
 </script>
 
 <template>
     <div class="form-wrapper">
       <form class="form">
         <input type="text" placeholder="title" v-model="input_title" />
-        <input type="url" placeholder="url" v-model="input_url" />
+        <input v-focus type="url" placeholder="url" v-model="input_url" />
         <div class="bookmark-form--btns">
           <button class="submit-btn" :disabled="isInvalidInputs()" @click.prevent="onSubmit">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -5 50 50" height="20" width="20"><path d="M18.9 35.7 7.7 24.5l2.15-2.15 9.05 9.05 19.2-19.2 2.15 2.15Z"/></svg>

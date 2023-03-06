@@ -39,14 +39,19 @@ export const settings: Settings = reactive(
       columnsCount: columnsCount.value,
     },
 
+    edit: true,
+
     saveToLocalSettings(): void {
       localStorage.setItem("settings", JSON.stringify(this.styles));
+      localStorage.setItem("edit", JSON.stringify(this.edit));
     },
 
     loadFromLocalStore(): void {
       const localSettings = localStorage.getItem("settings");
-      if (localSettings) {
+      const localEdit = localStorage.getItem("edit");
+      if (localSettings && localEdit) {
         this.styles = JSON.parse(localSettings);
+        this.edit = JSON.parse(localEdit);
       }
     },
 
@@ -91,7 +96,7 @@ export const settings: Settings = reactive(
 
     setColumnsCount(): void {
       this.styles.columnsCount = columnsCount.value;
-      store.arrangeCards(store.data.children);
+      store.arrangeCards(store.data.columns.flat());
       this.saveToLocalSettings();
       store.saveToLocalStore();
     }

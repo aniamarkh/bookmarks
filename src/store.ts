@@ -1,5 +1,5 @@
-import { reactive, ref } from "vue";
-import type { Store, Category, Bookmark } from "./types";
+import { reactive } from "vue";
+import type { Store, Category, Bookmark, Data } from "./types";
 import { settings } from "./settings";
 
 export const store: Store = reactive(
@@ -7,9 +7,10 @@ export const store: Store = reactive(
     data: {
       id: 0,
       title: "root",
-      children: [] as Array<Category>,
       columns: [[]] as Array<Array<Category>>,
     },
+
+    closed: [] as Array<number>,
 
     arrangeCards(cards: Array<Category>): void {
       const columns = settings.styles.columnsCount;
@@ -26,22 +27,19 @@ export const store: Store = reactive(
     },
 
     deleteNode(nodeId: number) {
+      const nodeToDelete = this.findNodeById(this.data, nodeId);
       const parentNode = this.findParentNodeById(this.data, nodeId);
-      if (parentNode) {
-        const nodeToDelete = this.findNodeById(this.data, nodeId);
-        if (nodeToDelete) {
-          const nodeToDeleteIndex = parentNode.children.indexOf(nodeToDelete);
-          parentNode.children.splice(nodeToDeleteIndex, 1);
 
-          if ("children" in nodeToDelete) {
-            this.data.columns.forEach((column, index) => {
-              if (column.filter(el => el.id === nodeToDelete.id).length) {
-                const indexInColumn = column.map(obj => obj.id).indexOf(nodeToDelete.id);
-                this.data.columns[index].splice(indexInColumn, 1);
-              }
-            });
+      if (nodeToDelete && parentNode && "columns" in parentNode) {
+        this.data.columns.forEach((column, index) => {
+          if (column.filter(el => el.id === nodeToDelete.id).length) {
+            const indexInColumn = column.map(obj => obj.id).indexOf(nodeToDelete.id);
+            this.data.columns[index].splice(indexInColumn, 1);
           }
-        }
+        });
+      } else if (nodeToDelete && parentNode && "children" in parentNode && !("columns" in nodeToDelete)) {
+        const nodeToDeleteIndex = parentNode.children.indexOf(nodeToDelete);
+        parentNode.children.splice(nodeToDeleteIndex, 1);
       }
       this.saveToLocalStore();
     },
@@ -97,51 +95,83 @@ export const store: Store = reactive(
     },
 
     saveToLocalStore(): void {
-      this.data.children = this.data.columns.flat();
       localStorage.setItem("data", JSON.stringify(this.data));
+      localStorage.setItem("closed", JSON.stringify(this.closed));
     },
 
     loadFromLocalStore(): void {
       const localData = localStorage.getItem("data");
+      const localClosed = localStorage.getItem("closed");
+
       if (localData) {
         this.data = JSON.parse(localData);
       }
+      if (localClosed) {
+        this.closed = JSON.parse(localClosed);
+      }
     },
 
-    findMaxId(node: Category | Bookmark): number {
+    findMaxId(node: Category | Bookmark | Data): number {
       let maxId = node.id;
       if ("children" in node) {
         node.children.forEach((child) => {
           maxId = Math.max(maxId, this.findMaxId(child));
         });
+      } else if (node && "columns" in node) {
+        (node as Data).columns.forEach((column: Array<Category>) => {
+          column.forEach((child: Category) => {
+            maxId = Math.max(maxId, this.findMaxId(child));
+          });
+        });
       }
       return maxId;
     },
 
-    findNodeById(node: Category | Bookmark, id: number): Category | Bookmark | null {
+    findNodeById(node: Category | Bookmark | Data, id: number): Category | Bookmark | Data | null {
       if (node.id === id) {
         return node;
       }
-      if ("children" in node && node.children) {
-        for (let i = 0; i < node.children.length; i++) {
-          const foundNode = this.findNodeById(node.children[i], id);
+      if ("children" in node) {
+        for (const child of node.children) {
+          const foundNode = this.findNodeById(child, id);
           if (foundNode) {
             return foundNode;
+          }
+        }
+      } else if ("columns" in node) {
+        for (const column of node.columns) {
+          for (const child of column) {
+            const foundNode = this.findNodeById(child, id);
+            if (foundNode) {
+              return foundNode;
+            }
           }
         }
       }
       return null;
     },
 
-    findParentNodeById(node: Category | Bookmark, id: number): Category | null {
-      if ("children" in node) {
+    findParentNodeById(node: Category | Bookmark | Data, id: number): Category | Data | null {
+      if ("children" in node && node.children) {
         for (const child of node.children) {
           if (child.id === id) {
-            return node;
+            return node as Category;
           }
           const parent = this.findParentNodeById(child, id);
           if (parent) {
             return parent;
+          }
+        }
+      } else if ("columns" in node) {
+        for (const column of (node as Data).columns) {
+          for (const child of column) {
+            if (child.id === id) {
+              return node as Data;
+            }
+            const parent = this.findParentNodeById(child, id);
+            if (parent) {
+              return parent;
+            }
           }
         }
       }
@@ -186,4 +216,3 @@ export const store: Store = reactive(
 );
 
 store.loadFromLocalStore();
-store.data.children = store.data.columns.flat();

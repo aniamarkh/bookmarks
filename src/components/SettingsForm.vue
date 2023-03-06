@@ -1,5 +1,4 @@
 <script setup lang="ts">
-// import {ref} from "vue";
 import Slider from '@vueform/slider'
 import "@vueform/slider/themes/default.css";
 import { settings, fontSizes, fontOptions, themes, columnsCount } from "../settings";

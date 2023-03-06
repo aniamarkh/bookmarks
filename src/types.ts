@@ -16,7 +16,6 @@ export interface Category {
 export interface Data {
   id: 0,
   title: "root",
-  children: Array<Category>,
   columns: Array<Array<Category>>,
 }
 
@@ -61,6 +60,7 @@ export interface fontSize {
 
 export interface Settings {
   styles: Styles,
+  edit: boolean,
   saveToLocalSettings(): void,
   loadFromLocalStore(): void,
   onLoad(): void,
@@ -72,6 +72,7 @@ export interface Settings {
 
 export interface Store {
   data: Data;
+  closed: Array<number>,
   arrangeCards(cards: Array<Category>): void;
   deleteNode(nodeId: number): void;
   addCategory(title: string): void;
@@ -80,9 +81,9 @@ export interface Store {
   editBookmark(bookmarkId: number, newTitle: string, newUrl: string): void;
   saveToLocalStore(): void;
   loadFromLocalStore(): void;
-  findMaxId(node: Category): number;
-  findNodeById(node: Category | Bookmark, id: number): Category | Bookmark | null;
-  findParentNodeById(node: Category | Bookmark, id: number): Category | null;
+  findMaxId(node: Category | Bookmark | Data): number;
+  findNodeById(node: Category | Bookmark | Data, id: number): Category | Bookmark | Data | null;
+  findParentNodeById(node: Category | Bookmark | Data, id: number): Category | Data | null;
   updateFaviconLink(urlInput: string, bookmark: Bookmark): void;
   updateBookmarkTitle(urlInput: string, bookmarkId: number): Promise<void>
 }

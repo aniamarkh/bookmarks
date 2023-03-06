@@ -2,6 +2,7 @@
 import { ref, toRef } from "vue";
 import type {Bookmark} from "../types";
 import { store } from "../store";
+import { settings } from "../settings";
 
 const props = defineProps({
   bookmark: { type: Object as () => Bookmark, required: true },
@@ -29,6 +30,10 @@ const onSubmit = (): void => {
   store.editBookmark(bookmarkProp.id, bookmarkProp.title, bookmarkProp.url);
   showEditForm.value = false;
 }
+
+const vFocus = {
+  mounted: (el: HTMLInputElement) => el.focus()
+}
 </script>
 
 <template>
@@ -37,7 +42,7 @@ const onSubmit = (): void => {
       <img class="favicon" v-bind:src="bookmark.favicon" />
       <a :href="bookmark.url" target="_blank">{{ bookmark.title }}</a>
     </div>
-    <div class="bookmark-btns">
+    <div v-if="settings.edit" class="bookmark-btns">
       <button class="bookmark-btn" @click="showEditForm = !showEditForm">
         <svg xmlns="http://www.w3.org/2000/svg" height="20" width="20"><path d="M4.583 15.667h.896l8.083-8.084-.895-.916-8.084 8.083Zm10.771-8.625-2.125-2.167.833-.833q.271-.271.615-.271t.635.271l.896.916q.25.25.23.636-.021.385-.271.635Zm-.542.541-8.958 8.938H3.729v-2.146l8.938-8.917Zm-1.687-.458-.458-.458.895.916Z"/></svg>
       </button>
@@ -47,7 +52,7 @@ const onSubmit = (): void => {
     </div>
   </div>
   <form class="bookmark-edit_form" v-if="showEditForm" @submit.prevent="onSubmit">
-    <input type="text" placeholder="new title" v-model="bookmarkProp.title"/>
+    <input v-focus type="text" placeholder="new title" v-model="bookmarkProp.title"/>
     <input type="url" placeholder="new url" v-model="bookmarkProp.url"/>
     <div class="bookmark-form--btns">
       <button class="submit-btn" :disabled="isInvalidInputs()" @click.prevent="onSubmit">
