@@ -16,7 +16,6 @@ export interface Category {
 export interface Data {
   id: 0,
   title: "root",
-  children: Array<Category>,
   columns: Array<Array<Category>>,
 }
 
@@ -82,9 +81,9 @@ export interface Store {
   editBookmark(bookmarkId: number, newTitle: string, newUrl: string): void;
   saveToLocalStore(): void;
   loadFromLocalStore(): void;
-  findMaxId(node: Category): number;
-  findNodeById(node: Category | Bookmark, id: number): Category | Bookmark | null;
-  findParentNodeById(node: Category | Bookmark, id: number): Category | null;
+  findMaxId(node: Category | Bookmark | Data): number;
+  findNodeById(node: Category | Bookmark | Data, id: number): Category | Bookmark | Data | null;
+  findParentNodeById(node: Category | Bookmark | Data, id: number): Category | Data | null;
   updateFaviconLink(urlInput: string, bookmark: Bookmark): void;
   updateBookmarkTitle(urlInput: string, bookmarkId: number): Promise<void>
 }

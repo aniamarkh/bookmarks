@@ -1,206 +1,117 @@
-import { vi, assert, expect, test } from 'vitest'
-import { store as _store } from './store'
+import { vi, assert, expect, test } from 'vitest';
+import { store as _store } from './store';
+import { settings as _settings, columnsCount as _columnsCount } from './settings';
 
 // Debugger workaround
 // https://youtrack.jetbrains.com/issue/WEB-53343/Typescript-Debug-Console-emits-undefined-errors#focus=Comments-27-5363210.0-0
-const store = _store
+const store = _store;
+const settings = _settings;
 
 test('Add category', () => {
   store.addCategory('Swimming');
-  expect(store.data.children).toEqual(
-    [{
-      id: 1,
-      title: 'Swimming',
-      children: []
-    }]
+  expect(store.data).toEqual(
+    {
+      id: 0,
+      title: 'root',
+      columns: [[
+        {
+          id: 1,
+          title: 'Swimming',
+          children: []
+        },
+      ]]
+    }
   );
 
   store.addCategory('Bowling');
-  expect(store.data.children).toEqual(
-    [{
-      id: 1,
-      title: 'Swimming',
-      children: [],
-    },
+  expect(store.data).toEqual(
     {
-      id: 2,
-      title: 'Bowling',
-      children: [],
-    }]
+      id: 0,
+      title: 'root',
+      columns: [[
+        {
+          id: 1,
+          title: 'Swimming',
+          children: [],
+        },
+        {
+          id: 2,
+          title: 'Bowling',
+          children: [],
+        }
+      ]]
+    }
   );
 });
 
-test('Add bookmark', () => {
-  store.addBookmark(1, 'My pool', 'http://pool.com/');
-  store.addBookmark(2, 'Bowling', 'http://bowling.com/');
+test('Arrange cards', () => {
+  settings.styles.columnsCount = 3;
+  store.arrangeCards(store.data.columns.flat());
+  expect(store.data.columns.length).toEqual(3);
 
-  expect(store.data.children).toEqual(
-    [{
+  settings.styles.columnsCount = 6;
+  store.arrangeCards(store.data.columns.flat());
+  expect(store.data.columns.length).toEqual(6);
+
+  settings.styles.columnsCount = 1;
+  store.arrangeCards(store.data.columns.flat());
+  expect(store.data.columns.length).toEqual(1);
+});
+
+test('Edit category', () => {
+  store.editCategory(2, "Fun");
+  expect(store.data.columns).toEqual([[
+    {
       id: 1,
       title: 'Swimming',
-      children: [{
-        id: 3,
-        title: 'My pool',
-        url: 'http://pool.com/',
-      }],
+      children: [],
     },
     {
       id: 2,
-      title: 'Bowling',
-      children: [{
-        id: 4,
-        title: 'Bowling',
-        url: 'http://bowling.com/',
-      }],
-    }]
-  );
+      title: 'Fun',
+      children: [],
+    }
+  ]])
 });
 
 test('Delete node', () => {
-  store.deleteNode(3);
-  expect(store.data.children).toEqual(
-    [{
-      id: 1,
-      title: 'Swimming',
-      children: [],
-    },
-    {
-      id: 2,
-      title: 'Bowling',
-      children: [{
-        id: 4,
-        title: 'Bowling',
-        url: 'http://bowling.com/',
-      }],
-    }]
+  store.deleteNode(1);
+  expect(store.data.columns).toEqual(
+    [[
+      {
+        id: 2,
+        title: 'Fun',
+        children: [],
+      }
+    ]]
   );
 });
 
 test('Find Node by Id', () => {
-  let result = store.findNodeById(store.data, 1);
+  let result = store.findNodeById(store.data, 2);
   expect(result).toEqual({
-    id: 1,
-    title: 'Swimming',
+    id: 2,
+    title: 'Fun',
     children: [],
-  });
-
-  result = store.findNodeById(store.data, 4);
-  expect(result).toEqual({
-    id: 4,
-    title: 'Bowling',
-    url: 'http://bowling.com/',
   });
 });
 
 test('Find Parent Node by ID', () => {
-  let result = store.findParentNodeById(store.data, 4);
-  expect(result).toEqual({
-    id: 2,
-    title: 'Bowling',
-    children: [{
-      id: 4,
-      title: 'Bowling',
-      url: 'http://bowling.com/',
-    }],
-  });
-
-  result = store.findParentNodeById(store.data, 2);
+  let result = store.findParentNodeById(store.data, 2);
   expect(result).toEqual({
     id: 0,
     title: 'root',
-    children: [{
-      id: 1,
-      title: 'Swimming',
-      children: [],
-    },
-    {
-      id: 2,
-      title: 'Bowling',
-      children: [{
-        id: 4,
-        title: 'Bowling',
-        url: 'http://bowling.com/',
-      }],
-    }]
+    columns: [[
+      {
+        id: 2,
+        title: 'Fun',
+        children: [],
+      }
+    ]],
   });
 });
 
 test('FindMaxId', () => {
   let result = store.findMaxId(store.data);
-  expect(result).toEqual(4);
-
-  store.deleteNode(4);
-  result = store.findMaxId(store.data);
   expect(result).toEqual(2);
 });
-
-test('Edit Bookmark', () => {
-  store.addBookmark(1, 'My pool', 'http://pool.com/');
-  store.addBookmark(2, 'Bowling', 'http://bowling.com/');
-
-  store.editBookmark(3, 'My fav pool', 'http://favpool.com/');
-  store.editBookmark(4, 'My fav bowling', 'http://bowling.com/');
-
-  expect(store.data.children).toEqual(
-    [{
-      id: 1,
-      title: 'Swimming',
-      children: [{
-        id: 3,
-        title: 'My fav pool',
-        url: 'http://favpool.com/',
-      }],
-    },
-    {
-      id: 2,
-      title: 'Bowling',
-      children: [{
-        id: 4,
-        title: 'My fav bowling',
-        url: 'http://bowling.com/',
-      }],
-    }]
-  );
-});
-
-test('Edit Category', () => {
-  store.editCategory(1, 'Sport');
-  store.editCategory(2, 'Fun');
-
-  expect(store.data.children).toEqual(
-    [{
-      id: 1,
-      title: 'Sport',
-      children: [{
-        id: 3,
-        title: 'My fav pool',
-        url: 'http://favpool.com/',
-      }],
-    },
-    {
-      id: 2,
-      title: 'Fun',
-      children: [{
-        id: 4,
-        title: 'My fav bowling',
-        url: 'http://bowling.com/',
-      }],
-    }]
-  );
-});
-
-test('Delete Category', () => {
-  store.deleteNode(2);
-  expect(store.data.children).toEqual(
-    [{
-      id: 1,
-      title: 'Sport',
-      children: [{
-        id: 3,
-        title: 'My fav pool',
-        url: 'http://favpool.com/',
-      }],
-    }]
-  );
-})
-
