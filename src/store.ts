@@ -50,6 +50,7 @@ export const store: Store = reactive(
         id: newId,
         title: title,
         children: [],
+        chrome: false,
       }
       this.data.columns[0].push(newCategory);
       this.saveToLocalStore();
@@ -71,6 +72,7 @@ export const store: Store = reactive(
         title: title,
         url: url,
         favicon: "",
+        chrome: false,
       };
 
       const isCategory = bookmarkCategory && "children" in bookmarkCategory;
@@ -213,83 +215,52 @@ export const store: Store = reactive(
       ]);
     },
 
-    // async addCategoryFromChrome(chromeCat: chrome.bookmarks.BookmarkTreeNode) {
-    // const newId: number = this.findMaxId(this.data) + 1;
-    // const newCategory: Category = {
-    //   id: newId,
-    //   title: chromeCat.title,
-    //   children: [],
-    // };
-    //   if (chromeCat.children) {
-    //     chromeCat.children.forEach(async (child, index) => {
-    //       let childObj: Bookmark | Category;
-    //       if (child.url && child.dateAdded) {
-    // childObj = {
-    //   id: newId + index + 1,
-    //   title: child.title,
-    //   url: child.url,
-    //   favicon: "",
-    // };
-    //         newCategory.children.push(childObj);
-    //         this.updateFaviconLink(child.url, childObj);
-    //       }
-    //       if (child.children) {
-    //         this.addCategoryFromChrome(child);
-    //       }
-    //     });
-    //   }
-    // },
+    importChromeBookmarks() {
+      chrome.bookmarks.getTree((bkmrkTree) => {
+        if (bkmrkTree[0].children) {
+          bkmrkTree[0].children.forEach((parent) => {
+            this.addCategoriesFromChrome(parent);
+          });
+          this.arrangeCards(this.data.columns.flat());
+        }
+      });
+    },
 
-    // pushChild(category: Category, child: Category | Bookmark) {
-    //   category.children.push(child);
-    // },
+    async addCategoriesFromChrome(chromeCat: chrome.bookmarks.BookmarkTreeNode) {
+      const newId: number = this.findMaxId(this.data) + 1;
+      const newCategory: Category = {
+        id: newId,
+        title: chromeCat.title,
+        children: [],
+        chrome: true,
+      };
+      this.data.columns[0].push(newCategory);
 
-    mapChromeBkmrks(parentNode: chrome.bookmarks.BookmarkTreeNode, parentId: number): Array<(Bookmark | Category)> {
-      let parentNodeData: Array<(Bookmark | Category)> = [];
-      if (parentNode.children) {
-        parentNode.children.forEach((child, index) => {
-          if (child.url) {
-            const newBookmark = {
-              id: parentId + index + 1,
+      if (chromeCat.children) {
+        chromeCat.children.forEach(async (child, index) => {
+          let childObj: Bookmark | Category;
+          if (child.url && child.dateAdded) {
+            childObj = {
+              id: this.findMaxId(this.data) + 1,
               title: child.title,
               url: child.url,
               favicon: "",
+              chrome: true,
             };
-            parentNodeData.push(newBookmark);
-            this.updateFaviconLink(newBookmark.url, newBookmark);
+            newCategory.children.push(childObj);
+            this.updateFaviconLink(child.url, childObj);
           }
           if (child.children) {
-            const newSubcategory = {
-              id: parentId + index + 1,
-              title: child.title,
-              children: this.mapChromeBkmrks(child, (parentId + index + 1)),
-            };
-            parentNodeData.push(newSubcategory);
+            this.addCategoriesFromChrome(child);
           }
         });
       }
-      return parentNodeData;
-    },
-
-    importChromeBookmarks() {
-      chrome.bookmarks.getTree((bkmrkTree) => {
-        console.log(bkmrkTree);
-        if (bkmrkTree[0].children) {
-          bkmrkTree[0].children.forEach((parent) => {
-            const parentId: number = this.findMaxId(this.data) + 1;
-            const newCategory: Category = {
-              id: parentId,
-              title: parent.title,
-              children: this.mapChromeBkmrks(parent, parentId),
-            };
-            this.data.columns[0].push(newCategory);
-            this.arrangeCards(this.data.columns.flat());
-          });
-          console.log(this.data);
-        }
-      });
     },
   }
 );
 
 store.loadFromLocalStore();
+
+if (!localStorage.getItem("data")) {
+  store.importChromeBookmarks();
+}
