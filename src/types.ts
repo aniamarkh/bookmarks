@@ -85,5 +85,7 @@ export interface Store {
   findNodeById(node: Category | Bookmark | Data, id: number): Category | Bookmark | Data | null;
   findParentNodeById(node: Category | Bookmark | Data, id: number): Category | Data | null;
   updateFaviconLink(urlInput: string, bookmark: Bookmark): void;
-  updateBookmarkTitle(urlInput: string, bookmarkId: number): Promise<void>
+  updateBookmarkTitle(urlInput: string, bookmarkId: number): Promise<void>;
+  mapChromeBkmrks(parentNode: chrome.bookmarks.BookmarkTreeNode, parentId: number): Array<(Bookmark | Category)>;
+  importChromeBookmarks(): void;
 }

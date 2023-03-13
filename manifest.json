@@ -10,7 +10,8 @@
     "newtab": "index.html"
   },
   "permissions": [
-    "favicon"
+    "favicon",
+    "bookmarks"
   ],
   "host_permissions": [
     "http://*/",

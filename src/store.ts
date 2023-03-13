@@ -212,6 +212,83 @@ export const store: Store = reactive(
         new Promise((_, reject) => setTimeout(() => reject(new Error('Timeout')), 3000))
       ]);
     },
+
+    // async addCategoryFromChrome(chromeCat: chrome.bookmarks.BookmarkTreeNode) {
+    // const newId: number = this.findMaxId(this.data) + 1;
+    // const newCategory: Category = {
+    //   id: newId,
+    //   title: chromeCat.title,
+    //   children: [],
+    // };
+    //   if (chromeCat.children) {
+    //     chromeCat.children.forEach(async (child, index) => {
+    //       let childObj: Bookmark | Category;
+    //       if (child.url && child.dateAdded) {
+    // childObj = {
+    //   id: newId + index + 1,
+    //   title: child.title,
+    //   url: child.url,
+    //   favicon: "",
+    // };
+    //         newCategory.children.push(childObj);
+    //         this.updateFaviconLink(child.url, childObj);
+    //       }
+    //       if (child.children) {
+    //         this.addCategoryFromChrome(child);
+    //       }
+    //     });
+    //   }
+    // },
+
+    // pushChild(category: Category, child: Category | Bookmark) {
+    //   category.children.push(child);
+    // },
+
+    mapChromeBkmrks(parentNode: chrome.bookmarks.BookmarkTreeNode, parentId: number): Array<(Bookmark | Category)> {
+      let parentNodeData: Array<(Bookmark | Category)> = [];
+      if (parentNode.children) {
+        parentNode.children.forEach((child, index) => {
+          if (child.url) {
+            const newBookmark = {
+              id: parentId + index + 1,
+              title: child.title,
+              url: child.url,
+              favicon: "",
+            };
+            parentNodeData.push(newBookmark);
+            this.updateFaviconLink(newBookmark.url, newBookmark);
+          }
+          if (child.children) {
+            const newSubcategory = {
+              id: parentId + index + 1,
+              title: child.title,
+              children: this.mapChromeBkmrks(child, (parentId + index + 1)),
+            };
+            parentNodeData.push(newSubcategory);
+          }
+        });
+      }
+      return parentNodeData;
+    },
+
+    importChromeBookmarks() {
+      chrome.bookmarks.getTree((bkmrkTree) => {
+        console.log(bkmrkTree);
+        if (bkmrkTree[0].children) {
+          bkmrkTree[0].children.forEach((parent) => {
+            const parentId: number = this.findMaxId(this.data) + 1;
+            const newCategory: Category = {
+              id: parentId,
+              title: parent.title,
+              children: this.mapChromeBkmrks(parent, parentId),
+            };
+            this.data.columns[0].push(newCategory);
+            this.arrangeCards(this.data.columns.flat());
+          });
+          console.log(this.data);
+        }
+      });
+    },
   }
 );
 
