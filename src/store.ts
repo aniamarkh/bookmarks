@@ -104,15 +104,13 @@ export const store: Store = reactive(
     //   this.saveToLocalStore();
     // },
 
-    // editBookmark(bookmarkId: number, newTitle: string, newUrl: string): void {
-    //   const bookmarkNode = this.findNodeById(this.data, bookmarkId);
-    //   if (bookmarkNode && "url" in bookmarkNode) {
-    //     bookmarkNode.title = newTitle;
-    //     bookmarkNode.url = newUrl;
-    //     this.updateFaviconLink(newUrl, bookmarkNode);
-    //   }
-    //   this.saveToLocalStore();
-    // },
+    editBookmark(bookmarkObj: Bookmark, newTitle: string, newUrl: string): void {
+      bookmarkObj.title = newTitle;
+      bookmarkObj.url = newUrl;
+      this.updateFaviconLink(newUrl, bookmarkObj);
+      chrome.bookmarks.update(bookmarkObj.id, { title: newTitle, url: newUrl, });
+      this.saveToLocalStore();
+    },
 
     saveToLocalStore(): void {
       localStorage.setItem("data", JSON.stringify(this.data));
@@ -202,32 +200,35 @@ export const store: Store = reactive(
       this.saveToLocalStore();
     },
 
-    // async updateBookmarkTitle(urlInput: string, bookmarkId: number): Promise<void> {
-    //   const fetchPromise = fetch(urlInput).then(async (response) => {
-    //     if (response.ok) {
-    //       const html = await response.text();
-    //       const parser = new DOMParser();
-    //       const doc = parser.parseFromString(html, 'text/html');
-    //       if (doc) {
-    //         const title = doc.querySelector('title');
-    //         if (title) {
-    //           const titleContent = title.textContent as string;
-    //           this.editBookmark(bookmarkId, titleContent, urlInput);
-    //         }
-    //       }
-    //     } else {
-    //       throw new Error("Error while fetching bookmark title");
-    //     }
-    //   }).catch((error) => {
-    //     console.error(error);
-    //     this.editBookmark(bookmarkId, urlInput, urlInput);
-    //   });
+    async updateBookmarkTitle(urlInput: string, bookmarkObj: Bookmark): Promise<void> {
+      const fetchPromise = fetch(urlInput).then(async (response) => {
+        if (response.ok) {
+          const html = await response.text();
+          const parser = new DOMParser();
+          const doc = parser.parseFromString(html, 'text/html');
+          if (doc) {
+            const title = doc.querySelector('title');
+            if (title) {
+              const titleContent = title.textContent as string;
+              this.editBookmark(bookmarkObj, titleContent, urlInput);
+              chrome.bookmarks.update(bookmarkObj.id, { title: titleContent, url: urlInput });
+            }
+          }
+        } else {
+          throw new Error("Error while fetching bookmark title");
+        }
+      }).catch((error) => {
+        console.error(error);
+        this.editBookmark(bookmarkObj, urlInput, urlInput);
+        chrome.bookmarks.update(bookmarkObj.id, { title: urlInput, url: urlInput });
 
-    //   await Promise.race([
-    //     fetchPromise,
-    //     new Promise((_, reject) => setTimeout(() => reject(new Error('Timeout')), 3000))
-    //   ]);
-    // },
+      });
+
+      await Promise.race([
+        fetchPromise,
+        new Promise((_, reject) => setTimeout(() => reject(new Error('Timeout')), 3000))
+      ]);
+    },
 
     async importChromeBookmarks(): Promise<void> {
       return new Promise((resolve, reject) => {

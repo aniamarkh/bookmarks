@@ -88,14 +88,14 @@ export interface Store {
   // addCategory(title: string): void;
   editCategory(categoryObj: Category, newTitle: string): void;
   // addBookmark(nodeId: number, title: string, url: string): void;
-  // editBookmark(bookmarkId: number, newTitle: string, newUrl: string): void;
+  editBookmark(bookmarkObj: Bookmark, newTitle: string, newUrl: string): void;
   saveToLocalStore(): void;
   loadFromLocalStore(): void;
   // findMaxId(node: Category | Bookmark | Data): number;
   findNodeById(node: Category | Bookmark | ChromeTreeNode, id: string): Category | Bookmark | ChromeTreeNode | null;
   // findParentNodeById(node: Category | Bookmark | Data, id: number): Category | Data | null;
   updateFaviconLink(urlInput: string, bookmark: Bookmark): void;
-  // updateBookmarkTitle(urlInput: string, bookmarkId: number): Promise<void>;
+  updateBookmarkTitle(urlInput: string, bookmarkObj: Bookmark): Promise<void>;
   importChromeBookmarks(): Promise<void>;
   addCategoriesFromChrome(chromeCat: chrome.bookmarks.BookmarkTreeNode): void;
 }

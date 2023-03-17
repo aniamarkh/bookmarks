@@ -9,15 +9,14 @@ const props = defineProps({
 });
 
 const bookmarkObj: Bookmark = store.findNodeById(store.chromeTreeNode, props.bookmarkId) as Bookmark;
-const bookmarkProp: Bookmark = toRef(props, "bookmark").value;
 
 const showEditForm = ref(false);
 
 const isInvalidInputs = (): boolean => {
-  const isEmpty: boolean = bookmarkProp.url.trim() === "";
+  const isEmpty: boolean = bookmarkObj.url.trim() === "";
   let invalidUrl: boolean;
   try {
-    new URL(bookmarkProp.url);
+    new URL(bookmarkObj.url);
     invalidUrl = false;
   } catch (err) {
     invalidUrl = true;
@@ -26,10 +25,10 @@ const isInvalidInputs = (): boolean => {
 };
 
 const onSubmit = (): void => {
-  if (bookmarkProp.title === "") {
-    store.updateBookmarkTitle(bookmarkProp.url, bookmarkProp.id);
+  if (bookmarkObj.title === "") {
+    store.updateBookmarkTitle(bookmarkObj.url, bookmarkObj);
   }
-  store.editBookmark(bookmarkProp.id, bookmarkProp.title, bookmarkProp.url);
+  store.editBookmark(bookmarkObj, bookmarkObj.title, bookmarkObj.url);
   showEditForm.value = false;
 }
 
@@ -54,8 +53,8 @@ const vFocus = {
     </div>
   </div>
   <form class="bookmark-edit_form" v-if="showEditForm" @submit.prevent="onSubmit">
-    <input v-focus type="text" placeholder="new title" v-model="bookmarkProp.title"/>
-    <input type="url" placeholder="new url" v-model="bookmarkProp.url"/>
+    <input v-focus type="text" placeholder="new title" v-model="bookmarkObj.title"/>
+    <input type="url" placeholder="new url" v-model="bookmarkObj.url"/>
     <div class="bookmark-form--btns">
       <button class="submit-btn" :disabled="isInvalidInputs()" @click.prevent="onSubmit">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -5 50 50" height="20" width="20"><path d="M18.9 35.7 7.7 24.5l2.15-2.15 9.05 9.05 19.2-19.2 2.15 2.15Z"/></svg>
