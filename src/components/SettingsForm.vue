@@ -65,8 +65,8 @@ if (wrapper) {
   .settings-form {
     position: absolute;
     z-index: 1;
-    top: 10px;
-    right: 90px;
+    top: 5px;
+    right: 40px;
     background-color: var(--cards);
     width: auto;
     height: auto;

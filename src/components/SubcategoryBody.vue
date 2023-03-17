@@ -3,6 +3,7 @@ import { ref } from "vue";
 import type { Ref } from "vue";
 import { store } from "../store";
 import { settings } from "../settings";
+import type { Category } from "../types";
 import BookmarkBody from "./BookmarkBody.vue";
 import SubCategory from "./SubcategoryBody.vue";
 import BookmarkForm from "./BookmarkForm.vue";
@@ -13,6 +14,7 @@ import Draggable from "vuedraggable";
 const props = defineProps({
   subcategory:  { type: Object, required: true },
 });
+const subcatObj: Category = store.findNodeById(store.chromeTreeNode, props.subcategory.id) as Category;
 
 const showAddBookmarkForm: Ref<boolean> = ref(false);
 const showEditCategoryForm: Ref<boolean> = ref(false);
@@ -35,7 +37,7 @@ const modifyDragItem = (dataTransfer: DataTransfer) => {
   dataTransfer.setDragImage(document.createElement('div'), 0, 0);
 };
 
-const toggleSubcat = (id: number) => {
+const toggleSubcat = (id: string) => {
   const idIndex = store.closed.indexOf(id);
   if (idIndex >= 0) {
     store.closed.splice(idIndex, 1);
@@ -45,7 +47,7 @@ const toggleSubcat = (id: number) => {
   store.saveToLocalStore();
 };
 
-const isClosed = (id: number) => {
+const isClosed = (id: string) => {
   const idIndex = store.closed.indexOf(id);
   if (idIndex >= 0) {
     return false;
@@ -54,18 +56,35 @@ const isClosed = (id: number) => {
   }
 };
 
+const findNode = (id: string) => {
+  const node = store.findNodeById(store.chromeTreeNode, id);
+  return node;
+};
+
+const checkIfChildren = (id: string): boolean => {
+  const node = findNode(id);
+  if (node) {
+    if ("children" in node) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+  return false;
+};
+
 </script>
 
 <template>
   <div class="subcategory-wrapper" v-if="!showEditCategoryForm">
-    <h4 class="subcategory-title" @click="toggleSubcat(subcategory.id)">
-      <div v-if="!isClosed(subcategory.id)" class="icon">
+    <h4 class="subcategory-title" @click="toggleSubcat(subcatObj.id)">
+      <div v-if="!isClosed(subcatObj.id)" class="icon">
         <svg xmlns="http://www.w3.org/2000/svg" height="20" width="20" viewBox="0 2 40 40"><path d="M17.167 27.167V12.833L24.333 20Z"/></svg>
       </div>
-      <div v-if="isClosed(subcategory.id)" class="icon">
+      <div v-if="isClosed(subcatObj.id)" class="icon">
         <svg xmlns="http://www.w3.org/2000/svg" height="20" width="20" viewBox="0 2 40 40"><path d="m20 24.333-7.167-7.166h14.334Z"/></svg>
       </div>
-      {{ subcategory.title }}
+      {{ subcatObj.title }}
     </h4>
     <div class="subcategory-btns" v-if="settings.edit">
       <button class="category-btn" @click="showAddBookmarkForm=!showAddBookmarkForm">
@@ -86,7 +105,7 @@ const isClosed = (id: number) => {
   <Draggable
     :empty-insert-threshold="20"
     class="subcat-items"
-    :list="subcategory.children" 
+    :list="subcategory.children"
     group="bookmarks"
     item-key="id"
     :move="validateDrop"
@@ -94,9 +113,9 @@ const isClosed = (id: number) => {
     :setData="modifyDragItem"
     :disabled="!settings.edit">
     <template #item="{element}">
-      <div :class=" element.children ? 'subcatbody' : 'bookmarkbody' " v-if="isClosed(subcategory.id)">
-        <BookmarkBody v-if="!element.children" :bookmark="element" />
-        <SubCategory v-if="element.children" :subcategory="element" />
+      <div v-if="isClosed(subcatObj.id)" :class=" checkIfChildren(element.id) ? 'subcatbody' : 'bookmarkbody' ">
+        <BookmarkBody v-if="!checkIfChildren(element.id)" :bookmarkId="element.id" />
+        <SubCategory v-if="checkIfChildren(element.id)" :subcategory="element" />
       </div>
     </template>
   </Draggable>

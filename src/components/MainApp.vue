@@ -32,7 +32,7 @@ const modifyDragItem = (dataTransfer: DataTransfer) => {
       >
       <template #item="{element}">
         <div class="category">
-          <CategoryCard :category="store.findNodeById(store.chromeTreeNode, element)"/>
+          <CategoryCard :category="element"/>
         </div>
       </template>
     </Draggable>

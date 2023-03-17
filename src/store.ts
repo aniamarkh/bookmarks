@@ -1,11 +1,11 @@
 import { reactive } from "vue";
-import type { Store, Category, Bookmark, ChromeTreeNode } from "./types";
+import type { Store, Category, Bookmark, ChromeTreeNode, DataNode } from "./types";
 import { settings } from "./settings";
 
 export const store: Store = reactive(
   {
-    data: [[]] as Array<Array<string>>,
-    closed: [] as Array<number>,
+    data: [[]] as Array<Array<DataNode>>,
+    closed: [] as Array<string>,
     chromeTreeNode: {
       id: "0",
       title: "root",
@@ -15,15 +15,35 @@ export const store: Store = reactive(
     arrangeCards(cards: Array<Category>): void {
       const columns = settings.styles.columnsCount;
       const maxCardsInColumn = Math.ceil(cards.length / columns);
-      const columnsArrays: Array<Array<string>> = Array.from({ length: columns }, () => []);
+      const columnsArrays: Array<Array<DataNode>> = Array.from({ length: columns }, () => []);
 
       cards.forEach((card: Category, index) => {
         const columnIndex = Math.floor(index / maxCardsInColumn);
         const columnByIndex = columnsArrays[columnIndex];
-        columnByIndex.push(card.id);
+        const nodeChildrens: Array<DataNode> = this.mapToDataNodes(card.children)
+        const node: DataNode = {
+          id: card.id,
+          children: nodeChildrens,
+        }
+        columnByIndex.push(node);
       })
       this.data = columnsArrays;
       this.saveToLocalStore();
+    },
+
+    mapToDataNodes(items: Array<Bookmark | Category>): Array<DataNode> {
+      const result: Array<DataNode> = [];
+
+      items.forEach(item => {
+        if ("children" in item) {
+          const children = this.mapToDataNodes(item.children);
+          result.push({ id: item.id, children });
+        } else {
+          result.push({ id: item.id });
+        }
+      });
+
+      return result;
     },
 
     // deleteNode(nodeId: number) {
@@ -99,6 +119,7 @@ export const store: Store = reactive(
     saveToLocalStore(): void {
       localStorage.setItem("data", JSON.stringify(this.data));
       localStorage.setItem("closed", JSON.stringify(this.closed));
+      localStorage.setItem("tree", JSON.stringify(this.chromeTreeNode));
     },
 
     loadFromLocalStore(): void {
@@ -133,7 +154,7 @@ export const store: Store = reactive(
     //   return maxId;
     // },
 
-    findNodeById(node: Category | Bookmark | ChromeTreeNode, id: string): Category | Bookmark | ChromeTreeNode | undefined {
+    findNodeById(node: Category | Bookmark | ChromeTreeNode, id: string): Category | Bookmark | ChromeTreeNode | null {
       if (node.id === id) {
         return node;
       }
@@ -145,7 +166,7 @@ export const store: Store = reactive(
           }
         }
       }
-      return undefined;
+      return null;
     },
 
     // findParentNodeById(node: Category | Bookmark | Data, id: number): Category | Data | null {

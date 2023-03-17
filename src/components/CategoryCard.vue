@@ -25,10 +25,27 @@ const validateDrop = (evt: any) => {
     }
   }
   return true;
-}
+};
 
 const modifyDragItem = (dataTransfer: DataTransfer) => {
   dataTransfer.setDragImage(document.createElement('div'), 0, 0);
+};
+
+const findNode = (id: string) => {
+  const node = store.findNodeById(store.chromeTreeNode, id);
+  return node;
+};
+
+const checkIfChildren = (id: string): boolean => {
+  const node = findNode(id);
+  if (node) {
+    if ("children" in node) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+  return false;
 };
 </script>
 
@@ -45,9 +62,9 @@ const modifyDragItem = (dataTransfer: DataTransfer) => {
     :setData="modifyDragItem"
     :disabled="!settings.edit">
     <template #item="{element}">
-      <div :class=" element.children ? 'subcatbody' : 'bookmarkbody' ">
-        <BookmarkBody v-if="!element.children" :bookmark="element" />
-        <SubCategory v-if="element.children" :subcategory="element" />
+      <div :class=" checkIfChildren(element.id) ? 'subcatbody' : 'bookmarkbody' ">
+        <BookmarkBody v-if="!checkIfChildren(element.id)" :bookmarkId="element.id" />
+        <SubCategory v-if="checkIfChildren(element.id)" :subcategory="element" />
       </div>
     </template>
   </Draggable>

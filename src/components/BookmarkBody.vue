@@ -5,8 +5,10 @@ import { store } from "../store";
 import { settings } from "../settings";
 
 const props = defineProps({
-  bookmark: { type: Object as () => Bookmark, required: true },
+  bookmarkId: { type: String, required: true },
 });
+
+const bookmarkObj: Bookmark = store.findNodeById(store.chromeTreeNode, props.bookmarkId) as Bookmark;
 const bookmarkProp: Bookmark = toRef(props, "bookmark").value;
 
 const showEditForm = ref(false);
@@ -39,8 +41,8 @@ const vFocus = {
 <template>
   <div class="bookmark-wrapper" v-if="!showEditForm">
     <div class="bookmark-title">
-      <img class="favicon" v-bind:src="bookmark.favicon" />
-      <a :href="bookmark.url" target="_blank">{{ bookmark.title }}</a>
+      <img class="favicon" v-bind:src="bookmarkObj.favicon" />
+      <a :href="bookmarkObj.url" target="_blank">{{ bookmarkObj.title }}</a>
     </div>
     <div v-if="settings.edit" class="bookmark-btns">
       <button class="bookmark-btn" @click="showEditForm = !showEditForm">

@@ -72,12 +72,18 @@ export interface ChromeTreeNode {
   children: Array<Category>,
 }
 
+export interface DataNode {
+  id: string,
+  children?: Array<DataNode>
+}
+
 export interface Store {
-  data: Array<Array<string>>;
-  closed: Array<number>,
+  data: Array<Array<DataNode>>;
+  closed: Array<string>,
   chromeTreeNode: ChromeTreeNode,
   // getCategoriesByIds(): Array<Array<chrome.bookmarks.BookmarkTreeNode>>;
   arrangeCards(cards: Array<Category>): void;
+  mapToDataNodes(items: Array<Bookmark | Category>): Array<DataNode>
   // deleteNode(nodeId: number): void;
   // addCategory(title: string): void;
   // editCategory(categoryId: number, newTitle: string): void;
@@ -86,7 +92,7 @@ export interface Store {
   saveToLocalStore(): void;
   loadFromLocalStore(): void;
   // findMaxId(node: Category | Bookmark | Data): number;
-  findNodeById(node: Category | Bookmark | ChromeTreeNode, id: string): Category | Bookmark | ChromeTreeNode | undefined;
+  findNodeById(node: Category | Bookmark | ChromeTreeNode, id: string): Category | Bookmark | ChromeTreeNode | null;
   // findParentNodeById(node: Category | Bookmark | Data, id: number): Category | Data | null;
   updateFaviconLink(urlInput: string, bookmark: Bookmark): void;
   // updateBookmarkTitle(urlInput: string, bookmarkId: number): Promise<void>;
