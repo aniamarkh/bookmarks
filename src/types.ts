@@ -86,7 +86,7 @@ export interface Store {
   mapToDataNodes(items: Array<Bookmark | Category>): Array<DataNode>
   // deleteNode(nodeId: number): void;
   // addCategory(title: string): void;
-  // editCategory(categoryId: number, newTitle: string): void;
+  editCategory(categoryObj: Category, newTitle: string): void;
   // addBookmark(nodeId: number, title: string, url: string): void;
   // editBookmark(bookmarkId: number, newTitle: string, newUrl: string): void;
   saveToLocalStore(): void;

@@ -2,6 +2,7 @@
 import { store } from "../store";
 import { ref } from "vue";
 import type { Ref } from "vue";
+import type { Category } from "../types";
 
 const props = defineProps({
   category: { type: Object, required: true },
@@ -10,20 +11,21 @@ const props = defineProps({
 const emit = defineEmits(["close-form"]);
 const sendCloseFormEvent = () => emit("close-form");
 
-const input_category: Ref<string> = ref(props.category.title);
+const categoryObj: Category = store.findNodeById(store.chromeTreeNode, props.category.id) as Category;
+const input_category: Ref<string> = ref(categoryObj.title);
 
 const isInvalidInput = (): boolean => {
   return input_category.value.trim() === "";
 };
 
 const editCategory = () => {
-  store.editCategory(props.category.id, input_category.value);
+  store.editCategory(categoryObj, input_category.value);
   sendCloseFormEvent();
-}
+};
 
 const vFocus = {
   mounted: (el: HTMLInputElement) => el.focus()
-}
+};
 </script>
 
 

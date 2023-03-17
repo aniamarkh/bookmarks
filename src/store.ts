@@ -76,13 +76,11 @@ export const store: Store = reactive(
     //   this.saveToLocalStore();
     // },
 
-    // editCategory(categoryId: number, newTitle: string): void {
-    //   const categoryNode = this.findNodeById(this.data, categoryId);
-    //   if (categoryNode) {
-    //     categoryNode.title = newTitle;
-    //   }
-    //   this.saveToLocalStore();
-    // },
+    editCategory(categoryObj: Category, newTitle: string): void {
+      categoryObj.title = newTitle;
+      chrome.bookmarks.update(categoryObj.id, { title: newTitle });
+      this.saveToLocalStore();
+    },
 
     // async addBookmark(nodeId: number, title: string, url: string): Promise<void> {
     //   const newId: number = this.findMaxId(this.data) + 1;

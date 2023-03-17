@@ -10,19 +10,6 @@ const props = defineProps({
   category: { type: Object, required: true },
 });
 
-const input_category: Ref<string> = ref(props.category.title);
-const input_subcategory: Ref<string> = ref("");
-
-const isInvalidInput = (formType: "subcategory" | "editcategory"): boolean => {
-  if (formType === "subcategory") {
-    return input_subcategory.value.trim() === "";
-  }
-  if (formType === "editcategory") {
-    return input_category.value.trim() === "";
-  }
-  return false;
-};
-
 const showCatEditForm = ref(false);
 
 const closeEditCategoryForm = () => showCatEditForm.value = false;
