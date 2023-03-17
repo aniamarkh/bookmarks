@@ -39,10 +39,10 @@ main {
 .categories-wrapper {
   display: flex;
   flex-direction: row;
-  flex-wrap: nowrap;
+  flex-wrap: wrap;
   gap: 20px;
   justify-content: center;
-  padding: 60px 20px 0 20px;
+  padding: 45px 20px 20px 20px;
   height: auto;
   width: 100vw;
 }

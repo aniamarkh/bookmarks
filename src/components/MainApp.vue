@@ -7,7 +7,6 @@ import ToolsPanel from "./ToolsPanel.vue";
 import { ref } from "vue";
 import type { Ref } from "vue";
 import Draggable from "vuedraggable";
-import { columnsCount } from "../settings";
 
 const showCategoryForm: Ref<boolean> = ref(false);
 const closeCategoryForm = () => showCategoryForm.value = false;

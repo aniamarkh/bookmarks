@@ -5,12 +5,14 @@ export interface Bookmark {
   title: string;
   url: string;
   favicon: string;
+  chrome: boolean;
 }
 
 export interface Category {
   id: number;
   title: string;
   children: Array<(Bookmark | Category)>;
+  chrome: boolean;
 }
 
 export interface Data {
@@ -85,5 +87,7 @@ export interface Store {
   findNodeById(node: Category | Bookmark | Data, id: number): Category | Bookmark | Data | null;
   findParentNodeById(node: Category | Bookmark | Data, id: number): Category | Data | null;
   updateFaviconLink(urlInput: string, bookmark: Bookmark): void;
-  updateBookmarkTitle(urlInput: string, bookmarkId: number): Promise<void>
+  updateBookmarkTitle(urlInput: string, bookmarkId: number): Promise<void>;
+  importChromeBookmarks(): void;
+  addCategoriesFromChrome(chromeCat: chrome.bookmarks.BookmarkTreeNode): void;
 }

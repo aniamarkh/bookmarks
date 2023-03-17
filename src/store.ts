@@ -50,6 +50,7 @@ export const store: Store = reactive(
         id: newId,
         title: title,
         children: [],
+        chrome: false,
       }
       this.data.columns[0].push(newCategory);
       this.saveToLocalStore();
@@ -71,6 +72,7 @@ export const store: Store = reactive(
         title: title,
         url: url,
         favicon: "",
+        chrome: false,
       };
 
       const isCategory = bookmarkCategory && "children" in bookmarkCategory;
@@ -212,7 +214,53 @@ export const store: Store = reactive(
         new Promise((_, reject) => setTimeout(() => reject(new Error('Timeout')), 3000))
       ]);
     },
+
+    importChromeBookmarks() {
+      chrome.bookmarks.getTree((bkmrkTree) => {
+        if (bkmrkTree[0].children) {
+          bkmrkTree[0].children.forEach((parent) => {
+            this.addCategoriesFromChrome(parent);
+          });
+          this.arrangeCards(this.data.columns.flat());
+        }
+      });
+    },
+
+    async addCategoriesFromChrome(chromeCat: chrome.bookmarks.BookmarkTreeNode) {
+      const newId: number = this.findMaxId(this.data) + 1;
+      const newCategory: Category = {
+        id: newId,
+        title: chromeCat.title,
+        children: [],
+        chrome: true,
+      };
+      this.data.columns[0].push(newCategory);
+
+      if (chromeCat.children) {
+        chromeCat.children.forEach(async (child, index) => {
+          let childObj: Bookmark | Category;
+          if (child.url && child.dateAdded) {
+            childObj = {
+              id: this.findMaxId(this.data) + 1,
+              title: child.title,
+              url: child.url,
+              favicon: "",
+              chrome: true,
+            };
+            newCategory.children.push(childObj);
+            this.updateFaviconLink(child.url, childObj);
+          }
+          if (child.children) {
+            this.addCategoriesFromChrome(child);
+          }
+        });
+      }
+    },
   }
 );
 
 store.loadFromLocalStore();
+
+if (!localStorage.getItem("data")) {
+  store.importChromeBookmarks();
+}
