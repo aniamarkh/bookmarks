@@ -1,24 +1,18 @@
 import type { Ref } from "vue";
 
 export interface Bookmark {
-  id: number;
+  id: string;
+  parentId: string | undefined;
   title: string;
   url: string;
   favicon: string;
-  chrome: boolean;
 }
 
 export interface Category {
-  id: number;
+  id: string;
+  parentId: string | undefined;
   title: string;
   children: Array<(Bookmark | Category)>;
-  chrome: boolean;
-}
-
-export interface Data {
-  id: 0,
-  title: "root",
-  columns: Array<Array<Category>>,
 }
 
 export interface Styles {
@@ -72,22 +66,30 @@ export interface Settings {
   setColumnsCount(): void,
 }
 
+export interface ChromeTreeNode {
+  id: "0",
+  title: "root",
+  children: Array<Category>,
+}
+
 export interface Store {
-  data: Data;
+  data: Array<Array<string>>;
   closed: Array<number>,
+  chromeTreeNode: ChromeTreeNode,
+  // getCategoriesByIds(): Array<Array<chrome.bookmarks.BookmarkTreeNode>>;
   arrangeCards(cards: Array<Category>): void;
-  deleteNode(nodeId: number): void;
-  addCategory(title: string): void;
-  editCategory(categoryId: number, newTitle: string): void;
-  addBookmark(nodeId: number, title: string, url: string): void;
-  editBookmark(bookmarkId: number, newTitle: string, newUrl: string): void;
+  // deleteNode(nodeId: number): void;
+  // addCategory(title: string): void;
+  // editCategory(categoryId: number, newTitle: string): void;
+  // addBookmark(nodeId: number, title: string, url: string): void;
+  // editBookmark(bookmarkId: number, newTitle: string, newUrl: string): void;
   saveToLocalStore(): void;
   loadFromLocalStore(): void;
-  findMaxId(node: Category | Bookmark | Data): number;
-  findNodeById(node: Category | Bookmark | Data, id: number): Category | Bookmark | Data | null;
-  findParentNodeById(node: Category | Bookmark | Data, id: number): Category | Data | null;
+  // findMaxId(node: Category | Bookmark | Data): number;
+  findNodeById(node: Category | Bookmark | ChromeTreeNode, id: string): Category | Bookmark | ChromeTreeNode | undefined;
+  // findParentNodeById(node: Category | Bookmark | Data, id: number): Category | Data | null;
   updateFaviconLink(urlInput: string, bookmark: Bookmark): void;
-  updateBookmarkTitle(urlInput: string, bookmarkId: number): Promise<void>;
-  importChromeBookmarks(): void;
+  // updateBookmarkTitle(urlInput: string, bookmarkId: number): Promise<void>;
+  importChromeBookmarks(): Promise<void>;
   addCategoriesFromChrome(chromeCat: chrome.bookmarks.BookmarkTreeNode): void;
 }

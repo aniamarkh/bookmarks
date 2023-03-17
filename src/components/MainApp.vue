@@ -19,7 +19,7 @@ const modifyDragItem = (dataTransfer: DataTransfer) => {
   <ToolsPanel />
   <div class="categories-wrapper">
     <Draggable
-      v-for="(column, index) in store.data.columns"
+      v-for="(column, index) in store.data"
       :key="index"
       :empty-insert-threshold="10"
       class="categories-column"
@@ -32,7 +32,7 @@ const modifyDragItem = (dataTransfer: DataTransfer) => {
       >
       <template #item="{element}">
         <div class="category">
-          <CategoryCard :category="element" />
+          <CategoryCard :category="store.findNodeById(store.chromeTreeNode, element)"/>
         </div>
       </template>
     </Draggable>

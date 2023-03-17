@@ -96,7 +96,7 @@ export const settings: Settings = reactive(
 
     setColumnsCount(): void {
       this.styles.columnsCount = columnsCount.value;
-      store.arrangeCards(store.data.columns.flat());
+      store.arrangeCards(store.chromeTreeNode.children);
       this.saveToLocalSettings();
       store.saveToLocalStore();
     }
