@@ -12,6 +12,7 @@ const wrapper = document.querySelector(".categories-wrapper");
 if (wrapper) {
   wrapper.addEventListener("click", sendCloseFormEvent);
 }
+
 const modifyDragItem = (dataTransfer: DataTransfer) => {
   dataTransfer.setDragImage(document.createElement('div'), 0, 0);
 };
@@ -25,6 +26,13 @@ const validateDrop = (evt: any) => {
     }
   }
   return true;
+};
+
+const isEmptyList = () => {
+  if (store.hidden.length === 0) {
+    sendCloseFormEvent();
+  }
+  store.saveToLocalStore();
 };
 </script>
 
@@ -43,7 +51,7 @@ const validateDrop = (evt: any) => {
       group="bookmarks"
       item-key="id"
       :move="validateDrop"
-      @end="store.saveToLocalStore()"
+      @end="isEmptyList"
       :setData="modifyDragItem"
       :disabled="!settings.edit">
       <template #item="{element}">

@@ -20,7 +20,6 @@ const getCategory = (id: string) => {
 
 const hideCategory = (nodeToHide: DataNode) => {
   store.hidden.push(nodeToHide);
-  store.closed.push(nodeToHide.id);
   store.data.forEach((column: Array<DataNode>) => {
     store.deleteDataNode(column, nodeToHide.id);
   });

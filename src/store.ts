@@ -26,7 +26,18 @@ export const store: Store = reactive(
           id: card.id,
           children: nodeChildrens,
         }
-        columnByIndex.push(node);
+
+        const isHidden = (): boolean => {
+          for (let i = 0; i < this.hidden.length; i++) {
+            if (this.hidden[i].id === node.id) {
+              return true;
+            }
+          }
+          return false;
+        };
+        if (!isHidden()) {
+          columnByIndex.push(node);
+        }
       })
       this.data = columnsArrays;
       this.saveToLocalStore();
@@ -55,10 +66,12 @@ export const store: Store = reactive(
       });
       this.saveToLocalStore();
 
-      if ("children" in nodeToDelete) {
-        chrome.bookmarks.removeTree(nodeToDelete.id);
-      } else {
-        chrome.bookmarks.remove(nodeToDelete.id);
+      if (nodeToDelete.id !== "1" && nodeToDelete.id !== "2") {
+        if ("children" in nodeToDelete) {
+          chrome.bookmarks.removeTree(nodeToDelete.id);
+        } else {
+          chrome.bookmarks.remove(nodeToDelete.id);
+        }
       }
 
       this.importChromeBookmarks().then(() => {

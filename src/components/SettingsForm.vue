@@ -2,8 +2,7 @@
 import Slider from '@vueform/slider'
 import "@vueform/slider/themes/default.css";
 import { settings, fontSizes, fontOptions, themes, columnsCount } from "../settings";
-
-
+import { store } from "../store";
 
 const emit = defineEmits(["close-form"]);
 const sendCloseFormEvent = () => emit("close-form");
@@ -15,7 +14,7 @@ if (wrapper) {
 </script>
 
 <template>
-  <div class="settings-form">
+  <div class="settings-form" :style="store.hidden.length === 0 ? 'right: 40px' : 'right: 80px'">
     <div class="wrapper">
       <button class="close-btn" @click="sendCloseFormEvent">
         <svg xmlns="http://www.w3.org/2000/svg" height="30" width="30" viewBox="0 0 50 50"><path d="m12.45 37.65-2.1-2.1L21.9 24 10.35 12.45l2.1-2.1L24 21.9l11.55-11.55 2.1 2.1L26.1 24l11.55 11.55-2.1 2.1L24 26.1Z"/></svg>

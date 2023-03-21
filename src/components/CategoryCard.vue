@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import type { Ref } from "vue";
+import Draggable from "vuedraggable";
 import Form from "./BookmarkForm.vue";
 import BookmarkBody from "./BookmarkBody.vue";
 import CategoryTitle from "./CategoryTitle.vue";
 import SubCategory from "./SubcategoryBody.vue";
-import Draggable from "vuedraggable";
 import { store } from "../store";
 import { settings } from "../settings";
 
