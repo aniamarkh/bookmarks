@@ -80,8 +80,8 @@ export interface DataNode {
 export interface Store {
   data: Array<Array<DataNode>>;
   closed: Array<string>,
+  hidden: Array<DataNode>,
   chromeTreeNode: ChromeTreeNode,
-  // getCategoriesByIds(): Array<Array<chrome.bookmarks.BookmarkTreeNode>>;
   arrangeCards(cards: Array<Category>): void;
   mapToDataNodes(items: Array<Bookmark | Category>): Array<DataNode>
   deleteNode(nodeId: string): void;
@@ -92,9 +92,7 @@ export interface Store {
   editBookmark(bookmarkObj: Bookmark, newTitle: string, newUrl: string): void;
   saveToLocalStore(): void;
   loadFromLocalStore(): void;
-  // findMaxId(node: Category | Bookmark | Data): number;
   findNodeById(node: Category | Bookmark | ChromeTreeNode, id: string): Category | Bookmark | ChromeTreeNode | null;
-  // findParentNodeById(node: Category | Bookmark | Data, id: number): Category | Data | null;
   updateFaviconLink(urlInput: string, bookmark: Bookmark): void;
   updateBookmarkTitle(urlInput: string, bookmarkObj: Bookmark): Promise<void>;
   importChromeBookmarks(): Promise<void>;

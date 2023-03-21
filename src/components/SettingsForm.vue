@@ -66,7 +66,7 @@ if (wrapper) {
     position: absolute;
     z-index: 1;
     top: 5px;
-    right: 40px;
+    right: 80px;
     background-color: var(--cards);
     width: auto;
     height: auto;

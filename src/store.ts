@@ -6,6 +6,7 @@ export const store: Store = reactive(
   {
     data: [[]] as Array<Array<DataNode>>,
     closed: [] as Array<string>,
+    hidden: [] as Array<DataNode>,
     chromeTreeNode: {
       id: "0",
       title: "root",
@@ -131,6 +132,7 @@ export const store: Store = reactive(
     saveToLocalStore(): void {
       localStorage.setItem("data", JSON.stringify(this.data));
       localStorage.setItem("closed", JSON.stringify(this.closed));
+      localStorage.setItem("hidden", JSON.stringify(this.hidden));
       localStorage.setItem("tree", JSON.stringify(this.chromeTreeNode));
     },
 
@@ -138,6 +140,7 @@ export const store: Store = reactive(
       const localData = localStorage.getItem("data");
       const localClosed = localStorage.getItem("closed");
       const localTree = localStorage.getItem("tree");
+      const localHidden = localStorage.getItem("hidden");
 
       if (localData) {
         this.data = JSON.parse(localData);
@@ -148,23 +151,10 @@ export const store: Store = reactive(
       if (localTree) {
         this.chromeTreeNode = JSON.parse(localTree);
       }
+      if (localHidden) {
+        this.hidden = JSON.parse(localHidden);
+      }
     },
-
-    // findMaxId(node: Category | Bookmark | Data): number {
-    //   let maxId = node.id;
-    //   if ("children" in node) {
-    //     node.children.forEach((child) => {
-    //       maxId = Math.max(maxId, this.findMaxId(child));
-    //     });
-    //   } else if (node && "columns" in node) {
-    //     (node as Data).columns.forEach((column: Array<Category>) => {
-    //       column.forEach((child: Category) => {
-    //         maxId = Math.max(maxId, this.findMaxId(child));
-    //       });
-    //     });
-    //   }
-    //   return maxId;
-    // },
 
     findNodeById(node: Category | Bookmark | ChromeTreeNode, id: string | undefined): Category | Bookmark | ChromeTreeNode | null {
       if (node.id === id) {
@@ -269,16 +259,6 @@ export const store: Store = reactive(
         });
       }
     },
-
-    // getCategoriesByIds() {
-    //   let chromeNodes: Array<Array<chrome.bookmarks.BookmarkTreeNode>> = [];
-    //   store.data.columns.forEach((column: Array<string>) => {
-    //     chrome.bookmarks.get(toRaw(column), value => {
-    //       chromeNodes.push(value);
-    //     });
-    //   });
-    //   return chromeNodes;
-    // },
   }
 );
 
