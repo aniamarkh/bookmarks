@@ -2,9 +2,10 @@
 import { ref } from "vue";
 import type { Ref } from "vue";
 import { store } from "../store";
+import type { DataNode } from "../types";
 
 const props = defineProps({
-  categoryId:  { type: Number, required: true },
+  category:  { type: Object, required: true },
 });
 
 const emit = defineEmits(["close-form"]);
@@ -28,7 +29,7 @@ const isInvalidInputs = (): boolean => {
 };
 
 const onSubmit = (): void => {
-  store.addBookmark(props.categoryId, input_title.value, input_url.value);
+  store.addBookmark(props.category as DataNode, input_title.value, input_url.value);
   input_title.value = "";
   input_url.value = "";
   sendCloseFormEvent();

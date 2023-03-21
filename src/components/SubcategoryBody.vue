@@ -99,7 +99,7 @@ const checkIfChildren = (id: string): boolean => {
     </div>
   </div>
   
-  <BookmarkForm v-if="showAddBookmarkForm" :categoryId="subcategory.id" @close-form="closeAddBookmarkForm"/>
+  <BookmarkForm v-if="showAddBookmarkForm" :category="subcategory" @close-form="closeAddBookmarkForm"/>
   <CategoryEditForm v-if="showEditCategoryForm" :category="subcategory" @close-form="closeEditCategoryForm"/>
 
   <Draggable

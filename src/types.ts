@@ -88,7 +88,7 @@ export interface Store {
   deleteDataNode(data: Array<DataNode>, id: string): void;
   addCategory(title: string): void;
   editCategory(categoryObj: Category, newTitle: string): void;
-  // addBookmark(nodeId: number, title: string, url: string): void;
+  addBookmark(parentDataNode: DataNode, bookmarkTitle: string, bookmarkUrl: string): void;
   editBookmark(bookmarkObj: Bookmark, newTitle: string, newUrl: string): void;
   saveToLocalStore(): void;
   loadFromLocalStore(): void;

@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { ref, toRef } from "vue";
-import type {Bookmark} from "../types";
+import { ref } from "vue";
+import type { Bookmark } from "../types";
 import { store } from "../store";
 import { settings } from "../settings";
 

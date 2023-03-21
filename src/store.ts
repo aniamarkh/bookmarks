@@ -88,6 +88,7 @@ export const store: Store = reactive(
         };
         this.chromeTreeNode.children.push(newCategory);
         this.data[0].push({ id: category.id });
+        this.saveToLocalStore();
       });
     },
 
@@ -97,27 +98,27 @@ export const store: Store = reactive(
       this.saveToLocalStore();
     },
 
-    // async addBookmark(nodeId: number, title: string, url: string): Promise<void> {
-    //   const newId: number = this.findMaxId(this.data) + 1;
-    //   const bookmarkCategory = this.findNodeById(this.data, nodeId);
-    //   const newBookmark = {
-    //     id: newId,
-    //     title: title,
-    //     url: url,
-    //     favicon: "",
-    //     chrome: false,
-    //   };
+    addBookmark(parentDataNode: DataNode, bookmarkTitle: string, bookmarkUrl: string): void {
+      chrome.bookmarks.create({ title: bookmarkTitle, parentId: parentDataNode.id, url: bookmarkUrl }, async (bookmark) => {
+        const newBookmark: Bookmark = {
+          id: bookmark.id,
+          parentId: bookmark.parentId,
+          title: bookmark.title,
+          url: bookmarkUrl,
+          favicon: "",
+        };
+        this.updateFaviconLink(bookmarkUrl, newBookmark);
 
-    //   const isCategory = bookmarkCategory && "children" in bookmarkCategory;
-    //   if (isCategory) {
-    //     bookmarkCategory.children.push(newBookmark);
-    //     this.updateFaviconLink(url, newBookmark);
-    //     if (title === "") {
-    //       this.updateBookmarkTitle(url, newBookmark.id);
-    //     }
-    //   }
-    //   this.saveToLocalStore();
-    // },
+        if (bookmarkTitle === "") {
+          await this.updateBookmarkTitle(bookmarkUrl, newBookmark);
+        }
+
+        const parentTreeNode = this.findNodeById(this.chromeTreeNode, bookmark.parentId) as Category;
+        parentTreeNode.children.push(newBookmark);
+        parentDataNode.children?.push({ id: bookmark.id });
+        this.saveToLocalStore();
+      });
+    },
 
     editBookmark(bookmarkObj: Bookmark, newTitle: string, newUrl: string): void {
       bookmarkObj.title = newTitle;
@@ -180,33 +181,6 @@ export const store: Store = reactive(
       return null;
     },
 
-    // findParentNodeById(node: Category | Bookmark | Data, id: number): Category | Data | null {
-    //   if ("children" in node && node.children) {
-    //     for (const child of node.children) {
-    //       if (child.id === id) {
-    //         return node as Category;
-    //       }
-    //       const parent = this.findParentNodeById(child, id);
-    //       if (parent) {
-    //         return parent;
-    //       }
-    //     }
-    //   } else if ("columns" in node) {
-    //     for (const column of (node as Data).columns) {
-    //       for (const child of column) {
-    //         if (child.id === id) {
-    //           return node as Data;
-    //         }
-    //         const parent = this.findParentNodeById(child, id);
-    //         if (parent) {
-    //           return parent;
-    //         }
-    //       }
-    //     }
-    //   }
-    //   return null;
-    // },
-
     updateFaviconLink(urlInput: string, bookmark: Bookmark): void {
       const url = new URL(chrome.runtime.getURL("/_favicon/"));
       url.searchParams.set("pageUrl", urlInput);
@@ -236,7 +210,6 @@ export const store: Store = reactive(
         console.error(error);
         this.editBookmark(bookmarkObj, urlInput, urlInput);
         chrome.bookmarks.update(bookmarkObj.id, { title: urlInput, url: urlInput });
-
       });
 
       await Promise.race([
@@ -270,7 +243,7 @@ export const store: Store = reactive(
     addCategoriesFromChrome(chromeCat: chrome.bookmarks.BookmarkTreeNode) {
       const newCategory: Category = {
         id: chromeCat.id,
-        parentId: "0",
+        parentId: chromeCat.parentId,
         title: chromeCat.title,
         children: [],
       };

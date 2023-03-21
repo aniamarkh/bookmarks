@@ -72,7 +72,7 @@ const checkIfChildren = (id: string): boolean => {
   <button class="add-bookmark-btn" @click="showBookmarkForm = !showBookmarkForm" v-if="!showBookmarkForm && settings.edit">
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="3 5 40 40" height="20" width="20"><path d="M22.5 38V25.5H10v-3h12.5V10h3v12.5H38v3H25.5V38Z"/></svg>
   </button>
-  <Form v-if="showBookmarkForm" :categoryId="category.id" @close-form="closeForm"/>
+  <Form v-if="showBookmarkForm" :category="category" @close-form="closeForm"/>
 
 </template>
 
