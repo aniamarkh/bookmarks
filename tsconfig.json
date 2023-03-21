@@ -14,7 +14,12 @@
     },
     "types": [
       "chrome"
-    ]
+    ],
+    "lib": [
+      "DOM",
+      "ES2019"
+    ],
+    "ignoreDeprecations": "5.0"
   },
   "references": [
     {

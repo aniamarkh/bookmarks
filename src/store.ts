@@ -26,74 +26,90 @@ export const store: Store = reactive(
       this.saveToLocalStore();
     },
 
-    deleteNode(nodeId: number) {
-      const nodeToDelete = this.findNodeById(this.data, nodeId);
-      const parentNode = this.findParentNodeById(this.data, nodeId);
+    deleteNode(nodeId: string) {
+      chrome.bookmarks.remove(nodeId, () => {
+        const nodeToDelete = this.findNodeById(this.data, nodeId);
+        const parentNode = this.findParentNodeById(this.data, nodeId);
 
-      if (nodeToDelete && parentNode && "columns" in parentNode) {
-        this.data.columns.forEach((column, index) => {
-          if (column.filter(el => el.id === nodeToDelete.id).length) {
-            const indexInColumn = column.map(obj => obj.id).indexOf(nodeToDelete.id);
-            this.data.columns[index].splice(indexInColumn, 1);
-          }
-        });
-      } else if (nodeToDelete && parentNode && "children" in parentNode && !("columns" in nodeToDelete)) {
-        const nodeToDeleteIndex = parentNode.children.indexOf(nodeToDelete);
-        parentNode.children.splice(nodeToDeleteIndex, 1);
-      }
-      this.saveToLocalStore();
-    },
-
-    addCategory(title: string): void {
-      const newId: number = this.findMaxId(this.data) + 1;
-      const newCategory: Category = {
-        id: newId,
-        title: title,
-        children: [],
-        chrome: false,
-      }
-      this.data.columns[0].push(newCategory);
-      this.saveToLocalStore();
-    },
-
-    editCategory(categoryId: number, newTitle: string): void {
-      const categoryNode = this.findNodeById(this.data, categoryId);
-      if (categoryNode) {
-        categoryNode.title = newTitle;
-      }
-      this.saveToLocalStore();
-    },
-
-    async addBookmark(nodeId: number, title: string, url: string): Promise<void> {
-      const newId: number = this.findMaxId(this.data) + 1;
-      const bookmarkCategory = this.findNodeById(this.data, nodeId);
-      const newBookmark = {
-        id: newId,
-        title: title,
-        url: url,
-        favicon: "",
-        chrome: false,
-      };
-
-      const isCategory = bookmarkCategory && "children" in bookmarkCategory;
-      if (isCategory) {
-        bookmarkCategory.children.push(newBookmark);
-        this.updateFaviconLink(url, newBookmark);
-        if (title === "") {
-          this.updateBookmarkTitle(url, newBookmark.id);
+        if (nodeToDelete && parentNode && "columns" in parentNode) {
+          this.data.columns.forEach((column, index) => {
+            if (column.filter(el => el.id === nodeToDelete.id).length) {
+              const indexInColumn = column.map(obj => obj.id).indexOf(nodeId);
+              this.data.columns[index].splice(indexInColumn, 1);
+            }
+          });
+        } else if (nodeToDelete && parentNode && "children" in parentNode && !("columns" in nodeToDelete)) {
+          const nodeToDeleteIndex = parentNode.children.indexOf(nodeToDelete);
+          parentNode.children.splice(nodeToDeleteIndex, 1);
         }
-      }
-      this.saveToLocalStore();
+        this.saveToLocalStore();
+
+      })
     },
 
-    editBookmark(bookmarkId: number, newTitle: string, newUrl: string): void {
-      const bookmarkNode = this.findNodeById(this.data, bookmarkId);
-      if (bookmarkNode && "url" in bookmarkNode) {
-        bookmarkNode.title = newTitle;
-        bookmarkNode.url = newUrl;
-        this.updateFaviconLink(newUrl, bookmarkNode);
-      }
-      this.saveToLocalStore();
+    addCategory(categoryTitle: string): void {
+      chrome.bookmarks.create({ title: categoryTitle }, (category) => {
+        const newCategory: Category = {
+          id: category.id,
+          title: category.title,
+          children: [],
+        };
+        this.data.columns[0].push(newCategory);
+        this.saveToLocalStore();
+      });
+    },
+
+    editCategory(categoryId: string, newTitle: string): void {
+      chrome.bookmarks.update(categoryId, { title: newTitle }, () => {
+        const categoryNode = this.findNodeById(this.data, categoryId) as Category;
+        if (categoryNode) {
+          categoryNode.title = newTitle;
+        }
+        this.saveToLocalStore();
+      })
+    },
+
+    async addBookmark(parentNodeId: string, bookmarkTitle: string, bookmarkUrl: string): Promise<void> {
+      chrome.bookmarks.create(
+        {
+          title: bookmarkTitle,
+          parentId: parentNodeId,
+          url: bookmarkUrl
+        }, (bookmark) => {
+          const bookmarkCategory = this.findNodeById(this.data, parentNodeId);
+          const newBookmark: Bookmark = {
+            id: bookmark.id,
+            title: bookmark.title,
+            url: bookmarkUrl,
+            favicon: "",
+          };
+
+          const isCategory = bookmarkCategory && "children" in bookmarkCategory;
+          if (isCategory) {
+            bookmarkCategory.children.push(newBookmark);
+            this.updateFaviconLink(bookmarkUrl, newBookmark);
+            if (bookmarkTitle === "") {
+              this.updateBookmarkTitle(bookmarkUrl, bookmark.id);
+            }
+          }
+          this.saveToLocalStore();
+
+        });
+    },
+
+    editBookmark(bookmarkId: string, newTitle: string, newUrl: string): void {
+      chrome.bookmarks.update(bookmarkId, { title: newTitle, url: newUrl, }, (bookmark) => {
+        const bookmarkNode = this.findNodeById(this.data, bookmarkId);
+        if (bookmarkNode && "url" in bookmarkNode) {
+          bookmarkNode.title = newTitle;
+          this.updateFaviconLink(newUrl, bookmarkNode);
+          if (newUrl !== bookmarkNode.url && newTitle === "") {
+            this.updateBookmarkTitle(newUrl, bookmarkId);
+          }
+          bookmarkNode.url = newUrl;
+        }
+        this.saveToLocalStore();
+      });
     },
 
     saveToLocalStore(): void {
@@ -113,23 +129,7 @@ export const store: Store = reactive(
       }
     },
 
-    findMaxId(node: Category | Bookmark | Data): number {
-      let maxId = node.id;
-      if ("children" in node) {
-        node.children.forEach((child) => {
-          maxId = Math.max(maxId, this.findMaxId(child));
-        });
-      } else if (node && "columns" in node) {
-        (node as Data).columns.forEach((column: Array<Category>) => {
-          column.forEach((child: Category) => {
-            maxId = Math.max(maxId, this.findMaxId(child));
-          });
-        });
-      }
-      return maxId;
-    },
-
-    findNodeById(node: Category | Bookmark | Data, id: number): Category | Bookmark | Data | null {
+    findNodeById(node: Category | Bookmark | Data, id: string): Category | Bookmark | Data | null {
       if (node.id === id) {
         return node;
       }
@@ -153,7 +153,7 @@ export const store: Store = reactive(
       return null;
     },
 
-    findParentNodeById(node: Category | Bookmark | Data, id: number): Category | Data | null {
+    findParentNodeById(node: Category | Bookmark | Data, id: string): Category | Data | null {
       if ("children" in node && node.children) {
         for (const child of node.children) {
           if (child.id === id) {
@@ -188,7 +188,7 @@ export const store: Store = reactive(
       this.saveToLocalStore();
     },
 
-    async updateBookmarkTitle(urlInput: string, bookmarkId: number): Promise<void> {
+    async updateBookmarkTitle(urlInput: string, bookmarkId: string): Promise<void> {
       const fetchPromise = fetch(urlInput).then(async (response) => {
         if (response.ok) {
           const html = await response.text();
@@ -227,25 +227,22 @@ export const store: Store = reactive(
     },
 
     async addCategoriesFromChrome(chromeCat: chrome.bookmarks.BookmarkTreeNode) {
-      const newId: number = this.findMaxId(this.data) + 1;
       const newCategory: Category = {
-        id: newId,
+        id: chromeCat.id,
         title: chromeCat.title,
         children: [],
-        chrome: true,
       };
       this.data.columns[0].push(newCategory);
 
       if (chromeCat.children) {
-        chromeCat.children.forEach(async (child, index) => {
+        chromeCat.children.forEach((child) => {
           let childObj: Bookmark | Category;
           if (child.url && child.dateAdded) {
             childObj = {
-              id: this.findMaxId(this.data) + 1,
+              id: child.id,
               title: child.title,
               url: child.url,
               favicon: "",
-              chrome: true,
             };
             newCategory.children.push(childObj);
             this.updateFaviconLink(child.url, childObj);

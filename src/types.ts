@@ -1,18 +1,16 @@
 import type { Ref } from "vue";
 
 export interface Bookmark {
-  id: number;
+  id: string;
   title: string;
   url: string;
   favicon: string;
-  chrome: boolean;
 }
 
 export interface Category {
-  id: number;
+  id: string;
   title: string;
   children: Array<(Bookmark | Category)>;
-  chrome: boolean;
 }
 
 export interface Data {
@@ -76,18 +74,17 @@ export interface Store {
   data: Data;
   closed: Array<number>,
   arrangeCards(cards: Array<Category>): void;
-  deleteNode(nodeId: number): void;
-  addCategory(title: string): void;
-  editCategory(categoryId: number, newTitle: string): void;
-  addBookmark(nodeId: number, title: string, url: string): void;
-  editBookmark(bookmarkId: number, newTitle: string, newUrl: string): void;
+  deleteNode(nodeId: string): void;
+  addCategory(categoryTitle: string): void;
+  editCategory(categoryId: string, newTitle: string): void;
+  addBookmark(parentNodeId: string, bookmarkTitle: string, bookmarkUrl: string): Promise<void>
+  editBookmark(bookmarkId: string, newTitle: string, newUrl: string): void;
   saveToLocalStore(): void;
   loadFromLocalStore(): void;
-  findMaxId(node: Category | Bookmark | Data): number;
-  findNodeById(node: Category | Bookmark | Data, id: number): Category | Bookmark | Data | null;
-  findParentNodeById(node: Category | Bookmark | Data, id: number): Category | Data | null;
+  findNodeById(node: Category | Bookmark | Data, id: string): Category | Bookmark | Data | null;
+  findParentNodeById(node: Category | Bookmark | Data, id: string): Category | Data | null;
   updateFaviconLink(urlInput: string, bookmark: Bookmark): void;
-  updateBookmarkTitle(urlInput: string, bookmarkId: number): Promise<void>;
+  updateBookmarkTitle(urlInput: string, bookmarkId: string): Promise<void>;
   importChromeBookmarks(): void;
   addCategoriesFromChrome(chromeCat: chrome.bookmarks.BookmarkTreeNode): void;
 }
