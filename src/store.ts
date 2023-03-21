@@ -78,35 +78,18 @@ export const store: Store = reactive(
       }
     },
 
-    // deleteNode(nodeId: number) {
-    //   const nodeToDelete = this.findNodeById(this.data, nodeId);
-    //   const parentNode = this.findParentNodeById(this.data, nodeId);
-
-    //   if (nodeToDelete && parentNode && "columns" in parentNode) {
-    //     this.data.columns.forEach((column, index) => {
-    //       if (column.filter(el => el.id === nodeToDelete.id).length) {
-    //         const indexInColumn = column.map(obj => obj.id).indexOf(nodeToDelete.id);
-    //         this.data.columns[index].splice(indexInColumn, 1);
-    //       }
-    //     });
-    //   } else if (nodeToDelete && parentNode && "children" in parentNode && !("columns" in nodeToDelete)) {
-    //     const nodeToDeleteIndex = parentNode.children.indexOf(nodeToDelete);
-    //     parentNode.children.splice(nodeToDeleteIndex, 1);
-    //   }
-    //   this.saveToLocalStore();
-    // },
-
-    // addCategory(title: string): void {
-    //   const newId: number = this.findMaxId(this.data) + 1;
-    //   const newCategory: Category = {
-    //     id: newId,
-    //     title: title,
-    //     children: [],
-    //     chrome: false,
-    //   }
-    //   this.data.columns[0].push(newCategory);
-    //   this.saveToLocalStore();
-    // },
+    addCategory(categoryTitle: string): void {
+      chrome.bookmarks.create({ title: categoryTitle }, (category) => {
+        const newCategory: Category = {
+          id: category.id,
+          parentId: "0",
+          title: category.title,
+          children: [],
+        };
+        this.chromeTreeNode.children.push(newCategory);
+        this.data[0].push({ id: category.id });
+      });
+    },
 
     editCategory(categoryObj: Category, newTitle: string): void {
       categoryObj.title = newTitle;
