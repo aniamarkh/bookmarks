@@ -84,7 +84,8 @@ export interface Store {
   // getCategoriesByIds(): Array<Array<chrome.bookmarks.BookmarkTreeNode>>;
   arrangeCards(cards: Array<Category>): void;
   mapToDataNodes(items: Array<Bookmark | Category>): Array<DataNode>
-  // deleteNode(nodeId: number): void;
+  deleteNode(nodeId: string): void;
+  deleteDataNode(data: Array<DataNode>, id: string): void;
   // addCategory(title: string): void;
   editCategory(categoryObj: Category, newTitle: string): void;
   // addBookmark(nodeId: number, title: string, url: string): void;

@@ -46,6 +46,38 @@ export const store: Store = reactive(
       return result;
     },
 
+    deleteNode(nodeId: string): void {
+      const nodeToDelete = this.findNodeById(this.chromeTreeNode, nodeId) as (Category | Bookmark);
+
+      this.data.forEach((column: Array<DataNode>) => {
+        this.deleteDataNode(column, nodeId);
+      });
+      this.saveToLocalStore();
+
+      if ("children" in nodeToDelete) {
+        chrome.bookmarks.removeTree(nodeToDelete.id);
+      } else {
+        chrome.bookmarks.remove(nodeToDelete.id);
+      }
+
+      this.importChromeBookmarks().then(() => {
+        localStorage.setItem("tree", JSON.stringify(store.chromeTreeNode));
+      });
+    },
+
+    deleteDataNode(data: Array<DataNode>, id: string) {
+      for (let i = 0; i < data.length; i++) {
+        const node = data[i];
+        if (node.id === id) {
+          data.splice(i, 1);
+          return;
+        }
+        if (node.children) {
+          this.deleteDataNode(node.children, id);
+        }
+      }
+    },
+
     // deleteNode(nodeId: number) {
     //   const nodeToDelete = this.findNodeById(this.data, nodeId);
     //   const parentNode = this.findParentNodeById(this.data, nodeId);
@@ -150,7 +182,7 @@ export const store: Store = reactive(
     //   return maxId;
     // },
 
-    findNodeById(node: Category | Bookmark | ChromeTreeNode, id: string): Category | Bookmark | ChromeTreeNode | null {
+    findNodeById(node: Category | Bookmark | ChromeTreeNode, id: string | undefined): Category | Bookmark | ChromeTreeNode | null {
       if (node.id === id) {
         return node;
       }
@@ -231,6 +263,7 @@ export const store: Store = reactive(
     },
 
     async importChromeBookmarks(): Promise<void> {
+
       return new Promise((resolve, reject) => {
         chrome.bookmarks.getTree((bookmarks) => {
           if (!bookmarks) {
@@ -240,6 +273,7 @@ export const store: Store = reactive(
 
           const bookmarkTree = bookmarks[0];
           if (bookmarkTree.children) {
+            this.chromeTreeNode.children = [];
             bookmarkTree.children.forEach(async (parent) => {
               this.addCategoriesFromChrome(parent);
             });
@@ -253,7 +287,7 @@ export const store: Store = reactive(
     addCategoriesFromChrome(chromeCat: chrome.bookmarks.BookmarkTreeNode) {
       const newCategory: Category = {
         id: chromeCat.id,
-        parentId: chromeCat.parentId,
+        parentId: "0",
         title: chromeCat.title,
         children: [],
       };
