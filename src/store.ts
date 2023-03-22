@@ -243,7 +243,6 @@ export const store: Store = reactive(
 
     importChromeBookmarks() {
       chrome.bookmarks.getTree((bkmrkTree) => {
-        console.log(bkmrkTree);
         if (bkmrkTree[0].children) {
           bkmrkTree[0].children.forEach(folder => {
             if (folder.title.toLowerCase() === "other bookmarks" && folder.children) {

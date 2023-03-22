@@ -6,46 +6,32 @@ import BookmarkBody from "./BookmarkBody.vue";
 import CategoryTitle from "./CategoryTitle.vue";
 import SubCategory from "./SubcategoryBody.vue";
 import Draggable from "vuedraggable";
-import { store } from "../store";
 import { settings } from "../settings";
+import { onEnd, validateDrop, modifyDragItem } from "../utils";
 
 const props = defineProps({
   category:  { type: Object, required: true },
 });
 const showBookmarkForm: Ref<boolean> = ref(false);
-// https://stackoverflow.com/questions/73105353/change-ref-of-the-parent-from-child-component-using-vue-3
 const closeForm = () => showBookmarkForm.value = false;
 
-const validateDrop = (evt: any) => {
-  const draggedElement = evt.dragged;
-  if (draggedElement.classList.contains("bookmarkbody")) {
-    const targetNode = evt.to;
-    if (targetNode.classList.contains("categories-column")) {
-      return false;
-    }
-  }
-  return true;
-}
-
-const modifyDragItem = (dataTransfer: DataTransfer) => {
-  dataTransfer.setDragImage(document.createElement('div'), 0, 0);
-};
 </script>
 
 <template>
   <CategoryTitle :category="category"/>
   <Draggable
+    :data-id="category.id"
     class="bookmarks-list"
     :empty-insert-threshold="50"
     :list="category.children" 
     group="bookmarks"
     item-key="id"
     :move="validateDrop"
-    @end="store.saveToLocalStore()"
+    @end="onEnd"
     :setData="modifyDragItem"
     :disabled="!settings.edit">
-    <template #item="{element}">
-      <div :class=" element.children ? 'subcatbody' : 'bookmarkbody' ">
+    <template #item="{element}" >
+      <div :data-id="element.id" :class=" element.children ? 'subcatbody' : 'bookmarkbody' ">
         <BookmarkBody v-if="!element.children" :bookmark="element" />
         <SubCategory v-if="element.children" :subcategory="element" />
       </div>

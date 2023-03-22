@@ -9,6 +9,7 @@ import BookmarkForm from "./BookmarkForm.vue";
 import CategoryEditForm from "./CategoryEditForm.vue";
 import Draggable from "vuedraggable";
 import type { Category } from "../types";
+import { onEnd, modifyDragItem, validateDrop } from "../utils";
 
 const props = defineProps({
   subcategory:  { type: Object, required: true },
@@ -19,21 +20,6 @@ const showEditCategoryForm: Ref<boolean> = ref(false);
 
 const closeAddBookmarkForm = () => showAddBookmarkForm.value = false;
 const closeEditCategoryForm = () => showEditCategoryForm.value = false;
-
-const validateDrop = (evt: any) => {
-  const draggedElement = evt.dragged;
-  if (draggedElement.classList.contains("bookmarkbody")) {
-    const targetNode = evt.to;
-    if (targetNode.classList.contains("categories-column")) {
-      return false;
-    }
-  }
-  return true;
-}
-
-const modifyDragItem = (dataTransfer: DataTransfer) => {
-  dataTransfer.setDragImage(document.createElement('div'), 0, 0);
-};
 
 const toggleSubcat = (id: string) => {
   const idIndex = store.closed.indexOf(id);
@@ -66,7 +52,6 @@ const hideCategory = (nodeToHide: Category) => {
   store.hideCategory(nodeToHide);
   store.saveToLocalStore();
 };
-
 </script>
 
 <template>
@@ -100,17 +85,18 @@ const hideCategory = (nodeToHide: Category) => {
   <CategoryEditForm v-if="showEditCategoryForm" :category="subcategory" @close-form="closeEditCategoryForm"/>
 
   <Draggable
+    :data-id="subcategory.id"
     :empty-insert-threshold="20"
     class="subcat-items"
     :list="subcategory.children" 
     group="bookmarks"
     item-key="id"
     :move="validateDrop"
-    @end="store.saveToLocalStore()"
+    @end="onEnd"
     :setData="modifyDragItem"
     :disabled="!settings.edit">
     <template #item="{element}">
-      <div :class=" element.children ? 'subcatbody' : 'bookmarkbody' " v-if="isClosed(subcategory.id)">
+      <div :data-id="element.id" :class=" element.children ? 'subcatbody' : 'bookmarkbody' " v-if="isClosed(subcategory.id)">
         <BookmarkBody v-if="!element.children" :bookmark="element" />
         <SubCategory v-if="element.children" :subcategory="element" />
       </div>

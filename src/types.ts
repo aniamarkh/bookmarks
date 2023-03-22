@@ -90,3 +90,7 @@ export interface Store {
   importChromeBookmarks(): void;
   addCategoriesFromChrome(chromeCat: chrome.bookmarks.BookmarkTreeNode, parentNode: Array<Category | Bookmark>): void;
 }
+
+export interface ChromeHandle {
+  moveNode(newParentId: string, movedNodeId: string, newIndex: number): void;
+}

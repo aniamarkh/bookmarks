@@ -2,7 +2,7 @@
 import { store } from "../store";
 import { settings } from "../settings";
 import Draggable from "vuedraggable";
-
+import { validateDrop, modifyDragItem } from "../utils";
 import SubCategory from "./SubcategoryBody.vue";
 
 const emit = defineEmits(["close-form"]);
@@ -12,21 +12,6 @@ const wrapper = document.querySelector(".categories-wrapper");
 if (wrapper) {
   wrapper.addEventListener("click", sendCloseFormEvent);
 }
-
-const modifyDragItem = (dataTransfer: DataTransfer) => {
-  dataTransfer.setDragImage(document.createElement('div'), 0, 0);
-};
-
-const validateDrop = (evt: any) => {
-  const draggedElement = evt.dragged;
-  if (draggedElement.classList.contains("bookmarkbody")) {
-    const targetNode = evt.to;
-    if (targetNode.classList.contains("categories-column")) {
-      return false;
-    }
-  }
-  return true;
-};
 
 const isEmptyList = () => {
   if (store.hidden.length === 0) {
@@ -55,7 +40,7 @@ const isEmptyList = () => {
       :setData="modifyDragItem"
       :disabled="!settings.edit">
       <template #item="{element}">
-        <div class="subcatbody">
+        <div class="subcatbody" :data-id="element.id">
           <SubCategory :subcategory="element" />
         </div>
       </template>

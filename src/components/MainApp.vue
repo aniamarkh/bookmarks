@@ -4,16 +4,13 @@ import type { Ref } from "vue";
 import Draggable from "vuedraggable";
 import { store } from "../store";
 import { settings } from "../settings";
+import { onEnd, modifyDragItem } from "../utils";
 import CategoryForm from "./CategoryForm.vue";
 import CategoryCard from "./CategoryCard.vue";
 import ToolsPanel from "./ToolsPanel.vue";
 
 const showCategoryForm: Ref<boolean> = ref(false);
 const closeCategoryForm = () => showCategoryForm.value = false;
-const modifyDragItem = (dataTransfer: DataTransfer) => {
-  dataTransfer.setDragImage(document.createElement('div'), 0, 0);
-};
-
 </script>
 
 <template>
@@ -21,18 +18,19 @@ const modifyDragItem = (dataTransfer: DataTransfer) => {
   <div class="categories-wrapper">
     <Draggable
       v-for="(column, index) in store.data.columns"
+      data-id="2"
       :key="index"
       :empty-insert-threshold="10"
       class="categories-column"
       :list="column" 
       group="bookmarks"
       item-key="id"
-      @end="store.saveToLocalStore()"
+      @end="onEnd"
       :setData="modifyDragItem"
       :disabled="!settings.edit"
       >
       <template #item="{element}">
-        <div class="category">
+        <div class="category" :data-id="element.id">
           <CategoryCard :category="element" />
         </div>
       </template>
