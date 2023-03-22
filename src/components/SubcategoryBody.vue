@@ -9,7 +9,7 @@ import BookmarkForm from "./BookmarkForm.vue";
 import CategoryEditForm from "./CategoryEditForm.vue";
 import Draggable from "vuedraggable";
 import type { Category } from "../types";
-import { onEnd, modifyDragItem, validateDrop } from "../utils";
+import { onEnd, modifyDragItem } from "../utils";
 
 const props = defineProps({
   subcategory:  { type: Object, required: true },
@@ -91,7 +91,6 @@ const hideCategory = (nodeToHide: Category) => {
     :list="subcategory.children" 
     group="bookmarks"
     item-key="id"
-    :move="validateDrop"
     @end="onEnd"
     :setData="modifyDragItem"
     :disabled="!settings.edit">

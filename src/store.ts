@@ -7,22 +7,18 @@ export const store: Store = reactive(
     data: {
       id: "0",
       title: "root",
-      columns: [[{
-        id: "1",
-        title: "Other bookmarks",
-        children: []
-      }]] as Array<Array<Category>>,
+      columns: [[]] as Array<Array<Category | Bookmark>>,
     },
 
     closed: [] as Array<string>,
     hidden: [] as Array<Category>,
 
-    arrangeCards(cards: Array<Category>): void {
+    arrangeCards(cards: Array<Category | Bookmark>): void {
       const columns = settings.styles.columnsCount;
       const maxCardsInColumn = Math.ceil(cards.length / columns);
-      const columnsArrays: Array<Array<Category>> = Array.from({ length: columns }, () => []);
+      const columnsArrays: Array<Array<Category | Bookmark>> = Array.from({ length: columns }, () => []);
 
-      cards.forEach((card: Category, index) => {
+      cards.forEach((card: Category | Bookmark, index) => {
         const columnIndex = Math.floor(index / maxCardsInColumn);
         const columnByIndex = columnsArrays[columnIndex];
         columnByIndex.push(card);
@@ -262,17 +258,14 @@ export const store: Store = reactive(
     ): void {
 
       if (chromeChild.url) {
-        const otherBookmarksNode = this.findNodeById(this.data, "1");
-        if (otherBookmarksNode && "children" in otherBookmarksNode) {
-          const newBookmark = {
-            id: chromeChild.id,
-            title: chromeChild.title,
-            url: chromeChild.url,
-            favicon: "",
-          };
-          otherBookmarksNode.children.push(newBookmark);
-          this.updateFaviconLink(chromeChild.url, newBookmark);
-        }
+        const newBookmark = {
+          id: chromeChild.id,
+          title: chromeChild.title,
+          url: chromeChild.url,
+          favicon: "",
+        };
+        this.data.columns[0].push(newBookmark);
+        this.updateFaviconLink(chromeChild.url, newBookmark);
       } else {
         const newCategory: Category = {
           id: chromeChild.id,

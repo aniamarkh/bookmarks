@@ -7,7 +7,7 @@ import CategoryTitle from "./CategoryTitle.vue";
 import SubCategory from "./SubcategoryBody.vue";
 import Draggable from "vuedraggable";
 import { settings } from "../settings";
-import { onEnd, validateDrop, modifyDragItem } from "../utils";
+import { onEnd, modifyDragItem } from "../utils";
 
 const props = defineProps({
   category:  { type: Object, required: true },
@@ -26,7 +26,6 @@ const closeForm = () => showBookmarkForm.value = false;
     :list="category.children" 
     group="bookmarks"
     item-key="id"
-    :move="validateDrop"
     @end="onEnd"
     :setData="modifyDragItem"
     :disabled="!settings.edit">

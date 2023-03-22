@@ -16,7 +16,7 @@ export interface Category {
 export interface Data {
   id: "0",
   title: "root",
-  columns: Array<Array<Category>>,
+  columns: Array<Array<Category | Bookmark>>,
 }
 
 export interface Styles {
@@ -74,7 +74,7 @@ export interface Store {
   data: Data;
   closed: Array<string>,
   hidden: Array<Category>,
-  arrangeCards(cards: Array<Category>): void;
+  arrangeCards(cards: Array<Category | Bookmark>): void;
   deleteNode(nodeId: string): void;
   hideCategory(nodeToDelete: Category): void;
   addCategory(categoryTitle: string): void;

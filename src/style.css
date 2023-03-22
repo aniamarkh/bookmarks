@@ -36,6 +36,10 @@ main {
   transition: all 0.3s;
 }
 
+.rootbookmark {
+  width: 310px;
+}
+
 .categories-wrapper {
   display: flex;
   flex-direction: row;

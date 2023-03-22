@@ -8,6 +8,7 @@ import { onEnd, modifyDragItem } from "../utils";
 import CategoryForm from "./CategoryForm.vue";
 import CategoryCard from "./CategoryCard.vue";
 import ToolsPanel from "./ToolsPanel.vue";
+import BookmarkBody from "./BookmarkBody.vue";
 
 const showCategoryForm: Ref<boolean> = ref(false);
 const closeCategoryForm = () => showCategoryForm.value = false;
@@ -30,8 +31,9 @@ const closeCategoryForm = () => showCategoryForm.value = false;
       :disabled="!settings.edit"
       >
       <template #item="{element}">
-        <div class="category" :data-id="element.id">
-          <CategoryCard :category="element" />
+        <div :class="element.children ? 'category' : 'rootbookmark'" :data-id="element.id">
+          <CategoryCard v-if="element.children" :category="element" />
+          <BookmarkBody v-if="!element.children" :bookmark="element"/>
         </div>
       </template>
     </Draggable>

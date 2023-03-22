@@ -2,7 +2,7 @@
 import { store } from "../store";
 import { settings } from "../settings";
 import Draggable from "vuedraggable";
-import { validateDrop, modifyDragItem } from "../utils";
+import { modifyDragItem, onEnd } from "../utils";
 import SubCategory from "./SubcategoryBody.vue";
 
 const emit = defineEmits(["close-form"]);
@@ -13,11 +13,11 @@ if (wrapper) {
   wrapper.addEventListener("click", sendCloseFormEvent);
 }
 
-const isEmptyList = () => {
+const isEmptyList = (evt: any) => {
   if (store.hidden.length === 0) {
     sendCloseFormEvent();
   }
-  store.saveToLocalStore();
+  onEnd(evt);
 };
 </script>
 
@@ -35,7 +35,6 @@ const isEmptyList = () => {
       :list="store.hidden" 
       group="bookmarks"
       item-key="id"
-      :move="validateDrop"
       @end="isEmptyList"
       :setData="modifyDragItem"
       :disabled="!settings.edit">
