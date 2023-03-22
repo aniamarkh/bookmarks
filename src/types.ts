@@ -72,9 +72,11 @@ export interface Settings {
 
 export interface Store {
   data: Data;
-  closed: Array<number>,
+  closed: Array<string>,
+  hidden: Array<Category>,
   arrangeCards(cards: Array<Category>): void;
   deleteNode(nodeId: string): void;
+  hideCategory(nodeToDelete: Category): void;
   addCategory(categoryTitle: string): void;
   editCategory(categoryId: string, newTitle: string): void;
   addBookmark(parentNodeId: string, bookmarkTitle: string, bookmarkUrl: string): Promise<void>

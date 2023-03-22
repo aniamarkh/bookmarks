@@ -10,7 +10,8 @@ export const store: Store = reactive(
       columns: [[]] as Array<Array<Category>>,
     },
 
-    closed: [] as Array<number>,
+    closed: [] as Array<string>,
+    hidden: [] as Array<Category>,
 
     arrangeCards(cards: Array<Category>): void {
       const columns = settings.styles.columnsCount;
@@ -43,8 +44,24 @@ export const store: Store = reactive(
           parentNode.children.splice(nodeToDeleteIndex, 1);
         }
         this.saveToLocalStore();
-
       })
+    },
+
+    hideCategory(nodeToDelete: Category): void {
+      const parentNode = this.findParentNodeById(this.data, nodeToDelete.id);
+
+      if (nodeToDelete && parentNode && "columns" in parentNode) {
+        this.data.columns.forEach((column, index) => {
+          if (column.filter(el => el.id === nodeToDelete.id).length) {
+            const indexInColumn = column.map(obj => obj.id).indexOf(nodeToDelete.id);
+            this.data.columns[index].splice(indexInColumn, 1);
+          }
+        });
+      } else if (nodeToDelete && parentNode && "children" in parentNode && !("columns" in nodeToDelete)) {
+        const nodeToDeleteIndex = parentNode.children.indexOf(nodeToDelete);
+        parentNode.children.splice(nodeToDeleteIndex, 1);
+      }
+      this.saveToLocalStore();
     },
 
     addCategory(categoryTitle: string): void {
@@ -115,17 +132,22 @@ export const store: Store = reactive(
     saveToLocalStore(): void {
       localStorage.setItem("data", JSON.stringify(this.data));
       localStorage.setItem("closed", JSON.stringify(this.closed));
+      localStorage.setItem("hidden", JSON.stringify(this.hidden));
     },
 
     loadFromLocalStore(): void {
       const localData = localStorage.getItem("data");
       const localClosed = localStorage.getItem("closed");
+      const localHidden = localStorage.getItem("hidden");
 
       if (localData) {
         this.data = JSON.parse(localData);
       }
       if (localClosed) {
         this.closed = JSON.parse(localClosed);
+      }
+      if (localHidden) {
+        this.hidden = JSON.parse(localHidden);
       }
     },
 

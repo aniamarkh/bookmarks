@@ -1,18 +1,19 @@
 <script setup lang="ts">
+import { ref } from "vue";
+import type { Ref } from "vue";
+import Draggable from "vuedraggable";
 import { store } from "../store";
 import { settings } from "../settings";
 import CategoryForm from "./CategoryForm.vue";
 import CategoryCard from "./CategoryCard.vue";
 import ToolsPanel from "./ToolsPanel.vue";
-import { ref } from "vue";
-import type { Ref } from "vue";
-import Draggable from "vuedraggable";
 
 const showCategoryForm: Ref<boolean> = ref(false);
 const closeCategoryForm = () => showCategoryForm.value = false;
 const modifyDragItem = (dataTransfer: DataTransfer) => {
   dataTransfer.setDragImage(document.createElement('div'), 0, 0);
 };
+
 </script>
 
 <template>

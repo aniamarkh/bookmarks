@@ -3,8 +3,6 @@ import Slider from '@vueform/slider'
 import "@vueform/slider/themes/default.css";
 import { settings, fontSizes, fontOptions, themes, columnsCount } from "../settings";
 
-
-
 const emit = defineEmits(["close-form"]);
 const sendCloseFormEvent = () => emit("close-form");
 
