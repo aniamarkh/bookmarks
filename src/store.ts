@@ -5,9 +5,13 @@ import { settings } from "./settings";
 export const store: Store = reactive(
   {
     data: {
-      id: 0,
+      id: "0",
       title: "root",
-      columns: [[]] as Array<Array<Category>>,
+      columns: [[{
+        id: "1",
+        title: "Other bookmarks",
+        children: []
+      }]] as Array<Array<Category>>,
     },
 
     closed: [] as Array<string>,
@@ -239,40 +243,63 @@ export const store: Store = reactive(
 
     importChromeBookmarks() {
       chrome.bookmarks.getTree((bkmrkTree) => {
+        console.log(bkmrkTree);
         if (bkmrkTree[0].children) {
-          bkmrkTree[0].children.forEach((parent) => {
-            this.addCategoriesFromChrome(parent);
+          bkmrkTree[0].children.forEach(folder => {
+            if (folder.title.toLowerCase() === "other bookmarks" && folder.children) {
+              folder.children.forEach(child => {
+                this.addCategoriesFromChrome(child, this.data.columns[0]);
+              })
+            }
           });
           this.arrangeCards(this.data.columns.flat());
         }
       });
     },
 
-    async addCategoriesFromChrome(chromeCat: chrome.bookmarks.BookmarkTreeNode) {
-      const newCategory: Category = {
-        id: chromeCat.id,
-        title: chromeCat.title,
-        children: [],
-      };
-      this.data.columns[0].push(newCategory);
+    addCategoriesFromChrome(
+      chromeChild: chrome.bookmarks.BookmarkTreeNode,
+      parentNode: Array<Category | Bookmark>
+    ): void {
 
-      if (chromeCat.children) {
-        chromeCat.children.forEach((child) => {
-          let childObj: Bookmark | Category;
-          if (child.url && child.dateAdded) {
-            childObj = {
-              id: child.id,
-              title: child.title,
-              url: child.url,
-              favicon: "",
-            };
-            newCategory.children.push(childObj);
-            this.updateFaviconLink(child.url, childObj);
-          }
-          if (child.children) {
-            this.addCategoriesFromChrome(child);
-          }
-        });
+      if (chromeChild.url) {
+        const otherBookmarksNode = this.findNodeById(this.data, "1");
+        if (otherBookmarksNode && "children" in otherBookmarksNode) {
+          const newBookmark = {
+            id: chromeChild.id,
+            title: chromeChild.title,
+            url: chromeChild.url,
+            favicon: "",
+          };
+          otherBookmarksNode.children.push(newBookmark);
+          this.updateFaviconLink(chromeChild.url, newBookmark);
+        }
+      } else {
+        const newCategory: Category = {
+          id: chromeChild.id,
+          title: chromeChild.title,
+          children: [],
+        };
+        parentNode.push(newCategory);
+
+        if (chromeChild.children) {
+          chromeChild.children.forEach((child) => {
+            let childObj: Bookmark | Category;
+            if (child.url) {
+              childObj = {
+                id: child.id,
+                title: child.title,
+                url: child.url,
+                favicon: "",
+              };
+              newCategory.children.push(childObj);
+              this.updateFaviconLink(child.url, childObj);
+            }
+            if (child.children) {
+              this.addCategoriesFromChrome(child, newCategory.children);
+            }
+          });
+        }
       }
     },
   }

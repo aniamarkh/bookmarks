@@ -14,7 +14,7 @@ export interface Category {
 }
 
 export interface Data {
-  id: 0,
+  id: "0",
   title: "root",
   columns: Array<Array<Category>>,
 }
@@ -88,5 +88,5 @@ export interface Store {
   updateFaviconLink(urlInput: string, bookmark: Bookmark): void;
   updateBookmarkTitle(urlInput: string, bookmarkId: string): Promise<void>;
   importChromeBookmarks(): void;
-  addCategoriesFromChrome(chromeCat: chrome.bookmarks.BookmarkTreeNode): void;
+  addCategoriesFromChrome(chromeCat: chrome.bookmarks.BookmarkTreeNode, parentNode: Array<Category | Bookmark>): void;
 }
