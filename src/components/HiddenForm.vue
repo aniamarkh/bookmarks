@@ -2,7 +2,7 @@
 import { store } from "../store";
 import { settings } from "../settings";
 import Draggable from "vuedraggable";
-import { modifyDragItem, onEnd } from "../utils";
+import { modifyDragItem, onDragEnd } from "../utils";
 import SubCategory from "./SubcategoryBody.vue";
 
 const emit = defineEmits(["close-form"]);
@@ -17,7 +17,7 @@ const isEmptyList = (evt: any) => {
   if (store.hidden.length === 0) {
     sendCloseFormEvent();
   }
-  onEnd(evt);
+  onDragEnd(evt);
 };
 </script>
 
@@ -39,7 +39,9 @@ const isEmptyList = (evt: any) => {
       :setData="modifyDragItem"
       :disabled="!settings.edit">
       <template #item="{element}">
-        <div class="subcatbody" :data-id="element.id">
+        <div class="subcatbody" 
+        :data-id="element.id"
+        :data-index="-1">
           <SubCategory :subcategory="element" />
         </div>
       </template>

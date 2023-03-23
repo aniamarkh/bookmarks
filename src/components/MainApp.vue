@@ -4,7 +4,7 @@ import type { Ref } from "vue";
 import Draggable from "vuedraggable";
 import { store } from "../store";
 import { settings } from "../settings";
-import { onEnd, modifyDragItem } from "../utils";
+import { onDragEnd, modifyDragItem } from "../utils";
 import CategoryForm from "./CategoryForm.vue";
 import CategoryCard from "./CategoryCard.vue";
 import ToolsPanel from "./ToolsPanel.vue";
@@ -20,20 +20,24 @@ const closeCategoryForm = () => showCategoryForm.value = false;
     <Draggable
       v-for="(column, index) in store.data.columns"
       data-id="2"
+      :data-column="index" 
       :key="index"
       :empty-insert-threshold="10"
       class="categories-column"
       :list="column" 
       group="bookmarks"
       item-key="id"
-      @end="onEnd"
+      @end="onDragEnd"
       :setData="modifyDragItem"
       :disabled="!settings.edit"
       >
       <template #item="{element}">
-        <div :class="element.children ? 'category' : 'rootbookmark'" :data-id="element.id">
+        <div :class="element.children ? 'category' : 'rootbookmark'" 
+        :data-id="element.id">
           <CategoryCard v-if="element.children" :category="element" />
-          <BookmarkBody v-if="!element.children" :bookmark="element"/>
+          <div class="bookmarkbody">
+            <BookmarkBody v-if="!element.children" :bookmark="element"/>
+          </div>
         </div>
       </template>
     </Draggable>
