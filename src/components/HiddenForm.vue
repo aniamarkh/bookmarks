@@ -25,23 +25,31 @@ const isEmptyList = (evt: any) => {
   <div class="hidden-form">
     <div class="wrapper">
       <button class="close-btn" @click="sendCloseFormEvent">
-        <svg xmlns="http://www.w3.org/2000/svg" height="30" width="30" viewBox="0 0 50 50"><path d="m12.45 37.65-2.1-2.1L21.9 24 10.35 12.45l2.1-2.1L24 21.9l11.55-11.55 2.1 2.1L26.1 24l11.55 11.55-2.1 2.1L24 26.1Z"/></svg>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          height="30"
+          width="30"
+          viewBox="0 0 50 50"
+        >
+          <path
+            d="m12.45 37.65-2.1-2.1L21.9 24 10.35 12.45l2.1-2.1L24 21.9l11.55-11.55 2.1 2.1L26.1 24l11.55 11.55-2.1 2.1L24 26.1Z"
+          />
+        </svg>
       </button>
       <h3>Hidden categories:</h3>
     </div>
     <Draggable
       class="bookmarks-list"
       :empty-insert-threshold="50"
-      :list="store.hidden" 
+      :list="store.hidden"
       group="bookmarks"
       item-key="id"
       @end="isEmptyList"
       :setData="modifyDragItem"
-      :disabled="!settings.edit">
-      <template #item="{element}">
-        <div class="subcatbody" 
-        :data-id="element.id"
-        :data-index="-1">
+      :disabled="!settings.edit"
+    >
+      <template #item="{ element }">
+        <div class="subcatbody" :data-id="element.id" :data-index="-1">
           <SubCategory :subcategory="element" />
         </div>
       </template>
@@ -50,53 +58,52 @@ const isEmptyList = (evt: any) => {
 </template>
 
 <style scoped>
+.hidden-form {
+  position: absolute;
+  z-index: 1;
+  top: 5px;
+  right: 0px;
+  background-color: var(--cards);
+  width: 320px;
+  height: auto;
+  border-radius: 15px;
+  box-shadow: 0px 0px 17px -7px rgba(0, 0, 0, 0.4);
+  padding: 10px;
+}
 
-  .hidden-form {
-    position: absolute;
-    z-index: 1;
-    top: 5px;
-    right: 0px;
-    background-color: var(--cards);
-    width: 320px;
-    height: auto;
-    border-radius: 15px;
-    box-shadow: 0px 0px 17px -7px rgba(0,0,0,0.4);
-    padding: 10px;
-  }
+.close-btn {
+  position: absolute;
+  z-index: 1;
+  top: 5px;
+  right: 5px;
+  background-color: inherit;
+  color: inherit;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  outline: inherit;
+  transition: all 0.2s;
+}
 
-  .close-btn {
-    position: absolute;
-    z-index: 1;
-    top: 5px;
-    right: 5px;
-    background-color: inherit;
-    color: inherit;
-    border: none;
-    border-radius: 12px;
-    cursor: pointer;
-    outline: inherit;
-    transition: all 0.2s;
-  }
+.close-btn svg {
+  fill: var(--medium);
+}
 
-  .close-btn svg {
-    fill: var(--medium);
-  }
+.close-btn:hover {
+  transform: scale(1.1);
+}
 
-  .close-btn:hover {
-    transform: scale(1.1);
-  }
+.close-btn:hover svg {
+  fill: var(--text);
+}
 
-  .close-btn:hover svg {
-    fill: var(--text);
-  }
-
-  h3 {
+h3 {
   margin-bottom: 0.5rem;
   text-align: left;
   font-size: var(--title-size);
   text-transform: none;
   margin-left: 5px;
-  overflow:hidden;
+  overflow: hidden;
   white-space: nowrap;
   width: calc(var(--column-width) - 20px);
   -webkit-mask-image: linear-gradient(90deg, var(--text) 85%, transparent);
@@ -113,5 +120,4 @@ const isEmptyList = (evt: any) => {
 .sortable-chosen {
   opacity: 0.8;
 }
-
 </style>

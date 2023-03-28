@@ -4,7 +4,6 @@ import { settings } from "./settings";
 
 import MainApp from "./components/MainApp.vue";
 onBeforeMount(settings.onLoad);
-
 </script>
 
 <template>
