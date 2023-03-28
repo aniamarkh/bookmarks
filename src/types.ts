@@ -75,7 +75,7 @@ export interface Settings {
 export interface Store {
   data: Data;
   closed: Array<string>,
-  hidden: Array<Category>,
+  hidden: Category,
   arrangeCards(cards: Array<Category | Bookmark>): void;
   deleteNode(nodeId: string): void;
   hideCategory(nodeToDelete: Category): void;
@@ -95,4 +95,11 @@ export interface Store {
 
 export interface ChromeHandle {
   moveNode(newParentId: string, movedNodeId: string, newIndex: number): void;
+  onNodeChange(id: string, changeInfo: ChangeInfo): void;
+
+}
+
+export interface ChangeInfo {
+  title: string,
+  url?: string,
 }

@@ -23,7 +23,7 @@ if (wrapper) {
 <template>
   <div
     class="settings-form"
-    :style="store.hidden.length === 0 ? 'right: 40px' : 'right: 80px'"
+    :style="store.hidden.children.length === 0 ? 'right: 40px' : 'right: 80px'"
   >
     <div class="wrapper">
       <button class="close-btn" @click="sendCloseFormEvent">

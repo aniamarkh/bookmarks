@@ -14,7 +14,7 @@ if (wrapper) {
 }
 
 const isEmptyList = (evt: any) => {
-  if (store.hidden.length === 0) {
+  if (store.hidden.children.length === 0) {
     sendCloseFormEvent();
   }
   onDragEnd(evt);
@@ -41,7 +41,7 @@ const isEmptyList = (evt: any) => {
     <Draggable
       class="bookmarks-list"
       :empty-insert-threshold="50"
-      :list="store.hidden"
+      :list="store.hidden.children"
       group="bookmarks"
       item-key="id"
       @end="isEmptyList"

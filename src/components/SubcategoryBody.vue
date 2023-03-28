@@ -41,11 +41,11 @@ const isClosed = (id: string) => {
 };
 
 const isHidden = (subcategory: Category) => {
-  return store.hidden.indexOf(subcategory) === -1 ? true : false;
+  return store.hidden.children.indexOf(subcategory) === -1 ? true : false;
 };
 
 const hideCategory = (nodeToHide: Category) => {
-  store.hidden.push(nodeToHide);
+  store.hidden.children.push(nodeToHide);
   if (store.closed.indexOf(nodeToHide.id) === -1) {
     store.closed.push(nodeToHide.id);
   }

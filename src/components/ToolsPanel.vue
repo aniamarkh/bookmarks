@@ -65,7 +65,7 @@ const toggleEditMode = () => {
     </div>
     <div
       class="top-panel--hidden"
-      v-if="store.hidden.length"
+      v-if="store.hidden.children.length"
       @click="showHiddenCategories = !showHiddenCategories"
     >
       <svg

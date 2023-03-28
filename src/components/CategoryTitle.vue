@@ -14,7 +14,7 @@ const showCatEditForm = ref(false);
 const closeEditCategoryForm = () => (showCatEditForm.value = false);
 
 const hideCategory = (nodeToHide: Category) => {
-  store.hidden.push(nodeToHide);
+  store.hidden.children.push(nodeToHide);
   if (store.closed.indexOf(nodeToHide.id) === -1) {
     store.closed.push(nodeToHide.id);
   }

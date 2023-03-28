@@ -11,7 +11,11 @@ export const store: Store = reactive(
     },
 
     closed: [] as Array<string>,
-    hidden: [] as Array<Category>,
+    hidden: {
+      id: "hidden",
+      title: "hidden",
+      children: []
+    } as Category,
 
     arrangeCards(cards: Array<Category | Bookmark>): void {
       const columns = settings.styles.columnsCount;
