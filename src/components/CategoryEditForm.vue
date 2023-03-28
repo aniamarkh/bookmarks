@@ -2,6 +2,7 @@
 import { store } from "../store";
 import { ref } from "vue";
 import type { Ref } from "vue";
+import { chromeHandle } from "../chromeHandle";
 
 const props = defineProps({
   category: { type: Object, required: true },
@@ -17,7 +18,7 @@ const isInvalidInput = (): boolean => {
 };
 
 const editCategory = () => {
-  store.editCategory(props.category.id, input_category.value);
+  chromeHandle.editCategoryInChrome(props.category.id, input_category.value);
   sendCloseFormEvent();
 };
 

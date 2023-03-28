@@ -19,13 +19,13 @@ export const onDragEnd = (evt: any) => {
       // https://stackoverflow.com/questions/13264060/chrome-bookmarks-api-using-move-to-reorder-bookmarks-in-the-same-folder
       if (oldIndexInRoot < newIndexInRoot) newIndexInRoot++;
     }
-    chromeHandle.moveNode(newParentId, movedNodeId, newIndexInRoot);
+    store.moveNode(newParentId, movedNodeId, newIndexInRoot);
   } else {
     let newIndex = evt.newIndex;
     if (oldParentId === newParentId) {
       if (oldIndex < newIndex) newIndex++;
     }
-    chromeHandle.moveNode(newParentId, movedNodeId, newIndex);
+    store.moveNode(newParentId, movedNodeId, newIndex);
   }
   store.saveToLocalStore();
 };

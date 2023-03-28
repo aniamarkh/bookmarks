@@ -14,7 +14,7 @@ export interface Category {
 }
 
 export interface Data {
-  id: "0",
+  id: "2",
   title: "root",
   columns: Array<Array<Category | Bookmark>>,
 }
@@ -79,26 +79,41 @@ export interface Store {
   arrangeCards(cards: Array<Category | Bookmark>): void;
   deleteNode(nodeId: string): void;
   hideCategory(nodeToDelete: Category): void;
-  addCategory(categoryTitle: string): void;
-  editCategory(categoryId: string, newTitle: string): void;
-  addBookmark(parentNodeId: string, bookmarkTitle: string, bookmarkUrl: string): Promise<void>
-  editBookmark(bookmarkId: string, newTitle: string, newUrl: string): void;
+  addCategory(category: chrome.bookmarks.BookmarkTreeNode): void;
+  editCategory(category: chrome.bookmarks.BookmarkTreeNode): void;
+  addBookmark(bookmark: chrome.bookmarks.BookmarkTreeNode): Promise<void>
+  editBookmark(id: string, newTitle: string, newUrl: string): void;
   saveToLocalStore(): void;
   loadFromLocalStore(): void;
   findNodeById(node: Category | Bookmark | Data, id: string): Category | Bookmark | Data | null;
   findParentNodeById(node: Category | Bookmark | Data, id: string): Category | Data | null;
   updateFaviconLink(urlInput: string, bookmark: Bookmark): void;
   updateBookmarkTitle(urlInput: string, bookmarkId: string): Promise<void>;
+  moveNode(newParentId: string, movedNodeId: string, newIndex: number): void;
 }
 
 export interface ChromeHandle {
   importChromeBookmarks(): void;
   addCategoriesFromChrome(chromeCat: chrome.bookmarks.BookmarkTreeNode, parentNode: Array<Category | Bookmark>): void;
-  moveNode(newParentId: string, movedNodeId: string, newIndex: number): void;
+  deleteNodeFromChrome(nodeId: string): void;
+  addCategoryToChrome(categoryTitle: string): void;
+  editCategoryInChrome(categoryId: string, newTitle: string): void
+  addBookmarkToChrome(parentNodeId: string, bookmarkTitle: string, bookmarkUrl: string): void
+  editBookmarkInChrome(bookmarkId: string, newTitle: string, newUrl: string): void;
   onNodeChange(id: string, changeInfo: ChangeInfo): void;
+  changeParent(id: string, moveInfo: MoveInfo): void;
+
+  // onCreated(id: string, bookmark: chrome.bookmarks.BookmarkTreeNode): void
 }
 
 export interface ChangeInfo {
   title: string,
   url?: string,
+}
+
+export interface MoveInfo {
+  index: number,
+  oldIndex: number,
+  oldParentId: string,
+  parentId: string,
 }

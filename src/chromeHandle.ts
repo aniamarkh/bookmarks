@@ -1,4 +1,4 @@
-import type { ChromeHandle, ChangeInfo, Bookmark, Category } from "./types";
+import type { ChromeHandle, ChangeInfo, Bookmark, Category, MoveInfo } from "./types";
 import { store } from "./store";
 
 export const chromeHandle: ChromeHandle = {
@@ -60,11 +60,42 @@ export const chromeHandle: ChromeHandle = {
     }
   },
 
-  moveNode(newParentId: string, movedNodeId: string, newIndex: number): void {
-    chrome.bookmarks.move(movedNodeId, { index: newIndex, parentId: newParentId });
+  deleteNodeFromChrome(nodeId: string): void {
+    chrome.bookmarks.remove(nodeId, () => {
+      store.deleteNode(nodeId);
+    })
   },
 
-  onNodeChange(id: string, changeInfo: ChangeInfo) {
+  addCategoryToChrome(categoryTitle: string): void {
+    chrome.bookmarks.create({ title: categoryTitle }, (category) => {
+      store.addCategory(category);
+    });
+  },
+
+  editCategoryInChrome(categoryId: string, newTitle: string): void {
+    chrome.bookmarks.update(categoryId, { title: newTitle }, (category) => {
+      store.editCategory(category);
+    });
+  },
+
+  addBookmarkToChrome(parentNodeId: string, bookmarkTitle: string, bookmarkUrl: string): void {
+    chrome.bookmarks.create(
+      {
+        title: bookmarkTitle,
+        parentId: parentNodeId,
+        url: bookmarkUrl
+      }, (bookmark) => {
+        store.addBookmark(bookmark);
+      });
+  },
+
+  editBookmarkInChrome(bookmarkId: string, newTitle: string, newUrl: string): void {
+    chrome.bookmarks.update(bookmarkId, { title: newTitle, url: newUrl, }, (bookmark) => {
+      store.editBookmark(bookmark.id, bookmark.title, newUrl);
+    });
+  },
+
+  onNodeChange(id: string, changeInfo: ChangeInfo): void {
     const node = store.findNodeById(store.data, id) || store.findNodeById(store.hidden, id);
     if (node) {
       if (changeInfo.url && "url" in node) {
@@ -75,7 +106,28 @@ export const chromeHandle: ChromeHandle = {
         node.title = changeInfo.title;
       }
     }
-  }
+  },
+
+  // changeParent(id: string, moveInfo: MoveInfo): void {
+  //   const node = JSON.stringify(
+  //     store.findNodeById(store.data, id) ||
+  //     store.findNodeById(store.hidden, id));
+  //   const newParent = store.findNodeById(store.data, moveInfo.parentId) || store.findNodeById(store.hidden, moveInfo.parentId);
+  //   console.log(moveInfo);
+  //   console.log(JSON.parse(node));
+  //   console.log(newParent?.title);
+
+
+  //   if (node && newParent && "children" in newParent) {
+  //     // store.deleteNode(id);
+  //     newParent.children.splice(moveInfo.index, 0, JSON.parse(node));
+  //     const newNode = store.findNodeById(store.data, id) || store.findNodeById(store.hidden, id)
+  //     if (newNode && "url" in newNode) {
+  //       store.updateFaviconLink(newNode.url, newNode);
+  //     }
+  //   }
+  // }
 }
 
 chrome.bookmarks.onChanged.addListener(chromeHandle.onNodeChange);
+// chrome.bookmarks.onMoved.addListener(chromeHandle.changeParent);

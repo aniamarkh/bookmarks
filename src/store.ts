@@ -5,7 +5,7 @@ import { settings } from "./settings";
 export const store: Store = reactive(
   {
     data: {
-      id: "0",
+      id: "2",
       title: "root",
       columns: [[]] as Array<Array<Category | Bookmark>>,
     },
@@ -32,23 +32,21 @@ export const store: Store = reactive(
     },
 
     deleteNode(nodeId: string) {
-      chrome.bookmarks.remove(nodeId, () => {
-        const nodeToDelete = this.findNodeById(this.data, nodeId);
-        const parentNode = this.findParentNodeById(this.data, nodeId);
+      const nodeToDelete = this.findNodeById(this.data, nodeId) || this.findNodeById(this.hidden, nodeId);
+      const parentNode = this.findParentNodeById(this.data, nodeId) || this.findParentNodeById(this.hidden, nodeId);
 
-        if (nodeToDelete && parentNode && "columns" in parentNode) {
-          this.data.columns.forEach((column, index) => {
-            if (column.filter(el => el.id === nodeToDelete.id).length) {
-              const indexInColumn = column.map(obj => obj.id).indexOf(nodeId);
-              this.data.columns[index].splice(indexInColumn, 1);
-            }
-          });
-        } else if (nodeToDelete && parentNode && "children" in parentNode && !("columns" in nodeToDelete)) {
-          const nodeToDeleteIndex = parentNode.children.indexOf(nodeToDelete);
-          parentNode.children.splice(nodeToDeleteIndex, 1);
-        }
-        this.saveToLocalStore();
-      })
+      if (nodeToDelete && parentNode && "columns" in parentNode) {
+        this.data.columns.forEach((column, index) => {
+          if (column.filter(el => el.id === nodeToDelete.id).length) {
+            const indexInColumn = column.map(obj => obj.id).indexOf(nodeId);
+            this.data.columns[index].splice(indexInColumn, 1);
+          }
+        });
+      } else if (nodeToDelete && parentNode && "children" in parentNode && !("columns" in nodeToDelete)) {
+        const nodeToDeleteIndex = parentNode.children.indexOf(nodeToDelete);
+        parentNode.children.splice(nodeToDeleteIndex, 1);
+      }
+      this.saveToLocalStore();
     },
 
     hideCategory(nodeToDelete: Category): void {
@@ -68,70 +66,57 @@ export const store: Store = reactive(
       this.saveToLocalStore();
     },
 
-    addCategory(categoryTitle: string): void {
-      chrome.bookmarks.create({ title: categoryTitle }, (category) => {
-        const newCategory: Category = {
-          id: category.id,
-          title: category.title,
-          children: [],
+    addCategory(category: chrome.bookmarks.BookmarkTreeNode): void {
+      const newCategory: Category = {
+        id: category.id,
+        title: category.title,
+        children: [],
+      };
+      this.data.columns[0].push(newCategory);
+      this.saveToLocalStore();
+    },
+
+    editCategory(category: chrome.bookmarks.BookmarkTreeNode): void {
+      const categoryNode = this.findNodeById(this.data, category.id) as Category;
+      if (categoryNode) {
+        categoryNode.title = category.title;
+      }
+      this.saveToLocalStore();
+    },
+
+    async addBookmark(bookmark: chrome.bookmarks.BookmarkTreeNode): Promise<void> {
+      if (bookmark.url && bookmark.parentId) {
+        const bookmarkCategory = this.findNodeById(this.data, bookmark.parentId);
+        const newBookmark: Bookmark = {
+          id: bookmark.id,
+          title: bookmark.title,
+          url: bookmark.url,
+          favicon: "",
         };
-        this.data.columns[0].push(newCategory);
-        this.saveToLocalStore();
-      });
-    },
 
-    editCategory(categoryId: string, newTitle: string): void {
-      chrome.bookmarks.update(categoryId, { title: newTitle }, () => {
-        const categoryNode = this.findNodeById(this.data, categoryId) as Category;
-        if (categoryNode) {
-          categoryNode.title = newTitle;
+        const isCategory = bookmarkCategory && "children" in bookmarkCategory;
+        if (isCategory) {
+          bookmarkCategory.children.push(newBookmark);
+          this.updateFaviconLink(bookmark.url, newBookmark);
+          if (bookmark.title === "") {
+            this.updateBookmarkTitle(bookmark.url, bookmark.id);
+          }
         }
         this.saveToLocalStore();
-      })
+      }
     },
 
-    async addBookmark(parentNodeId: string, bookmarkTitle: string, bookmarkUrl: string): Promise<void> {
-      chrome.bookmarks.create(
-        {
-          title: bookmarkTitle,
-          parentId: parentNodeId,
-          url: bookmarkUrl
-        }, (bookmark) => {
-          const bookmarkCategory = this.findNodeById(this.data, parentNodeId);
-          const newBookmark: Bookmark = {
-            id: bookmark.id,
-            title: bookmark.title,
-            url: bookmarkUrl,
-            favicon: "",
-          };
-
-          const isCategory = bookmarkCategory && "children" in bookmarkCategory;
-          if (isCategory) {
-            bookmarkCategory.children.push(newBookmark);
-            this.updateFaviconLink(bookmarkUrl, newBookmark);
-            if (bookmarkTitle === "") {
-              this.updateBookmarkTitle(bookmarkUrl, bookmark.id);
-            }
-          }
-          this.saveToLocalStore();
-
-        });
-    },
-
-    editBookmark(bookmarkId: string, newTitle: string, newUrl: string): void {
-      chrome.bookmarks.update(bookmarkId, { title: newTitle, url: newUrl, }, (bookmark) => {
-        const bookmarkNode = this.findNodeById(this.data, bookmarkId);
-        if (bookmarkNode && "url" in bookmarkNode) {
-          bookmarkNode.title = newTitle;
-          this.updateFaviconLink(newUrl, bookmarkNode);
-          if (newUrl !== bookmarkNode.url && newTitle === "") {
-            this.updateBookmarkTitle(newUrl, bookmarkId);
-          }
-          bookmarkNode.url = newUrl;
+    editBookmark(id: string, newTitle: string, newUrl: string): void {
+      const bookmarkNode = this.findNodeById(this.data, id);
+      if (bookmarkNode && "url" in bookmarkNode) {
+        bookmarkNode.title = newTitle;
+        this.updateFaviconLink(newUrl, bookmarkNode);
+        if (newUrl !== bookmarkNode.url && newTitle === "") {
+          this.updateBookmarkTitle(newUrl, id);
         }
-        this.saveToLocalStore();
-        console.log("edit worked;");
-      });
+        bookmarkNode.url = newUrl;
+      }
+      this.saveToLocalStore();
     },
 
     saveToLocalStore(): void {
@@ -225,15 +210,18 @@ export const store: Store = reactive(
             const title = doc.querySelector('title');
             if (title) {
               const titleContent = title.textContent as string;
+              chrome.bookmarks.update(bookmarkId, { title: titleContent });
               this.editBookmark(bookmarkId, titleContent, urlInput);
             }
           }
         } else {
           this.editBookmark(bookmarkId, urlInput, urlInput);
+          chrome.bookmarks.update(bookmarkId, { title: urlInput });
           throw new Error("Error while fetching bookmark title");
         }
       }).catch((error) => {
         console.error(error);
+        chrome.bookmarks.update(bookmarkId, { title: urlInput });
         this.editBookmark(bookmarkId, urlInput, urlInput);
       });
 
@@ -241,6 +229,11 @@ export const store: Store = reactive(
         fetchPromise,
         new Promise((_, reject) => setTimeout(() => reject(new Error('Timeout')), 3000))
       ]);
+    },
+
+    moveNode(newParentId: string, movedNodeId: string, newIndex: number): void {
+      chrome.bookmarks.move(movedNodeId, { index: newIndex, parentId: newParentId });
+      console.log("onMove works!");
     },
   }
 );

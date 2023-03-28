@@ -2,6 +2,7 @@
 import { ref } from "vue";
 import type { Ref } from "vue";
 import { store } from "../store";
+import { chromeHandle } from "../chromeHandle";
 
 const input_category: Ref<string> = ref("");
 
@@ -13,7 +14,7 @@ const emit = defineEmits(["close-form"]);
 const sendCloseFormEvent = () => emit("close-form");
 
 const onSubmit = (): void => {
-  store.addCategory(input_category.value);
+  chromeHandle.addCategoryToChrome(input_category.value);
   input_category.value = "";
   sendCloseFormEvent();
 };

@@ -2,6 +2,7 @@
 import { ref } from "vue";
 import type { Ref } from "vue";
 import { store } from "../store";
+import { chromeHandle } from "../chromeHandle";
 
 const props = defineProps({
   categoryId: { type: String, required: true },
@@ -28,7 +29,11 @@ const isInvalidInputs = (): boolean => {
 };
 
 const onSubmit = (): void => {
-  store.addBookmark(props.categoryId, input_title.value, input_url.value);
+  chromeHandle.addBookmarkToChrome(
+    props.categoryId,
+    input_title.value,
+    input_url.value
+  );
   input_title.value = "";
   input_url.value = "";
   sendCloseFormEvent();

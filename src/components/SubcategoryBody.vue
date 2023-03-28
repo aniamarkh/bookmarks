@@ -10,6 +10,7 @@ import CategoryEditForm from "./CategoryEditForm.vue";
 import Draggable from "vuedraggable";
 import type { Category } from "../types";
 import { onDragEnd, modifyDragItem } from "../utils";
+import { chromeHandle } from "../chromeHandle";
 
 const props = defineProps({
   subcategory: { type: Object, required: true },
@@ -103,7 +104,10 @@ const hideCategory = (nodeToHide: Category) => {
           />
         </svg>
       </button>
-      <button class="category-btn" @click="store.deleteNode(subcategory.id)">
+      <button
+        class="category-btn"
+        @click="chromeHandle.deleteNodeFromChrome(subcategory.id)"
+      >
         <svg xmlns="http://www.w3.org/2000/svg" height="20" width="20">
           <path
             d="M7.042 16.042q-.459 0-.782-.323-.322-.323-.322-.802V5.542h-.98v-.604h3.063v-.792h3.958v.792h3.083v.604h-.979v9.375q0 .479-.323.802-.322.323-.802.323Zm6.437-10.5H6.542v9.375q0 .229.146.375.145.146.354.146h5.916q.188 0 .354-.157.167-.156.167-.364Zm-4.75 8.416h.604V7.021h-.604Zm1.938 0h.604V7.021h-.604ZM6.542 5.542v9.896-.521Z"
