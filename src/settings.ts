@@ -28,7 +28,7 @@ export const cardsAlign = ref("flex-start");
 
 export const cardsWidth = ref(320);
 
-export const columnsCount = ref(5);
+export const columnsCount = ref(3);
 
 export const settings: Settings = reactive(
   {

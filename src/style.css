@@ -72,7 +72,7 @@ main {
   flex-direction: column;
   align-content:space-between;
   background-color: var(--cards);
-  padding: 15px;
+  padding: 15px 15px 0 15px;
   border-radius: 10px;
   width: var(--column-width);
   text-align: center;

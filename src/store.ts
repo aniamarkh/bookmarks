@@ -126,6 +126,7 @@ export const store: Store = reactive(
           bookmarkNode.url = newUrl;
         }
         this.saveToLocalStore();
+        console.log("edit worked;");
       });
     },
 
@@ -224,6 +225,7 @@ export const store: Store = reactive(
             }
           }
         } else {
+          this.editBookmark(bookmarkId, urlInput, urlInput);
           throw new Error("Error while fetching bookmark title");
         }
       }).catch((error) => {
