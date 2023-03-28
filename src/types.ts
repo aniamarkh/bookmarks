@@ -89,14 +89,13 @@ export interface Store {
   findParentNodeById(node: Category | Bookmark | Data, id: string): Category | Data | null;
   updateFaviconLink(urlInput: string, bookmark: Bookmark): void;
   updateBookmarkTitle(urlInput: string, bookmarkId: string): Promise<void>;
-  importChromeBookmarks(): void;
-  addCategoriesFromChrome(chromeCat: chrome.bookmarks.BookmarkTreeNode, parentNode: Array<Category | Bookmark>): void;
 }
 
 export interface ChromeHandle {
+  importChromeBookmarks(): void;
+  addCategoriesFromChrome(chromeCat: chrome.bookmarks.BookmarkTreeNode, parentNode: Array<Category | Bookmark>): void;
   moveNode(newParentId: string, movedNodeId: string, newIndex: number): void;
   onNodeChange(id: string, changeInfo: ChangeInfo): void;
-
 }
 
 export interface ChangeInfo {
