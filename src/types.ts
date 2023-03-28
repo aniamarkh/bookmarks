@@ -49,6 +49,7 @@ export interface Styles {
   fontSize: fontSize,
   fontFamily: string,
   columnsCount: number,
+  columnWidth: number,
 }
 
 export interface fontSize {
@@ -59,15 +60,16 @@ export interface fontSize {
 }
 
 export interface Settings {
-  styles: Styles,
-  edit: boolean,
-  saveToLocalSettings(): void,
-  loadFromLocalStore(): void,
-  onLoad(): void,
-  setTheme(theme: Array<string>): void,
-  setFontSize(fontSize: fontSize): void,
-  setFont(event: Event): void,
-  setColumnsCount(): void,
+  styles: Styles;
+  edit: boolean;
+  saveToLocalSettings(): void;
+  loadFromLocalStore(): void;
+  onLoad(): void;
+  setTheme(theme: Array<string>): void;
+  setFontSize(fontSize: fontSize): void;
+  setFont(event: Event): void;
+  setColumnsCount(): void;
+  setColumnWidth(): void;
 }
 
 export interface Store {

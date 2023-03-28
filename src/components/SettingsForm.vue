@@ -7,6 +7,7 @@ import {
   fontOptions,
   themes,
   columnsCount,
+  columnWidth
 } from "../settings";
 import { store } from "../store";
 
@@ -100,6 +101,19 @@ if (wrapper) {
           :default="columnsCount"
           @update="settings.setColumnsCount()"
           tooltip-position="bottom"
+        />
+      </div>
+      <div class="columns-width">
+        <h4>Column width:</h4>
+        <Slider
+          v-model="columnWidth"
+          class="slider"
+          :min="300"
+          :max="600"
+          :step="10"
+          :default="columnWidth"
+          @update="settings.setColumnWidth()"
+          :tooltips="false"
         />
       </div>
     </div>
@@ -223,7 +237,8 @@ h4 {
 .font-select,
 .cards-align,
 .cards-width,
-.columns-count {
+.columns-count,
+.columns-width {
   display: flex;
   flex-direction: row;
   align-items: center;

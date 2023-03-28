@@ -24,9 +24,7 @@ export const fontOptions = ref([
   { title: "Playfair Display", css: "'Playfair Display', serif" },
 ]);
 
-export const cardsAlign = ref("flex-start");
-
-export const cardsWidth = ref(320);
+export const columnWidth = ref(320);
 
 export const columnsCount = ref(3);
 
@@ -37,6 +35,7 @@ export const settings: Settings = reactive(
       fontSize: fontSizes[0],
       fontFamily: fontOptions.value[0].css,
       columnsCount: columnsCount.value,
+      columnWidth: columnWidth.value,
     },
 
     edit: true,
@@ -65,6 +64,8 @@ export const settings: Settings = reactive(
       document.documentElement.style.setProperty("--title-size", `${(local.fontSize.titleSize) + "px"}`);
       document.documentElement.style.setProperty("--bkmrk-margin", `${(local.fontSize.margin) + "px"}`);
       document.documentElement.style.setProperty("--font-family", local.fontFamily);
+      document.documentElement.style.setProperty("--column-width", `${local.columnWidth + "px"}`);
+      columnWidth.value = local.columnWidth;
       columnsCount.value = local.columnsCount;
     },
 
@@ -99,6 +100,14 @@ export const settings: Settings = reactive(
       store.arrangeCards(store.data.columns.flat());
       this.saveToLocalSettings();
       store.saveToLocalStore();
+    },
+
+    setColumnWidth(): void {
+      document.documentElement.style.setProperty("--column-width", `${columnWidth.value + "px"}`);
+
+      this.styles.columnWidth = columnWidth.value;
+      this.saveToLocalSettings();
+      console.log(columnWidth.value);
     }
   }
 )
