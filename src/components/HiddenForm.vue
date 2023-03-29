@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { store } from "../store";
-import { settings } from "../settings";
+import { store } from "../core/store";
+import { settings } from "../core/settings";
 import Draggable from "vuedraggable";
-import { modifyDragItem, onDragEnd } from "../utils";
+import { modifyDragItem, onDragEnd } from "../core/utils";
 import SubCategory from "./SubcategoryBody.vue";
 
 const emit = defineEmits(["close-form"]);

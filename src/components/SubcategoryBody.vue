@@ -1,16 +1,16 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import type { Ref } from "vue";
-import { store } from "../store";
-import { settings } from "../settings";
+import Draggable from "vuedraggable";
+import { store } from "../core/store";
+import { settings } from "../core/settings";
+import type { Category } from "../core/types";
+import { onDragEnd, modifyDragItem } from "../core/utils";
+import { chromeHandle } from "../core/chromeHandle";
 import BookmarkBody from "./BookmarkBody.vue";
 import SubCategory from "./SubcategoryBody.vue";
 import BookmarkForm from "./BookmarkForm.vue";
 import CategoryEditForm from "./CategoryEditForm.vue";
-import Draggable from "vuedraggable";
-import type { Category } from "../types";
-import { onDragEnd, modifyDragItem } from "../utils";
-import { chromeHandle } from "../chromeHandle";
 
 const props = defineProps({
   subcategory: { type: Object, required: true },

@@ -6,8 +6,8 @@ import BookmarkBody from "./BookmarkBody.vue";
 import CategoryTitle from "./CategoryTitle.vue";
 import SubCategory from "./SubcategoryBody.vue";
 import Draggable from "vuedraggable";
-import { settings } from "../settings";
-import { onDragEnd, modifyDragItem } from "../utils";
+import { settings } from "../core/settings";
+import { onDragEnd, modifyDragItem } from "../core/utils";
 
 const props = defineProps({
   category: { type: Object, required: true },

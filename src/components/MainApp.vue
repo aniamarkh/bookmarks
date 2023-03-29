@@ -2,9 +2,9 @@
 import { ref } from "vue";
 import type { Ref } from "vue";
 import Draggable from "vuedraggable";
-import { store } from "../store";
-import { settings } from "../settings";
-import { onDragEnd, modifyDragItem } from "../utils";
+import { store } from "../core/store";
+import { settings } from "../core/settings";
+import { onDragEnd, modifyDragItem } from "../core/utils";
 import CategoryForm from "./CategoryForm.vue";
 import CategoryCard from "./CategoryCard.vue";
 import ToolsPanel from "./ToolsPanel.vue";

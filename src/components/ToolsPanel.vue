@@ -3,8 +3,8 @@ import { ref } from "vue";
 import type { Ref } from "vue";
 import SettingsForm from "./SettingsForm.vue";
 import HiddenCatForm from "./HiddenForm.vue";
-import { settings } from "../settings";
-import { store } from "../store";
+import { settings } from "../core/settings";
+import { store } from "../core/store";
 
 const showSettingsForm: Ref<boolean> = ref(false);
 const showHiddenCategories: Ref<boolean> = ref(false);

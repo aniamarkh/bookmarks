@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { ref, toRef } from "vue";
-import type { Bookmark } from "../types";
-import { store } from "../store";
-import { settings } from "../settings";
-import { chromeHandle } from "../chromeHandle";
+import type { Bookmark } from "../core/types";
+import { store } from "../core/store";
+import { settings } from "../core/settings";
+import { chromeHandle } from "../core/chromeHandle";
 
 const props = defineProps({
   bookmark: { type: Object as () => Bookmark, required: true },

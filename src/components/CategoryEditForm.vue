@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { store } from "../store";
+import { store } from "../core/store";
 import { ref } from "vue";
 import type { Ref } from "vue";
-import { chromeHandle } from "../chromeHandle";
+import { chromeHandle } from "../core/chromeHandle";
 
 const props = defineProps({
   category: { type: Object, required: true },

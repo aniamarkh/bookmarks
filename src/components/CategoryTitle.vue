@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { store } from "../store";
+import { store } from "../core/store";
 import { ref } from "vue";
 import CategoryEditForm from "./CategoryEditForm.vue";
-import { settings } from "../settings";
-import type { Category } from "../types";
-import { chromeHandle } from "../chromeHandle";
+import { settings } from "../core/settings";
+import type { Category } from "../core/types";
+import { chromeHandle } from "../core/chromeHandle";
 
 const props = defineProps({
   category: { type: Object, required: true },

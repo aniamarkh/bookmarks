@@ -8,8 +8,8 @@ import {
   themes,
   columnsCount,
   columnWidth
-} from "../settings";
-import { store } from "../store";
+} from "../core/settings";
+import { store } from "../core/store";
 
 const emit = defineEmits(["close-form"]);
 const sendCloseFormEvent = () => emit("close-form");
