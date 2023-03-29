@@ -175,4 +175,4 @@ chrome.bookmarks.onRemoved.addListener((id, removeInfo) => {
     chromeHandle.onRemoved(id, removeInfo);
   }
 });
-
+chrome.bookmarks.onImportEnded.addListener(chromeHandle.importChromeBookmarks);
