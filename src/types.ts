@@ -102,8 +102,8 @@ export interface ChromeHandle {
   editBookmarkInChrome(bookmarkId: string, newTitle: string, newUrl: string): void;
   onNodeChange(id: string, changeInfo: ChangeInfo): void;
   changeParent(id: string, moveInfo: MoveInfo): void;
-
-  // onCreated(id: string, bookmark: chrome.bookmarks.BookmarkTreeNode): void
+  onCreated(id: string, changeInfo: chrome.bookmarks.BookmarkTreeNode): void;
+  onRemoved(id: string, removeInfo: RemoveInfo): void;
 }
 
 export interface ChangeInfo {
@@ -116,4 +116,10 @@ export interface MoveInfo {
   oldIndex: number,
   oldParentId: string,
   parentId: string,
+}
+
+export interface RemoveInfo {
+  index: number,
+  node: chrome.bookmarks.BookmarkTreeNode,
+  parentId: string;
 }

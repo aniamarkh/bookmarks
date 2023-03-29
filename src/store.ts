@@ -1,6 +1,7 @@
 import { reactive } from "vue";
 import type { Store, Category, Bookmark, Data } from "./types";
 import { settings } from "./settings";
+import { getColumnAndIndex } from "./utils";
 
 export const store: Store = reactive(
   {
@@ -72,7 +73,14 @@ export const store: Store = reactive(
         title: category.title,
         children: [],
       };
-      this.data.columns[0].push(newCategory);
+      if (category.parentId === "2") {
+        this.data.columns[this.data.columns.length - 1].push(newCategory);
+      } else if (category.parentId) {
+        const parentNode = store.findNodeById(this.data, category.parentId) || store.findNodeById(this.hidden, category.parentId);
+        if (parentNode && "children" in parentNode) {
+          parentNode.children.push(newCategory);
+        }
+      }
       this.saveToLocalStore();
     },
 
@@ -94,13 +102,22 @@ export const store: Store = reactive(
           favicon: "",
         };
 
-        const isCategory = bookmarkCategory && "children" in bookmarkCategory;
-        if (isCategory) {
+        if (bookmarkCategory && "children" in bookmarkCategory) {
           bookmarkCategory.children.push(newBookmark);
-          this.updateFaviconLink(bookmark.url, newBookmark);
-          if (bookmark.title === "") {
-            this.updateBookmarkTitle(bookmark.url, bookmark.id);
+
+        } else if (bookmarkCategory && "columns" in bookmarkCategory && bookmark.index) {
+          let columnIndex = store.data.columns.length - 1;
+          let indexInColumn = store.data.columns[columnIndex].length;
+          const returns = getColumnAndIndex(bookmark.index);
+          if (returns) {
+            columnIndex = returns[0];
+            indexInColumn = returns[1];
           }
+          store.data.columns[columnIndex].splice(indexInColumn, 0, newBookmark);
+        }
+        this.updateFaviconLink(bookmark.url, newBookmark);
+        if (bookmark.title === "") {
+          this.updateBookmarkTitle(bookmark.url, bookmark.id);
         }
         this.saveToLocalStore();
       }

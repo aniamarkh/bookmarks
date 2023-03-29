@@ -1,4 +1,4 @@
-import type { ChromeHandle, ChangeInfo, Bookmark, Category, MoveInfo } from "./types";
+import type { ChromeHandle, ChangeInfo, Bookmark, Category, MoveInfo, RemoveInfo } from "./types";
 import { store } from "./store";
 import { getColumnAndIndex } from "./utils";
 
@@ -110,32 +110,49 @@ export const chromeHandle: ChromeHandle = {
   },
 
   changeParent(id: string, moveInfo: MoveInfo): void {
-    const node = JSON.stringify(
-      store.findNodeById(store.data, id) ||
-      store.findNodeById(store.hidden, id));
-    const newParent = store.findNodeById(store.data, moveInfo.parentId) || store.findNodeById(store.hidden, moveInfo.parentId);
-
-    if (node && newParent && ("children" in newParent || "columns" in newParent)) {
-      store.deleteNode(id);
-      if ("children" in newParent) {
-        newParent.children.splice(moveInfo.index, 0, JSON.parse(node));
-      } else if ("columns" in newParent) {
-        let columnIndex = store.data.columns.length - 1;
-        let indexInColumn = store.data.columns[columnIndex].length;
-        const returns = getColumnAndIndex(moveInfo.index);
-        if (returns) {
-          columnIndex = returns[0];
-          indexInColumn = returns[1];
+    if (moveInfo.parentId !== moveInfo.oldParentId) {
+      const node = JSON.stringify(
+        store.findNodeById(store.data, id) ||
+        store.findNodeById(store.hidden, id));
+      const newParent = store.findNodeById(store.data, moveInfo.parentId) || store.findNodeById(store.hidden, moveInfo.parentId);
+      if (node && newParent && ("children" in newParent || "columns" in newParent)) {
+        store.deleteNode(id);
+        if ("children" in newParent) {
+          newParent.children.splice(moveInfo.index, 0, JSON.parse(node));
+        } else if ("columns" in newParent) {
+          let columnIndex = store.data.columns.length - 1;
+          let indexInColumn = store.data.columns[columnIndex].length;
+          const returns = getColumnAndIndex(moveInfo.index);
+          if (returns) {
+            columnIndex = returns[0];
+            indexInColumn = returns[1];
+          }
+          store.data.columns[columnIndex].splice(indexInColumn, 0, JSON.parse(node));
         }
-        store.data.columns[columnIndex].splice(indexInColumn, 0, JSON.parse(node));
+        const newNode = store.findNodeById(store.data, id) || store.findNodeById(store.hidden, id)
+        if (newNode && "url" in newNode) {
+          store.updateFaviconLink(newNode.url, newNode);
+        }
       }
-      const newNode = store.findNodeById(store.data, id) || store.findNodeById(store.hidden, id)
-      if (newNode && "url" in newNode) {
-        store.updateFaviconLink(newNode.url, newNode);
-      }
+      store.saveToLocalStore();
     }
+  },
+
+  onCreated(id: string, node: chrome.bookmarks.BookmarkTreeNode): void {
+    if (node.url) {
+      store.addBookmark(node);
+    } else {
+      store.addCategory(node);
+    }
+  },
+
+  onRemoved(id: string, removeInfo: RemoveInfo): void {
+    store.deleteNode(id);
   }
 }
 
 chrome.bookmarks.onChanged.addListener(chromeHandle.onNodeChange);
 chrome.bookmarks.onMoved.addListener(chromeHandle.changeParent);
+chrome.bookmarks.onCreated.addListener(chromeHandle.onCreated);
+chrome.bookmarks.onRemoved.addListener(chromeHandle.onRemoved);
+
