@@ -1,5 +1,6 @@
 import type { ChromeHandle, ChangeInfo, Bookmark, Category, MoveInfo } from "./types";
 import { store } from "./store";
+import { getColumnAndIndex } from "./utils";
 
 export const chromeHandle: ChromeHandle = {
   importChromeBookmarks() {
@@ -108,26 +109,33 @@ export const chromeHandle: ChromeHandle = {
     }
   },
 
-  // changeParent(id: string, moveInfo: MoveInfo): void {
-  //   const node = JSON.stringify(
-  //     store.findNodeById(store.data, id) ||
-  //     store.findNodeById(store.hidden, id));
-  //   const newParent = store.findNodeById(store.data, moveInfo.parentId) || store.findNodeById(store.hidden, moveInfo.parentId);
-  //   console.log(moveInfo);
-  //   console.log(JSON.parse(node));
-  //   console.log(newParent?.title);
+  changeParent(id: string, moveInfo: MoveInfo): void {
+    const node = JSON.stringify(
+      store.findNodeById(store.data, id) ||
+      store.findNodeById(store.hidden, id));
+    const newParent = store.findNodeById(store.data, moveInfo.parentId) || store.findNodeById(store.hidden, moveInfo.parentId);
 
-
-  //   if (node && newParent && "children" in newParent) {
-  //     // store.deleteNode(id);
-  //     newParent.children.splice(moveInfo.index, 0, JSON.parse(node));
-  //     const newNode = store.findNodeById(store.data, id) || store.findNodeById(store.hidden, id)
-  //     if (newNode && "url" in newNode) {
-  //       store.updateFaviconLink(newNode.url, newNode);
-  //     }
-  //   }
-  // }
+    if (node && newParent && ("children" in newParent || "columns" in newParent)) {
+      store.deleteNode(id);
+      if ("children" in newParent) {
+        newParent.children.splice(moveInfo.index, 0, JSON.parse(node));
+      } else if ("columns" in newParent) {
+        let columnIndex = store.data.columns.length - 1;
+        let indexInColumn = store.data.columns[columnIndex].length;
+        const returns = getColumnAndIndex(moveInfo.index);
+        if (returns) {
+          columnIndex = returns[0];
+          indexInColumn = returns[1];
+        }
+        store.data.columns[columnIndex].splice(indexInColumn, 0, JSON.parse(node));
+      }
+      const newNode = store.findNodeById(store.data, id) || store.findNodeById(store.hidden, id)
+      if (newNode && "url" in newNode) {
+        store.updateFaviconLink(newNode.url, newNode);
+      }
+    }
+  }
 }
 
 chrome.bookmarks.onChanged.addListener(chromeHandle.onNodeChange);
-// chrome.bookmarks.onMoved.addListener(chromeHandle.changeParent);
+chrome.bookmarks.onMoved.addListener(chromeHandle.changeParent);

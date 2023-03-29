@@ -233,7 +233,6 @@ export const store: Store = reactive(
 
     moveNode(newParentId: string, movedNodeId: string, newIndex: number): void {
       chrome.bookmarks.move(movedNodeId, { index: newIndex, parentId: newParentId });
-      console.log("onMove works!");
     },
   }
 );

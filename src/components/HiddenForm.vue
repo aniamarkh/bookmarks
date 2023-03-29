@@ -39,6 +39,7 @@ const isEmptyList = (evt: any) => {
       <h3>Hidden categories:</h3>
     </div>
     <Draggable
+      data-id="hidden"
       class="bookmarks-list"
       :empty-insert-threshold="50"
       :list="store.hidden.children"

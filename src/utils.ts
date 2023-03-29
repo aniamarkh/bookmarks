@@ -1,6 +1,6 @@
 import { store } from "./store";
 import { chromeHandle } from "./chromeHandle";
-import type { Category, Bookmark } from "./types";
+import type { Category, Bookmark, Store } from "./types";
 
 export const onDragEnd = (evt: any) => {
   const oldParent = evt.from;
@@ -17,7 +17,7 @@ export const onDragEnd = (evt: any) => {
     if (oldParentId === newParentId) {
       const oldIndexInRoot = getOldIndexInRoot(oldIndex, oldParent.dataset.column);
       // https://stackoverflow.com/questions/13264060/chrome-bookmarks-api-using-move-to-reorder-bookmarks-in-the-same-folder
-      if (oldIndexInRoot < newIndexInRoot) newIndexInRoot++;
+      if (oldIndexInRoot < newIndexInRoot || (oldParentId === "hidden" && newParentId === "2")) newIndexInRoot++;
     }
     store.moveNode(newParentId, movedNodeId, newIndexInRoot);
   } else {
@@ -46,4 +46,17 @@ const getNewRootIndex = (movedItemId: string): number => {
   const flatData = store.data.columns.flat();
   return flatData.map((item: Category | Bookmark) => { return item.id })
     .indexOf(movedItemId);
+}
+
+export const getColumnAndIndex = (newIndex: number): [number, number] | undefined => {
+  let flattenedIndex = 0;
+
+  for (let columnIndex = 0; columnIndex < store.data.columns.length; columnIndex++) {
+    for (let indexInColumn = 0; indexInColumn < store.data.columns[columnIndex].length; indexInColumn++) {
+      if (flattenedIndex === newIndex) {
+        return [columnIndex, indexInColumn];
+      }
+      flattenedIndex++;
+    }
+  }
 }

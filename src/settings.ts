@@ -107,7 +107,6 @@ export const settings: Settings = reactive(
 
       this.styles.columnWidth = columnWidth.value;
       this.saveToLocalSettings();
-      console.log(columnWidth.value);
     }
   }
 )
