@@ -3,6 +3,8 @@ import { store } from "./store";
 import { getColumnAndIndex } from "./utils";
 
 export const chromeHandle: ChromeHandle = {
+  fromUI: false,
+
   importChromeBookmarks() {
     chrome.bookmarks.getTree((bkmrkTree) => {
       if (bkmrkTree[0].children) {
@@ -62,36 +64,46 @@ export const chromeHandle: ChromeHandle = {
   },
 
   deleteNodeFromChrome(nodeId: string): void {
+    this.fromUI = true;
     chrome.bookmarks.remove(nodeId, () => {
+      this.fromUI = false;
       store.deleteNode(nodeId);
     })
   },
 
   addCategoryToChrome(categoryTitle: string): void {
+    this.fromUI = true;
     chrome.bookmarks.create({ title: categoryTitle }, (category) => {
+      this.fromUI = false;
       store.addCategory(category);
     });
   },
 
   editCategoryInChrome(categoryId: string, newTitle: string): void {
+    this.fromUI = true;
     chrome.bookmarks.update(categoryId, { title: newTitle }, (category) => {
+      this.fromUI = false;
       store.editCategory(category);
     });
   },
 
   addBookmarkToChrome(parentNodeId: string, bookmarkTitle: string, bookmarkUrl: string): void {
+    this.fromUI = true;
     chrome.bookmarks.create(
       {
         title: bookmarkTitle,
         parentId: parentNodeId,
         url: bookmarkUrl
       }, (bookmark) => {
+        this.fromUI = false;
         store.addBookmark(bookmark);
       });
   },
 
   editBookmarkInChrome(bookmarkId: string, newTitle: string, newUrl: string): void {
+    this.fromUI = true;
     chrome.bookmarks.update(bookmarkId, { title: newTitle, url: newUrl, }, (bookmark) => {
+      this.fromUI = false;
       store.editBookmark(bookmark.id, bookmark.title, newUrl);
     });
   },
@@ -153,6 +165,14 @@ export const chromeHandle: ChromeHandle = {
 
 chrome.bookmarks.onChanged.addListener(chromeHandle.onNodeChange);
 chrome.bookmarks.onMoved.addListener(chromeHandle.changeParent);
-chrome.bookmarks.onCreated.addListener(chromeHandle.onCreated);
-chrome.bookmarks.onRemoved.addListener(chromeHandle.onRemoved);
+chrome.bookmarks.onCreated.addListener((id, node) => {
+  if (!chromeHandle.fromUI) {
+    chromeHandle.onCreated(id, node);
+  }
+});
+chrome.bookmarks.onRemoved.addListener((id, removeInfo) => {
+  if (!chromeHandle.fromUI) {
+    chromeHandle.onRemoved(id, removeInfo);
+  }
+});
 
