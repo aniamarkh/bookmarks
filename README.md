@@ -1,6 +1,15 @@
-## Recommended IDE Setup
+# Bookmarks Manager Extension (In Development)
+Bookmarks Manager is a Chrome extension designed to enhance your bookmark management experience in Google Chrome. It replaces the default Chrome bookmarks folder with a new and intuitive interface, built with Vue 3, TypeScript, and Vite. This extension leverages the power of vueform and vue-draggable libraries to make your bookmark organization more efficient and streamlined.
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
+## Features (Work In Progress)
+- Manage bookmarks in a new tab.
+- Drag and drop interface for easy organization.
+- Hide unnecessary bookmarks folders.
+- Qustomise a new tab design.
+- Bulk edit, delete, and move bookmarks.
+- Create and edit bookmark folders.
+- Please note that the project is still in development, and the listed features are subject to change.
+
 
 ## Project Setup
 
