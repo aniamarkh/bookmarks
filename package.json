@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "vite",
-    "build": "run-p type-check build-only plugin",
+    "build": "run-p type-check build-only",
     "plugin": "zip kartotek.crx zip -j dist/*",
     "preview": "vite preview",
     "build-only": "vite build",
