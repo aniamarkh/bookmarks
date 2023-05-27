@@ -8,6 +8,7 @@
   --bkmrk-margin: 3px;
   --column-width: 320px;
   --font-family: 'Roboto Slab', sans-serif;
+  --global-top-margin: 45px;
 }
 
 
@@ -42,7 +43,7 @@ main {
   flex-wrap: wrap;
   gap: 20px;
   justify-content: center;
-  padding: 45px 20px 20px 20px;
+  padding: var(--global-top-margin) 20px 20px 20px;
   height: auto;
   width: 100vw;
 }

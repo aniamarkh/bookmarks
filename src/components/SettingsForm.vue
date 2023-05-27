@@ -7,7 +7,8 @@ import {
   fontOptions,
   themes,
   columnsCount,
-  columnWidth
+  columnWidth,
+  globalTopMargin,
 } from "../core/settings";
 import { store } from "../core/store";
 
@@ -61,8 +62,8 @@ if (wrapper) {
           @click="settings.setTheme(themes.coffee)"
         ></button>
       </div>
-      <div class="font-size">
-        <h4>Text size:</h4>
+      <h4>Text size:</h4>
+      <div class="font-size-btns">
         <button
           v-for="(size, index) in fontSizes"
           :key="index"
@@ -73,8 +74,8 @@ if (wrapper) {
           {{ size.title }}
         </button>
       </div>
+      <h4>Font Family:</h4>
       <div class="font-select">
-        <h4>Font Family:</h4>
         <select
           name="FontFamily"
           v-model="settings.styles.fontFamily"
@@ -90,8 +91,8 @@ if (wrapper) {
           </option>
         </select>
       </div>
+      <h4>Columns count:</h4>
       <div class="columns-count">
-        <h4>Columns count:</h4>
         <Slider
           v-model="columnsCount"
           class="slider"
@@ -100,11 +101,12 @@ if (wrapper) {
           :step="1"
           :default="columnsCount"
           @update="settings.setColumnsCount()"
+          showTooltip="drag"
           tooltip-position="bottom"
         />
       </div>
+      <h4>Column width:</h4>
       <div class="columns-width">
-        <h4>Column width:</h4>
         <Slider
           v-model="columnWidth"
           class="slider"
@@ -113,7 +115,22 @@ if (wrapper) {
           :step="10"
           :default="columnWidth"
           @update="settings.setColumnWidth()"
-          :tooltips="false"
+          showTooltip="drag"
+          tooltip-position="bottom"
+        />
+      </div>
+      <h4>Top margin:</h4>
+      <div class="global-top-margin">
+        <Slider
+          v-model="globalTopMargin"
+          class="slider"
+          :min="45"
+          :max="1000"
+          :step="1"
+          :default="globalTopMargin"
+          @update="settings.setGlobalTopMargin()"
+          showTooltip="drag"
+          tooltipPosition="bottom"
         />
       </div>
     </div>
@@ -210,7 +227,7 @@ h4 {
   background: linear-gradient(to left, #8c7851 50%, #eaddcf 50%);
 }
 
-.font-size {
+.font-size-btns {
   display: flex;
   flex-direction: row;
   gap: 10px;
@@ -235,15 +252,14 @@ h4 {
 }
 
 .font-select,
-.cards-align,
-.cards-width,
 .columns-count,
+.global-top-margin,
 .columns-width {
   display: flex;
   flex-direction: row;
   align-items: center;
   gap: 10px;
-  margin-top: 10px;
+  margin: 10px 0 20px 0;
   width: 100%;
 }
 
@@ -270,7 +286,7 @@ select {
 }
 
 .slider {
-  width: 100px;
+  width: 100%;
   --slider-handle-width: 16px;
   --slider-bg: #c2c2c2;
   --slider-connect-bg: var(--background);

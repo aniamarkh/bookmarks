@@ -42,6 +42,7 @@ export interface Settings {
   setFontSize(fontSize: fontSize): void,
   setFont(event: Event): void,
   setColumnsCount(): void,
+  setGlobalTopMargin(): void,
 }
 
 export interface Styles {
@@ -50,6 +51,7 @@ export interface Styles {
   fontFamily: string,
   columnsCount: number,
   columnWidth: number,
+  globalTopMargin: number,
 }
 
 export interface fontSize {
