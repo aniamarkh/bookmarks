@@ -25,8 +25,8 @@ export const fontOptions = ref([
 ]);
 
 export const columnWidth = ref(320);
-
 export const columnsCount = ref(3);
+export const globalTopMargin = ref(45);
 
 export const settings: Settings = reactive(
   {
@@ -36,6 +36,7 @@ export const settings: Settings = reactive(
       fontFamily: fontOptions.value[0].css,
       columnsCount: columnsCount.value,
       columnWidth: columnWidth.value,
+      globalTopMargin: globalTopMargin.value,
     },
 
     edit: true,
@@ -65,8 +66,10 @@ export const settings: Settings = reactive(
       document.documentElement.style.setProperty("--bkmrk-margin", `${(local.fontSize.margin) + "px"}`);
       document.documentElement.style.setProperty("--font-family", local.fontFamily);
       document.documentElement.style.setProperty("--column-width", `${local.columnWidth + "px"}`);
+      document.documentElement.style.setProperty("--global-top-margin", `${local.globalTopMargin + "px"}`);
       columnWidth.value = local.columnWidth;
       columnsCount.value = local.columnsCount;
+      globalTopMargin.value = local.globalTopMargin;
     },
 
     setTheme(themeColors: Array<string>): void {
@@ -106,6 +109,12 @@ export const settings: Settings = reactive(
       document.documentElement.style.setProperty("--column-width", `${columnWidth.value + "px"}`);
 
       this.styles.columnWidth = columnWidth.value;
+      this.saveToLocalSettings();
+    },
+
+    setGlobalTopMargin(): void {
+      document.documentElement.style.setProperty("--global-top-margin", `${globalTopMargin.value + "px"}`);
+      this.styles.globalTopMargin = globalTopMargin.value;
       this.saveToLocalSettings();
     }
   }

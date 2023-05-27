@@ -7,7 +7,8 @@ import {
   fontOptions,
   themes,
   columnsCount,
-  columnWidth
+  columnWidth,
+  globalTopMargin,
 } from "../core/settings";
 import { store } from "../core/store";
 
@@ -114,6 +115,20 @@ if (wrapper) {
           :default="columnWidth"
           @update="settings.setColumnWidth()"
           :tooltips="false"
+        />
+      </div>
+      <div class="global-top-margin">
+        <h4>Top margin:</h4>
+        <Slider
+          v-model="globalTopMargin"
+          class="slider"
+          :min="45"
+          :max="1000"
+          :step="1"
+          :default="globalTopMargin"
+          @update="settings.setGlobalTopMargin()"
+          showTooltip="drag"
+          tooltipPosition="bottom"
         />
       </div>
     </div>
@@ -238,6 +253,7 @@ h4 {
 .cards-align,
 .cards-width,
 .columns-count,
+.global-top-margin,
 .columns-width {
   display: flex;
   flex-direction: row;
