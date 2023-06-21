@@ -45,7 +45,7 @@ const vFocus = {
   <div class="bookmark-wrapper" v-if="!showEditForm">
     <div class="bookmark-title">
       <img class="favicon" v-bind:src="bookmark.favicon" />
-      <a :href="bookmark.url" target="_blank">{{ bookmark.title }}</a>
+      <a :href="bookmark.url">{{ bookmark.title }}</a>
     </div>
     <div v-if="settings.edit" class="bookmark-btns">
       <button class="bookmark-btn" @click="showEditForm = !showEditForm">
