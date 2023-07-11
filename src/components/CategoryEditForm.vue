@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { store } from "../core/store";
 import { ref } from "vue";
 import type { Ref } from "vue";
 import { chromeHandle } from "../core/chromeHandle";

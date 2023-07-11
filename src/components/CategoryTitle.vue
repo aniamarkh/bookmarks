@@ -6,7 +6,7 @@ import { settings } from "../core/settings";
 import type { Category } from "../core/types";
 import { chromeHandle } from "../core/chromeHandle";
 
-const props = defineProps({
+defineProps({
   category: { type: Object, required: true },
 });
 

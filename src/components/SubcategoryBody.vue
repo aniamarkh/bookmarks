@@ -12,7 +12,7 @@ import SubCategory from "./SubcategoryBody.vue";
 import BookmarkForm from "./BookmarkForm.vue";
 import CategoryEditForm from "./CategoryEditForm.vue";
 
-const props = defineProps({
+defineProps({
   subcategory: { type: Object, required: true },
 });
 

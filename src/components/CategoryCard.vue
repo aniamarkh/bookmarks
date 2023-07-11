@@ -9,7 +9,7 @@ import Draggable from "vuedraggable";
 import { settings } from "../core/settings";
 import { onDragEnd, modifyDragItem } from "../core/utils";
 
-const props = defineProps({
+defineProps({
   category: { type: Object, required: true },
 });
 const showBookmarkForm: Ref<boolean> = ref(false);

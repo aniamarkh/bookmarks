@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import type { Ref } from "vue";
-import { store } from "../core/store";
 import { chromeHandle } from "../core/chromeHandle";
 
 const input_category: Ref<string> = ref("");
