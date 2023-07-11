@@ -16,10 +16,7 @@ export const chromeHandle: ChromeHandle = {
     chrome.bookmarks.getTree((bkmrkTree) => {
       if (bkmrkTree[0].children) {
         bkmrkTree[0].children.forEach((folder) => {
-          if (
-            folder.title.toLowerCase() === "other bookmarks" &&
-            folder.children
-          ) {
+          if (folder.id === "2" && folder.children) {
             folder.children.forEach((child) => {
               this.addCategoriesFromChrome(child, store.data.columns[0]);
             });
@@ -189,28 +186,45 @@ export const chromeHandle: ChromeHandle = {
   },
 
   onCreated(id: string, node: chrome.bookmarks.BookmarkTreeNode): void {
-    if (node.url) {
-      store.addBookmark(node);
-    } else {
-      store.addCategory(node);
-    }
+    node.url ? store.addBookmark(node) : store.addCategory(node);
   },
 
   onRemoved(id: string, removeInfo: RemoveInfo): void {
     store.deleteNode(id);
   },
-};
 
-chrome.bookmarks.onChanged.addListener(chromeHandle.onNodeChange);
-chrome.bookmarks.onMoved.addListener(chromeHandle.changeParent);
-chrome.bookmarks.onCreated.addListener((id, node) => {
-  if (!chromeHandle.fromUI) {
-    chromeHandle.onCreated(id, node);
+  listen():void {
+    chrome.bookmarks.onChanged.addListener(chromeHandle.onNodeChange);
+
+    chrome.bookmarks.onMoved.addListener(
+      (id: string, moveInfo: chrome.bookmarks.BookmarkMoveInfo) => {
+        if (moveInfo.oldParentId === "1") {
+          chrome.bookmarks.get(
+            id,
+            (result: chrome.bookmarks.BookmarkTreeNode[]) => {
+              store.addBookmark(result[0]);
+            }
+          );
+        } else if (moveInfo.parentId === "1") {
+          store.deleteNode(id);
+        } else {
+          chromeHandle.changeParent(id, moveInfo);
+        }
+      }
+    );
+
+    chrome.bookmarks.onCreated.addListener((id, node) => {
+      if (!chromeHandle.fromUI) {
+        chromeHandle.onCreated(id, node);
+      }
+    });
+
+    chrome.bookmarks.onRemoved.addListener((id, removeInfo) => {
+      if (!chromeHandle.fromUI) {
+        chromeHandle.onRemoved(id, removeInfo);
+      }
+    });
+
+    chrome.bookmarks.onImportEnded.addListener(chromeHandle.importChromeBookmarks);
   }
-});
-chrome.bookmarks.onRemoved.addListener((id, removeInfo) => {
-  if (!chromeHandle.fromUI) {
-    chromeHandle.onRemoved(id, removeInfo);
-  }
-});
-chrome.bookmarks.onImportEnded.addListener(chromeHandle.importChromeBookmarks);
+};

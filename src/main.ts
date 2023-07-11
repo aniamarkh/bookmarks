@@ -10,3 +10,5 @@ store.loadFromLocalStore();
 if (!localStorage.getItem("data")) {
   chromeHandle.importChromeBookmarks();
 }
+
+chromeHandle.listen();

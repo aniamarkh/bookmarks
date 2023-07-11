@@ -122,6 +122,7 @@ export interface ChromeHandle {
   changeParent(id: string, moveInfo: MoveInfo): void;
   onCreated(id: string, changeInfo: chrome.bookmarks.BookmarkTreeNode): void;
   onRemoved(id: string, removeInfo: RemoveInfo): void;
+  listen(): void;
 }
 
 export interface ChangeInfo {
