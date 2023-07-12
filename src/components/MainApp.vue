@@ -7,7 +7,6 @@ import { settings } from "../core/settings";
 import { onDragEnd, modifyDragItem } from "../core/utils";
 import CategoryForm from "./CategoryForm.vue";
 import CategoryCard from "./CategoryCard.vue";
-import ToolsPanel from "./ToolsPanel.vue";
 import BookmarkBody from "./BookmarkBody.vue";
 
 const showCategoryForm: Ref<boolean> = ref(false);
@@ -15,7 +14,6 @@ const closeCategoryForm = () => (showCategoryForm.value = false);
 </script>
 
 <template>
-  <ToolsPanel />
   <div class="categories-wrapper">
     <Draggable
       v-for="(column, index) in store.data.columns"

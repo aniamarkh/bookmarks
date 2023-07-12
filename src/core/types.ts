@@ -101,7 +101,7 @@ export interface Store {
 export interface ChromeHandle {
   fromUI: boolean;
   importChromeBookmarks(): void;
-  addCategoriesFromChrome(
+  addNodeFromChrome(
     chromeCat: chrome.bookmarks.BookmarkTreeNode,
     parentNode: Array<Category | Bookmark>
   ): void;
@@ -121,7 +121,7 @@ export interface ChromeHandle {
   onNodeChange(id: string, changeInfo: ChangeInfo): void;
   changeParent(id: string, moveInfo: MoveInfo): void;
   onCreated(id: string, changeInfo: chrome.bookmarks.BookmarkTreeNode): void;
-  onRemoved(id: string, removeInfo: RemoveInfo): void;
+  onRemoved(id: string): void;
   listen(): void;
 }
 

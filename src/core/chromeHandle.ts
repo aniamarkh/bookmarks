@@ -4,7 +4,6 @@ import type {
   Bookmark,
   Category,
   MoveInfo,
-  RemoveInfo,
 } from "./types";
 import { store } from "./store";
 import { getColumnAndIndex } from "./utils";
@@ -12,13 +11,13 @@ import { getColumnAndIndex } from "./utils";
 export const chromeHandle: ChromeHandle = {
   fromUI: false,
 
-  importChromeBookmarks() {
+  importChromeBookmarks(): void {
     chrome.bookmarks.getTree((bkmrkTree) => {
       if (bkmrkTree[0].children) {
         bkmrkTree[0].children.forEach((folder) => {
           if (folder.id === "2" && folder.children) {
             folder.children.forEach((child) => {
-              this.addCategoriesFromChrome(child, store.data.columns[0]);
+              this.addNodeFromChrome(child, store.data.columns[0]);
             });
           }
         });
@@ -27,7 +26,7 @@ export const chromeHandle: ChromeHandle = {
     });
   },
 
-  addCategoriesFromChrome(
+  addNodeFromChrome(
     chromeChild: chrome.bookmarks.BookmarkTreeNode,
     parentNode: Array<Category | Bookmark>
   ): void {
@@ -62,7 +61,7 @@ export const chromeHandle: ChromeHandle = {
             store.updateFaviconLink(child.url, childObj);
           }
           if (child.children) {
-            this.addCategoriesFromChrome(child, newCategory.children);
+            this.addNodeFromChrome(child, newCategory.children);
           }
         });
       }
@@ -189,11 +188,11 @@ export const chromeHandle: ChromeHandle = {
     node.url ? store.addBookmark(node) : store.addCategory(node);
   },
 
-  onRemoved(id: string, removeInfo: RemoveInfo): void {
+  onRemoved(id: string): void {
     store.deleteNode(id);
   },
 
-  listen():void {
+  listen(): void {
     chrome.bookmarks.onChanged.addListener(chromeHandle.onNodeChange);
 
     chrome.bookmarks.onMoved.addListener(
@@ -219,12 +218,14 @@ export const chromeHandle: ChromeHandle = {
       }
     });
 
-    chrome.bookmarks.onRemoved.addListener((id, removeInfo) => {
+    chrome.bookmarks.onRemoved.addListener((id) => {
       if (!chromeHandle.fromUI) {
-        chromeHandle.onRemoved(id, removeInfo);
+        chromeHandle.onRemoved(id);
       }
     });
 
-    chrome.bookmarks.onImportEnded.addListener(chromeHandle.importChromeBookmarks);
-  }
+    chrome.bookmarks.onImportEnded.addListener(
+      chromeHandle.importChromeBookmarks
+    );
+  },
 };

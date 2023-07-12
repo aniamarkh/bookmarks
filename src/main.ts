@@ -1,6 +1,6 @@
 import { createApp } from "vue";
 import App from "./App.vue";
-import "./style.css"
+import "./style.css";
 import { store } from "./core/store";
 import { chromeHandle } from "./core/chromeHandle";
 

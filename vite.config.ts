@@ -1,5 +1,5 @@
 import { fileURLToPath, URL } from "node:url";
-
+import path from "path";
 import { defineConfig } from "vitest/config";
 import vue from "@vitejs/plugin-vue";
 
@@ -13,10 +13,10 @@ export default defineConfig({
   },
   test: {
     globals: true,
-    setupFiles: ['vitest-localstorage-mock'],
+    setupFiles: ["vitest-localstorage-mock"],
     mockReset: false,
     coverage: {
-      all: true
-    }
+      all: true,
+    },
   },
 });
