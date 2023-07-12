@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { onBeforeMount, ref } from "vue";
 import { settings } from "./core/settings";
+import { chromeHandle } from "./core/chromeHandle";
 import MainApp from "./components/MainApp.vue";
 import StartWindow from "./components/StartWindow.vue";
 import ToolsPanel from "./components/ToolsPanel.vue";
@@ -10,6 +11,7 @@ const showStartWindow = ref(true);
 onBeforeMount(() => {
   if (localStorage.getItem("data")) {
     showStartWindow.value = false;
+    chromeHandle.listen();
   }
   settings.onLoad();
 });
