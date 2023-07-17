@@ -3,7 +3,11 @@
 Kartotek is a Chrome Extension for managing the 'Other bookmarks' folder.
 
 Built with Vue 3 and TypeScript.
+
+### [Link to Chrome Web Store](https://chrome.google.com/webstore/detail/kartotek/hcinbgecljcibhpfpjibkodifeaanjep)
+
 ![screen-capture (3)](https://github.com/aniamarkh/bookmarks/assets/93217444/40a5784c-a396-44ed-a5c8-6cb0fdbaae43)
+
 
 ## Features
 
